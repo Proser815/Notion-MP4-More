@@ -110,18 +110,21 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            padding: 8px 10px;
+            padding: 6px 10px;
             box-shadow: var(--shadow);
-            flex: 1;
             display: flex;
             align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .info-text {
             font-size: 9px;
             color: var(--text-muted);
-            line-height: 1.3;
             margin: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 100%;
         }
 
         .control-card {
@@ -294,7 +297,6 @@
             top: 20px;
             right: 20px;
             width: 320px;
-            max-height: 90vh;
             background: rgba(252, 248, 236, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -314,10 +316,9 @@
         }
 
         body.fullscreen-mode .player-wrapper .video-info {
-            display: none; /* Hide standard bottom bar inside expand view */
+            display: none;
         }
 
-        /* When hovering the video/screen in expand mode, slide/fade in the menu */
         body.fullscreen-mode.show-controls .controls-column {
             opacity: 1;
             pointer-events: auto;
@@ -404,13 +405,13 @@
         let mouseTimer = null;
 
         const translations = {
-            en: { title: "Player", desc: "Paste direct video link or pick a local device file to play.", load: "Load", file: "Choose Local File", none: "No video", custom: "Stream", expand: "Expand" },
-            zh: { title: "播放器", desc: "粘贴直接视频链接或选择本地文件播放。", load: "加载", file: "选择本地文件", none: "无视频", custom: "流", expand: "全屏" },
+            en: { title: "Player", desc: "Paste direct video link or pick a local device file.", load: "Load", file: "Choose Local File", none: "No video", custom: "Stream", expand: "Expand" },
+            zh: { title: "播放器", desc: "粘贴直接视频链接或选择本地文件。", load: "加载", file: "选择本地文件", none: "无视频", custom: "流", expand: "全屏" },
             ja: { title: "プレーヤー", desc: "直接リンクを貼り付けるかファイルを選択。", load: "読込", file: "ファイル選択", none: "動画なし", custom: "ストリーム", expand: "拡大" },
             de: { title: "Player", desc: "Direkten Link einfügen oder lokale Datei wählen.", load: "Laden", file: "Datei wählen", none: "Kein Video", custom: "Stream", expand: "Vollbild" },
-            ko: { title: "플레이어", desc: "비디오 링크를 붙여넣거나 로컬 파일을 선택하세요.", load: "로드", file: "로컬 파일 선택", none: "비디오 없음", custom: "스트림", expand: "확대" },
+            ko: { title: "플레이어", desc: "비디오 링크를 붙여넣거나 로컬 파일을 선택.", load: "로드", file: "로컬 파일 선택", none: "비디오 없음", custom: "스트림", expand: "확대" },
             fr: { title: "Lecteur", desc: "Collez un lien direct ou choisissez un fichier.", load: "Charger", file: "Choisir un fichier", none: "Aucune vidéo", custom: "Flux", expand: "Agrandir" },
-            it: { title: "Player", desc: "Incolla un link o seleziona un file locale.", load: "Carica", file: "Scegli file", none: "Nessun video", custom: "Flusso", expand: "Espandi" },
+            it: { title: "Player", desc: "Incolla un link o seleziona un file.", load: "Carica", file: "Scegli file", none: "Nessun video", custom: "Flusso", expand: "Espandi" },
             fa: { title: "پخش کننده", desc: "لینک مستقیم را وارد کنید یا فایل انتخاب کنید.", load: "بارگذاری", file: "انتخاب فایل", none: "ویدیویی نیست", custom: "جریان", expand: "بزرگ" }
         };
 
@@ -444,11 +445,9 @@
         expandBtn.onclick = toggleFullscreen;
         minimizeBtn.onclick = toggleFullscreen;
 
-        // Hover tracking for expand mode
         document.addEventListener('mousemove', (e) => {
             if (!document.body.classList.contains('fullscreen-mode')) return;
 
-            // Check if mouse is hovering over the right control menu itself
             const controlsMenu = document.getElementById('controlsColumn');
             const rect = controlsMenu.getBoundingClientRect();
             const isOverMenu = (

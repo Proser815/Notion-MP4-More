@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smooth Micro iOS Player</title>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --bg-base: transparent;
-            --bg-surface: #fcf8ec;
-            --bg-hover: #f5eedb;
+            --bg-surface: rgba(252, 248, 236, var(--glass-opacity, 0.85));
+            --bg-hover: rgba(245, 238, 219, var(--glass-opacity, 0.85));
             --border-color: rgba(230, 210, 150, 0.4);
             --accent: #e5b83b;
             --accent-hover: #d4a72d;
@@ -17,12 +19,14 @@
             --radius: 14px;
             --shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
             --transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            --glass-blur: 16px;
+            --glass-opacity: 0.85;
         }
 
         [data-theme="dark"] {
             --bg-base: transparent;
-            --bg-surface: #1c1c1e;
-            --bg-hover: #2c2c2e;
+            --bg-surface: rgba(28, 28, 30, var(--glass-opacity, 0.85));
+            --bg-hover: rgba(44, 44, 46, var(--glass-opacity, 0.85));
             --border-color: rgba(255, 255, 255, 0.1);
             --accent: #ffb300;
             --accent-hover: #e09b00;
@@ -47,7 +51,13 @@
             transition: background-color 0.5s ease;
         }
 
-        /* Cinematic Lights-Out Mode (Keeps theme color, only blurs controls & dims dashboard) */
+        /* Glass Surface Apply Dynamic Blur */
+        .control-card, .info-bar, .player-wrapper, .controls-column.fullscreen-glass {
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+        }
+
+        /* Cinematic Lights-Out Mode */
         body.cinematic-mode .controls-column {
             opacity: 0.2;
             filter: blur(5px);
@@ -81,7 +91,6 @@
             position: relative;
         }
 
-        /* Minimal Subtly Reactive Ambient Glow */
         .ambient-glow {
             position: absolute;
             inset: -2px;
@@ -118,9 +127,10 @@
         .header-controls {
             display: flex;
             gap: 4px;
+            align-items: center;
         }
 
-        select, .theme-btn, .cinematic-btn {
+        select, .theme-btn, .cinematic-btn, .glass-toggle-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-main);
@@ -133,15 +143,51 @@
             transition: var(--transition);
         }
 
-        select:hover, .theme-btn:hover, .cinematic-btn:hover {
+        select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover {
             background: var(--bg-hover);
             transform: scale(1.02);
         }
 
-        .cinematic-btn.active {
+        .cinematic-btn.active, .glass-toggle-btn.active {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
+        }
+
+        /* Glass settings popover drawer */
+        .glass-settings-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: var(--shadow);
+            font-size: 9px;
+        }
+
+        .glass-settings-panel.open {
+            display: flex;
+        }
+
+        .slider-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .slider-row label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+            cursor: pointer;
         }
 
         .info-bar {
@@ -339,9 +385,7 @@
             top: 16px;
             right: 16px;
             width: 250px;
-            background: rgba(252, 248, 236, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: 8px;
@@ -351,10 +395,6 @@
             pointer-events: none;
             transform: translateX(15px);
             transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        [data-theme="dark"] body.fullscreen-mode .controls-column {
-            background: rgba(28, 28, 30, 0.85);
         }
 
         body.fullscreen-mode .player-wrapper .video-info {
@@ -398,6 +438,7 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
+                    <button class="glass-toggle-btn" id="glassToggleBtn" title="Glass Settings">🪟</button>
                     <button class="cinematic-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
                     <select id="langSelect" aria-label="Language">
                         <option value="en">EN</option>
@@ -411,6 +452,18 @@
                     </select>
                     <button class="theme-btn" id="themeToggleBtn">Theme</button>
                     <button class="fullscreen-btn" id="minimizeBtn" style="font-weight: 600; padding: 3px 6px;">✕</button>
+                </div>
+            </div>
+
+            <!-- Glassmorphism Customizer Panel -->
+            <div class="glass-settings-panel" id="glassSettingsPanel">
+                <div class="slider-row">
+                    <label>Blur Intensity <span id="blurVal">16px</span></label>
+                    <input type="range" id="blurRange" min="0" max="40" value="16">
+                </div>
+                <div class="slider-row">
+                    <label>Glass Opacity <span id="opacityVal">85%</span></label>
+                    <input type="range" id="opacityRange" min="10" max="100" value="85">
                 </div>
             </div>
 
@@ -444,6 +497,12 @@
         const localFileInput = document.getElementById('localFileInput');
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const cinematicToggleBtn = document.getElementById('cinematicToggleBtn');
+        const glassToggleBtn = document.getElementById('glassToggleBtn');
+        const glassSettingsPanel = document.getElementById('glassSettingsPanel');
+        const blurRange = document.getElementById('blurRange');
+        const opacityRange = document.getElementById('opacityRange');
+        const blurVal = document.getElementById('blurVal');
+        const opacityVal = document.getElementById('opacityVal');
         const langSelect = document.getElementById('langSelect');
         const expandBtn = document.getElementById('expandBtn');
         const minimizeBtn = document.getElementById('minimizeBtn');
@@ -455,6 +514,7 @@
         let activeSourceType = 'none';
         let mouseTimer = null;
         let sampleInterval = null;
+        let hasTriggeredConfetti = false;
 
         const translations = {
             en: { title: "Player", desc: "Paste direct video link or pick a local device file.", load: "Load", file: "Choose Local File", none: "No video", custom: "Stream", expand: "Expand" },
@@ -489,6 +549,24 @@
         cinematicToggleBtn.onclick = () => {
             document.body.classList.toggle('cinematic-mode');
             cinematicToggleBtn.classList.toggle('active');
+        };
+
+        glassToggleBtn.onclick = () => {
+            glassSettingsPanel.classList.toggle('open');
+            glassToggleBtn.classList.toggle('active');
+        };
+
+        blurRange.oninput = (e) => {
+            const val = e.target.value + 'px';
+            htmlElement.style.setProperty('--glass-blur', val);
+            blurVal.textContent = val;
+        };
+
+        opacityRange.oninput = (e) => {
+            const raw = e.target.value;
+            const decimal = raw / 100;
+            htmlElement.style.setProperty('--glass-opacity', decimal);
+            opacityVal.textContent = raw + '%';
         };
 
         const toggleFullscreen = () => {
@@ -556,6 +634,7 @@
         }
 
         videoPlayer.onplay = () => {
+            hasTriggeredConfetti = false;
             startColorSampling();
         };
 
@@ -563,11 +642,24 @@
             if (sampleInterval) clearInterval(sampleInterval);
         };
 
+        videoPlayer.onended = () => {
+            if (sampleInterval) clearInterval(sampleInterval);
+            if (!hasTriggeredConfetti) {
+                hasTriggeredConfetti = true;
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        };
+
         loadUrlBtn.onclick = () => {
             const url = videoUrlInput.value.trim();
             if (url) {
                 videoPlayer.src = url;
                 activeSourceType = 'custom';
+                hasTriggeredConfetti = false;
                 updateUI();
                 videoPlayer.load();
                 videoPlayer.play().catch(() => {});
@@ -578,6 +670,7 @@
             const file = e.target.files[0];
             if (file) {
                 activeSourceType = 'local';
+                hasTriggeredConfetti = false;
                 videoTitle.textContent = file.name;
                 videoPlayer.src = URL.createObjectURL(file);
                 videoPlayer.load();

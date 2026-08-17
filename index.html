@@ -63,16 +63,16 @@
             position: relative;
         }
 
-        /* Dynamic Frame-Reactive Ambient Glow */
+        /* Enhanced Dynamic Frame-Reactive Ambient Glow (Slightly richer & brighter) */
         .ambient-glow {
             position: absolute;
-            inset: -8px;
+            inset: -12px;
             background: var(--accent);
-            border-radius: calc(var(--radius) + 6px);
-            filter: blur(24px);
-            opacity: 0.4;
+            border-radius: calc(var(--radius) + 8px);
+            filter: blur(28px);
+            opacity: 0.65;
             z-index: -1;
-            transition: background 0.5s ease, opacity 0.5s ease;
+            transition: background 0.4s ease, opacity 0.4s ease;
             pointer-events: none;
         }
 
@@ -306,7 +306,7 @@
         }
 
         body.fullscreen-mode .ambient-glow {
-            opacity: 0.25;
+            opacity: 0.45; /* Enhanced bloom in fullscreen mode */
         }
 
         /* Smaller Hover Overlay Menu on the Right in Fullscreen */
@@ -496,7 +496,7 @@
             }, 2000);
         });
 
-        // Sample dominant color from video frame periodically while playing
+        // Sample dominant color from video frame periodically while playing (boosted saturation/vibrancy slightly)
         function startColorSampling() {
             if (sampleInterval) clearInterval(sampleInterval);
             sampleInterval = setInterval(() => {
@@ -506,7 +506,6 @@
                     const frameData = ctx.getImageData(0, 0, 30, 30).data;
                     let r = 0, g = 0, b = 0, count = 0;
                     
-                    // Sample every 4th pixel for performance
                     for (let i = 0; i < frameData.length; i += 16) {
                         r += frameData[i];
                         g += frameData[i+1];
@@ -520,9 +519,9 @@
 
                     ambientGlow.style.background = `rgb(${r}, ${g}, ${b})`;
                 } catch (e) {
-                    // Handles CORS restrictions if cross-origin video is loaded without proper headers
+                    // CORS fallback safely handled
                 }
-            }, 400);
+            }, 300);
         }
 
         videoPlayer.onplay = () => {

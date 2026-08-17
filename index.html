@@ -398,7 +398,6 @@
             transform: scale(0.96);
         }
 
-        /* A-B repeat active state styling */
         .action-btn.ab-active {
             background: #ff5252;
         }
@@ -548,7 +547,6 @@
             padding-bottom: 3px;
         }
 
-        /* Note Search Bar Style inside Sidebar */
         .notes-search-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.6);
@@ -1025,6 +1023,20 @@
         const lblRecentNotes = document.getElementById('lblRecentNotes');
         const noteSearchInput = document.getElementById('noteSearchInput');
 
+        // Labels for Glass Settings
+        const lblBlur = document.getElementById('lblBlur');
+        const lblOpacity = document.getElementById('lblOpacity');
+        const lblGlow = document.getElementById('lblGlow');
+        const lblScratchpad = document.getElementById('lblScratchpad');
+        const lblKeyboardShortcuts = document.getElementById('lblKeyboardShortcuts');
+        const scPlay = document.getElementById('scPlay');
+        const scBack = document.getElementById('scBack');
+        const scForward = document.getElementById('scForward');
+        const scVol = document.getElementById('scVol');
+        const scFull = document.getElementById('scFull');
+        const scLoop = document.getElementById('scLoop');
+        const scHelp = document.getElementById('scHelp');
+
         // A-B Repeat elements
         const setABtn = document.getElementById('setABtn');
         const setBBtn = document.getElementById('setBBtn');
@@ -1395,7 +1407,7 @@
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        // Feature 1: A-B Repeat Logic Handlers
+        // A-B Repeat Logic Handlers
         setABtn.onclick = () => {
             loopPointA = videoPlayer.currentTime;
             setABtn.textContent = `A: ${formatTime(loopPointA)}`;
@@ -1446,12 +1458,11 @@
             }
         }
 
-        // Feature 4: Filterable Notes Sidebar List Renderer
+        // Filterable Notes Sidebar List Renderer
         function renderSidebarList(filterKeyword = '') {
             notesSidebarList.innerHTML = '';
             const keyword = filterKeyword.toLowerCase().trim();
             
-            // Filter notes based on keyword match
             const filteredNotes = notesHistory.filter(noteText => 
                 noteText.toLowerCase().includes(keyword)
             );

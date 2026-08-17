@@ -122,7 +122,7 @@
             transition: background-color 0.5s ease;
         }
 
-        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea {
+        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
@@ -193,7 +193,6 @@
             transition: color 0.4s ease;
         }
 
-        /* Unified Icon-Only Button Styling for Clean Visual Harmony */
         .icon-top-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
@@ -223,7 +222,6 @@
             border-color: var(--accent);
         }
 
-        /* Styled compact select and theme buttons matching height & radius */
         .header-controls {
             display: flex;
             gap: 3px;
@@ -320,28 +318,6 @@
         .color-dot.active {
             transform: scale(1.25);
             box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--accent);
-        }
-
-        .info-bar {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 4px 10px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .info-text {
-            font-size: 9px;
-            color: var(--text-muted);
-            margin: 0;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            width: 100%;
-            transition: color 0.4s ease;
         }
 
         .control-card {
@@ -569,8 +545,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
         }
 
         .shortcut-header {
@@ -712,6 +686,7 @@
                     <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">🔁</button>
                     <button class="icon-top-btn" id="glassToggleBtn" title="Glass Settings">🪟</button>
                     <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
+                    <button class="icon-top-btn" id="instructionHelpBtn" title="How to load a video (?)">❓</button>
                     <select id="langSelect" aria-label="Language">
                         <option value="en">EN</option>
                         <option value="zh">中</option>
@@ -776,10 +751,6 @@
                     <button class="notes-btn" id="downloadNotesBtn">Download .txt</button>
                 </div>
             </div>
-
-            <div class="info-bar">
-                <p class="info-text" id="infoDesc">Paste direct video link or pick a local device file.</p>
-            </div>
         </div>
     </div>
 
@@ -802,6 +773,21 @@
         </div>
     </div>
 
+    <!-- Instructions Modal Overlay -->
+    <div class="shortcut-modal" id="instructionModal">
+        <div class="shortcut-box">
+            <div class="shortcut-header">
+                <span id="instrModalTitle">How to Play</span>
+                <button class="fullscreen-btn" id="closeInstructionModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
+            </div>
+            <div class="shortcut-list">
+                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.4;" id="instrModalText">
+                    Paste a direct video link (.mp4 / .webm) into the URL field and click Load, or choose a video file directly from your local device.
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden canvas for sampling video frame colors -->
     <canvas id="colorSamplerCanvas" style="display:none;" width="30" height="30"></canvas>
 
@@ -818,6 +804,13 @@
         const shortcutHelpBtn = document.getElementById('shortcutHelpBtn');
         const shortcutModal = document.getElementById('shortcutModal');
         const closeShortcutModal = document.getElementById('closeShortcutModal');
+        
+        const instructionHelpBtn = document.getElementById('instructionHelpBtn');
+        const instructionModal = document.getElementById('instructionModal');
+        const closeInstructionModal = document.getElementById('closeInstructionModal');
+        const instrModalTitle = document.getElementById('instrModalTitle');
+        const instrModalText = document.getElementById('instrModalText');
+
         const glassSettingsPanel = document.getElementById('glassSettingsPanel');
         const blurRange = document.getElementById('blurRange');
         const opacityRange = document.getElementById('opacityRange');
@@ -845,14 +838,86 @@
         let hasTriggeredConfetti = false;
 
         const translations = {
-            en: { title: "Player", desc: "Paste direct video link or pick a local device file.", load: "Load", file: "Choose Local File", none: "No video", custom: "Stream", expand: "Expand" },
-            zh: { title: "播放器", desc: "粘贴直接视频链接或选择本地文件。", load: "加载", file: "选择本地文件", none: "无视频", custom: "流", expand: "全屏" },
-            ja: { title: "プレーヤー", desc: "直接リンクを貼り付けるかファイルを選択。", load: "読込", file: "ファイル選択", none: "動画なし", custom: "ストリーム", expand: "拡大" },
-            de: { title: "Player", desc: "Direkten Link einfügen oder lokale Datei wählen.", load: "Laden", file: "Datei wählen", none: "Kein Video", custom: "Stream", expand: "Vollbild" },
-            ko: { title: "플레이어", desc: "비디오 링크를 붙여넣거나 로컬 파일을 선택.", load: "로드", file: "로컬 파일 선택", none: "비디오 없음", custom: "스트림", expand: "확대" },
-            fr: { title: "Lecteur", desc: "Collez un lien direct ou choisissez un fichier.", load: "Charger", file: "Choisir un fichier", none: "Aucune vidéo", custom: "Flux", expand: "Agrandir" },
-            it: { title: "Player", desc: "Incolla un link o seleziona un file.", load: "Carica", file: "Scegli file", none: "Nessun video", custom: "Flusso", expand: "Espandi" },
-            fa: { title: "پخش کننده", desc: "لینک مستقیم را وارد کنید یا فایل انتخاب کنید.", load: "بارگذاری", file: "انتخاب فایل", none: "ویدیویی نیست", custom: "جریان", expand: "بزرگ" }
+            en: { 
+                title: "Player", 
+                load: "Load", 
+                file: "Choose Local File", 
+                none: "No video", 
+                custom: "Stream", 
+                expand: "Expand",
+                instrTitle: "How to Play",
+                instrText: "Paste a direct video link (.mp4 / .webm) into the URL field and click Load, or choose a video file directly from your local device."
+            },
+            zh: { 
+                title: "播放器", 
+                load: "加载", 
+                file: "选择本地文件", 
+                none: "无视频", 
+                custom: "流", 
+                expand: "全屏",
+                instrTitle: "播放说明",
+                instrText: "将直接视频链接（.mp4 / .webm）粘贴到URL输入框中并点击加载，或者直接从本地设备选择视频文件。"
+            },
+            ja: { 
+                title: "プレーヤー", 
+                load: "読込", 
+                file: "ファイル選択", 
+                none: "動画なし", 
+                custom: "ストリーム", 
+                expand: "拡大",
+                instrTitle: "再生方法",
+                instrText: "URL欄に直接動画リンク（.mp4 / .webm）を貼り付けて「読込」をクリックするか、ローカルデバイスから動画ファイルを選択してください。"
+            },
+            de: { 
+                title: "Player", 
+                load: "Laden", 
+                file: "Datei wählen", 
+                none: "Kein Video", 
+                custom: "Stream", 
+                expand: "Vollbild",
+                instrTitle: "Anleitung",
+                instrText: "Fügen Sie einen direkten Videolink (.mp4 / .webm) in das URL-Feld ein und klicken Sie auf Laden, oder wählen Sie eine Videodatei von Ihrem Gerät aus."
+            },
+            ko: { 
+                title: "플레이어", 
+                load: "로드", 
+                file: "로컬 파일 선택", 
+                none: "비디오 없음", 
+                custom: "스트림", 
+                expand: "확대",
+                instrTitle: "재생 방법",
+                instrText: "URL 필드에 직접 비디오 링크(.mp4 / .webm)를 붙여넣고 로드를 클릭하거나 로컬 기기에서 비디오 파일을 선택하세요."
+            },
+            fr: { 
+                title: "Lecteur", 
+                load: "Charger", 
+                file: "Choisir un fichier", 
+                none: "Aucune vidéo", 
+                custom: "Flux", 
+                expand: "Agrandir",
+                instrTitle: "Instructions",
+                instrText: "Collez un lien vidéo direct (.mp4 / .webm) dans le champ URL et cliquez sur Charger, ou choisissez un fichier vidéo directement depuis votre appareil."
+            },
+            it: { 
+                title: "Player", 
+                load: "Carica", 
+                file: "Scegli file", 
+                none: "Nessun video", 
+                custom: "Flusso", 
+                expand: "Espandi",
+                instrTitle: "Istruzioni",
+                instrText: "Incolla un link video diretto (.mp4 / .webm) nel campo URL e clicca Carica, oppure seleziona un file video dal tuo dispositivo."
+            },
+            fa: { 
+                title: "پخش کننده", 
+                load: "بارگذاری", 
+                file: "انتخاب فایل", 
+                none: "ویدیویی نیست", 
+                custom: "جریان", 
+                expand: "بزرگ",
+                instrTitle: "راهنما",
+                instrText: "لینک مستقیم ویدیو (.mp4 / .webm) را در فیلد URL وارد کرده و بارگذاری را بزنید، یا یک فایل ویدیویی از دستگاه خود انتخاب کنید."
+            }
         };
 
         function updateUI() {
@@ -860,10 +925,12 @@
             const t = translations[lang] || translations.en;
             
             document.getElementById('appTitle').textContent = t.title;
-            document.getElementById('infoDesc').textContent = t.desc;
             loadUrlBtn.textContent = t.load;
             document.getElementById('labelBrowse').childNodes[0].nodeValue = t.file + " ";
             expandBtn.textContent = t.expand;
+            
+            instrModalTitle.textContent = t.instrTitle;
+            instrModalText.textContent = t.instrText;
 
             if (activeSourceType === 'none') videoTitle.textContent = t.none;
             else if (activeSourceType === 'custom') videoTitle.textContent = t.custom;
@@ -897,6 +964,12 @@
         closeShortcutModal.onclick = () => shortcutModal.classList.remove('open');
         shortcutModal.onclick = (e) => {
             if (e.target === shortcutModal) shortcutModal.classList.remove('open');
+        };
+
+        instructionHelpBtn.onclick = () => instructionModal.classList.add('open');
+        closeInstructionModal.onclick = () => instructionModal.classList.remove('open');
+        instructionModal.onclick = (e) => {
+            if (e.target === instructionModal) instructionModal.classList.remove('open');
         };
 
         function formatTime(seconds) {

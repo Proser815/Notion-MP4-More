@@ -392,6 +392,14 @@
             transform: scale(0.96);
         }
 
+        /* A-B repeat active state styling */
+        .action-btn.ab-active {
+            background: #ff5252;
+        }
+        .action-btn.ab-active:hover {
+            background: #ff1744;
+        }
+
         input[type="file"] {
             display: none;
         }
@@ -423,7 +431,6 @@
             gap: 4px;
         }
 
-        /* Minimalist Logo inside notes header */
         .notes-logo-minimal {
             width: 13px;
             height: 13px;
@@ -492,7 +499,6 @@
             border-color: var(--accent);
         }
 
-        /* Recent Notes Sidebar Container */
         .notes-sidebar-container {
             position: relative;
         }
@@ -536,12 +542,32 @@
             padding-bottom: 3px;
         }
 
+        /* Note Search Bar Style inside Sidebar */
+        .notes-search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 3px 5px;
+            border-radius: 5px;
+            font-size: 8px;
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 2px;
+        }
+        [data-theme="dark"] .notes-search-input {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .notes-search-input:focus {
+            border-color: var(--accent);
+        }
+
         .notes-sidebar-list {
             display: flex;
             flex-direction: column;
             gap: 3px;
             overflow-y: auto;
-            max-height: 80px;
+            max-height: 62px;
             font-size: 8px;
         }
 
@@ -857,6 +883,12 @@
                         <input type="file" id="localFileInput" accept="video/*">
                     </label>
                 </div>
+                <!-- Feature 1: Loop Region / A-B Repeat Control Row -->
+                <div class="control-row" style="justify-content: space-between; gap: 3px;">
+                    <button class="notes-btn" id="setABtn" title="Set loop start point A" style="flex:1;">Set A: --</button>
+                    <button class="notes-btn" id="setBBtn" title="Set loop end point B" style="flex:1;">Set B: --</button>
+                    <button class="notes-btn" id="clearABtn" title="Clear A-B loop" style="flex:0.7;">Clear AB</button>
+                </div>
             </div>
 
             <!-- Mini Notes / Scratchpad Panel with Minimalist Logo and Recent Notes Sidebar -->
@@ -884,12 +916,14 @@
                     </div>
                 </div>
 
-                <!-- Recent Notes Sidebar Drawer -->
+                <!-- Recent Notes Sidebar Drawer with Search & Filter Bar -->
                 <div class="notes-sidebar" id="notesSidebar">
                     <div class="notes-sidebar-header">
                         <span id="lblRecentNotes">Recent Notes</span>
                         <button class="fullscreen-btn" id="closeSidebarBtn" style="font-weight: 600; padding: 0 2px;">✕</button>
                     </div>
+                    <!-- Feature 4: Note Search & Filter Bar -->
+                    <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search notes..." />
                     <div class="notes-sidebar-list" id="notesSidebarList">
                         <!-- Dynamically populated recent notes items -->
                     </div>
@@ -928,7 +962,7 @@
                 <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.5; flex-direction: column; align-items: flex-start; gap: 6px;" id="instrModalText">
                     <div>• <b>URL Streaming:</b> Paste a direct video link (such as .mp4 or .webm) into the input box and click <b>Load</b> to start playback.</div>
                     <div>• <b>Local Files:</b> Click <b>Choose Local File</b> to select and play any video stored directly on your local device.</div>
-                    <div>• <b>Scratchpad:</b> Jot down notes or click <b>+ Time</b> to log exact playback timestamps, then download them as a .txt file.</div>
+                    <div>• <b>Scratchpad & A-B Loop:</b> Jot down notes or click <b>+ Time</b> to log timestamps. Use <b>Set A</b> / <b>Set B</b> to loop custom video regions.</div>
                 </div>
             </div>
         </div>
@@ -983,13 +1017,20 @@
         const notesSidebar = document.getElementById('notesSidebar');
         const notesSidebarList = document.getElementById('notesSidebarList');
         const lblRecentNotes = document.getElementById('lblRecentNotes');
+        const noteSearchInput = document.getElementById('noteSearchInput');
+
+        // A-B Repeat elements
+        const setABtn = document.getElementById('setABtn');
+        const setBBtn = document.getElementById('setBBtn');
+        const clearABtn = document.getElementById('clearABtn');
+        let loopPointA = null;
+        let loopPointB = null;
 
         let activeSourceType = 'none';
         let mouseTimer = null;
         let sampleInterval = null;
         let hasTriggeredConfetti = false;
         
-        // Notes history array for previous notes and recent sidebar
         let notesHistory = JSON.parse(localStorage.getItem('player_notes_history') || '[]');
 
         const translations = {
@@ -1024,7 +1065,7 @@
                 instrText: `
                     <div>• <b>URL Streaming:</b> Paste a direct video link (such as .mp4 or .webm) into the input box and click <b>Load</b> to start playback.</div>
                     <div>• <b>Local Files:</b> Click <b>Choose Local File</b> to select and play any video stored directly on your local device.</div>
-                    <div>• <b>Scratchpad:</b> Jot down notes or click <b>+ Time</b> to log exact playback timestamps, then download them as a .txt file. Use <b>Load Prev</b> or <b>Recent</b> to review past notes.</div>
+                    <div>• <b>Scratchpad & A-B Loop:</b> Jot down notes or click <b>+ Time</b> to log timestamps. Use <b>Set A</b> / <b>Set B</b> to loop custom video regions.</div>
                 `
             },
             zh: { 
@@ -1056,9 +1097,9 @@
                 scHelp: "快捷键帮助",
                 instrTitle: "播放说明",
                 instrText: `
-                    <div>• <b>URL流播放:</b> 将直接视频链接（如 .mp4 或 .webm）粘贴到输入框中并点击<b>加载</b>开始播放。</div>
+                    <div>• <b>URL流播放:</b> 将直接视频链接粘贴到输入框中并点击<b>加载</b>开始播放。</div>
                     <div>• <b>本地文件:</b> 点击<b>选择本地文件</b>来选择并播放您设备上存储的视频。</div>
-                    <div>• <b>记事本:</b> 随时记录笔记，或点击<b>+ 时间</b>记录精确的时间戳。可通过<b>加载上一条</b>或<b>最近</b>查看历史笔记。</div>
+                    <div>• <b>记事本与AB循环:</b> 随时记录笔记，或使用<b>Set A</b> / <b>Set B</b>循环播放特定片段。</div>
                 `
             },
             ja: { 
@@ -1090,9 +1131,9 @@
                 scHelp: "ショートカットヘルプ",
                 instrTitle: "再生方法",
                 instrText: `
-                    <div>• <b>URL再生:</b> 直接動画リンクを入力欄に貼り付け、<b>読込</b>をクリックして再生します。</div>
-                    <div>• <b>ローカルファイル:</b> <b>ファイル選択</b>をクリックしてデバイス内の動画を再生します。</div>
-                    <div>• <b>メモ帳:</b> メモや<b>+ 時間</b>でタイムスタンプを記録。<b>前を読込</b>や<b>履歴</b>で過去のメモを呼び出せます。</div>
+                    <div>• <b>URL再生:</b> 動画リンクを入力欄に貼り付け、<b>読込</b>をクリックします。</div>
+                    <div>• <b>ローカルファイル:</b> <b>ファイル選択</b>でデバイス内の動画を再生します。</div>
+                    <div>• <b>メモ帳とABリピート:</b> <b>Set A</b> / <b>Set B</b>で特定区間を繰り返し再生できます。</div>
                 `
             },
             de: { 
@@ -1126,7 +1167,7 @@
                 instrText: `
                     <div>• <b>URL-Streaming:</b> Videolink einfügen und auf <b>Laden</b> klicken.</div>
                     <div>• <b>Lokale Dateien:</b> Auf <b>Datei wählen</b> klicken, um ein Video abzuspielen.</div>
-                    <div>• <b>Notizen:</b> Notizen erfassen und mit <b>Letzte laden</b> vergangene Notizen wiederherstellen.</div>
+                    <div>• <b>Notizen & A-B Loop:</b> Nutzen Sie <b>Set A</b> und <b>Set B</b> für Abschnittswiederholungen.</div>
                 `
             },
             ko: { 
@@ -1160,7 +1201,7 @@
                 instrText: `
                     <div>• <b>URL 스트리밍:</b> 비디오 링크를 입력하고 <b>로드</b>를 클릭하세요.</div>
                     <div>• <b>로컬 파일:</b> <b>로컬 파일 선택</b>으로 기기의 영상을 재생합니다.</div>
-                    <div>• <b>메모장:</b> <b>이전 불러오기</b>나 <b>최근</b> 버튼을 통해 과거 메모를 확인하고 불러올 수 있습니다.</div>
+                    <div>• <b>메모 및 A-B 반복:</b> <b>Set A</b> / <b>Set B</b>로 특정 구간을 반복 재생하세요.</div>
                 `
             },
             fr: { 
@@ -1194,7 +1235,7 @@
                 instrText: `
                     <div>• <b>Flux URL:</b> Collez le lien vidéo et cliquez sur <b>Charger</b>.</div>
                     <div>• <b>Fichiers locaux:</b> Choisissez un fichier local pour lancer la lecture.</div>
-                    <div>• <b>Bloc-notes:</b> Utilisez <b>Précédent</b> ou <b>Récent</b> pour consulter vos notes antérieures.</div>
+                    <div>• <b>Bloc-notes & Boucle A-B:</b> Utilisez <b>Set A</b> et <b>Set B</b> pour boucler une portion.</div>
                 `
             },
             it: { 
@@ -1228,7 +1269,7 @@
                 instrText: `
                     <div>• <b>Streaming URL:</b> Incolla il link video e clicca <b>Carica</b>.</div>
                     <div>• <b>File locali:</b> Scegli un file dal tuo dispositivo per avviarlo.</div>
-                    <div>• <b>Blocco note:</b> Usa <b>Carica prec.</b> o <b>Recenti</b> per esaminare gli appunti passati.</div>
+                    <div>• <b>Blocco note & Loop A-B:</b> Usa <b>Set A</b> e <b>Set B</b> per ripetere sezioni video.</div>
                 `
             },
             fa: { 
@@ -1262,7 +1303,7 @@
                 instrText: `
                     <div>• <b>پخش آنلاین:</b> لینک ویدیو را وارد و روی <b>بارگذاری</b> کلیک کنید.</div>
                     <div>• <b>فایل محلی:</b> برای انتخاب فایل از روی دستگاه اقدام کنید.</div>
-                    <div>• <b>يادداشت:</b> با دکمه‌های <b>قبلی</b> یا <b>اخیر</b> می‌توانید یادداشت‌های ذخیره شده قبلی را مرور کنید.</div>
+                    <div>• <b>یادداشت و تکرار AB:</b> از دکمه‌های <b>Set A</b> و <b>Set B</b> برای تکرار بخش دلخواه استفاده کنید.</div>
                 `
             }
         };
@@ -1288,6 +1329,7 @@
             loadPrevNoteBtn.textContent = t.loadPrev;
             clearNotesBtn.textContent = t.clear;
             downloadNotesBtn.textContent = t.download;
+            noteSearchInput.placeholder = lang === 'zh' ? "搜索笔记..." : (lang === 'ja' ? "メモを検索..." : (lang === 'de' ? "Notizen suchen..." : (lang === 'ko' ? "메모 검색..." : (lang === 'fr' ? "Rechercher..." : (lang === 'it' ? "Cerca note..." : (lang === 'fa' ? "جستجوی یادداشت..." : "Search notes..."))))));
 
             lblKeyboardShortcuts.textContent = t.shortcutsTitle;
             scPlay.textContent = t.scPlay;
@@ -1347,32 +1389,76 @@
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        // Save current note to history before changing or clearing
+        // Feature 1: A-B Repeat Logic Handlers
+        setABtn.onclick = () => {
+            loopPointA = videoPlayer.currentTime;
+            setABtn.textContent = `A: ${formatTime(loopPointA)}`;
+            checkABStatus();
+        };
+
+        setBBtn.onclick = () => {
+            loopPointB = videoPlayer.currentTime;
+            setBBtn.textContent = `B: ${formatTime(loopPointB)}`;
+            checkABStatus();
+        };
+
+        clearABtn.onclick = () => {
+            loopPointA = null;
+            loopPointB = null;
+            setABtn.textContent = "Set A: --";
+            setBBtn.textContent = "Set B: --";
+            setABtn.classList.remove('ab-active');
+            setBBtn.classList.remove('ab-active');
+        };
+
+        function checkABStatus() {
+            if (loopPointA !== null) setABtn.classList.add('ab-active');
+            else setABtn.classList.remove('ab-active');
+
+            if (loopPointB !== null) setBBtn.classList.add('ab-active');
+            else setBBtn.classList.remove('ab-active');
+        }
+
+        // Handle timeupdate for A-B Repeat looping
+        videoPlayer.ontimeupdate = () => {
+            if (loopPointA !== null && loopPointB !== null && loopPointB > loopPointA) {
+                if (videoPlayer.currentTime >= loopPointB) {
+                    videoPlayer.currentTime = loopPointA;
+                }
+            }
+        };
+
         function saveCurrentNoteToHistory() {
             const currentText = notesTextArea.value.trim();
             if (currentText) {
-                // Avoid duplicate consecutive entries
                 if (notesHistory.length === 0 || notesHistory[notesHistory.length - 1] !== currentText) {
                     notesHistory.push(currentText);
-                    if (notesHistory.length > 15) notesHistory.shift(); // keep last 15
+                    if (notesHistory.length > 25) notesHistory.shift();
                     localStorage.setItem('player_notes_history', JSON.stringify(notesHistory));
-                    renderSidebarList();
+                    renderSidebarList(noteSearchInput.value);
                 }
             }
         }
 
-        function renderSidebarList() {
+        // Feature 4: Filterable Notes Sidebar List Renderer
+        function renderSidebarList(filterKeyword = '') {
             notesSidebarList.innerHTML = '';
-            if (notesHistory.length === 0) {
+            const keyword = filterKeyword.toLowerCase().trim();
+            
+            // Filter notes based on keyword match
+            const filteredNotes = notesHistory.filter(noteText => 
+                noteText.toLowerCase().includes(keyword)
+            );
+
+            if (filteredNotes.length === 0) {
                 const emptyMsg = document.createElement('div');
-                emptyMsg.style.cssText = 'padding: 4px; color: var(--text-muted); font-size: 8px; text-align: center;';
-                emptyMsg.textContent = 'No notes yet';
+                emptyMsg.style.cssText = 'padding: 6px; color: var(--text-muted); font-size: 8px; text-align: center;';
+                emptyMsg.textContent = notesHistory.length === 0 ? 'No notes yet' : 'No matching notes';
                 notesSidebarList.appendChild(emptyMsg);
                 return;
             }
 
-            // Display in reverse chronological order (newest first)
-            [...notesHistory].reverse().forEach((noteText, idx) => {
+            [...filteredNotes].reverse().forEach((noteText) => {
                 const item = document.createElement('div');
                 item.className = 'sidebar-note-item';
                 item.title = noteText;
@@ -1386,9 +1472,17 @@
             });
         }
 
+        noteSearchInput.oninput = (e) => {
+            renderSidebarList(e.target.value);
+        };
+
         toggleSidebarBtn.onclick = () => {
+            noteSearchInput.value = '';
             renderSidebarList();
             notesSidebar.classList.toggle('open');
+            if (notesSidebar.classList.contains('open')) {
+                noteSearchInput.focus();
+            }
         };
 
         closeSidebarBtn.onclick = () => {
@@ -1407,15 +1501,13 @@
             saveCurrentNoteToHistory();
         };
 
-        // Load Previous Note Button Handler
         loadPrevNoteBtn.onclick = () => {
             saveCurrentNoteToHistory();
             if (notesHistory.length > 0) {
-                // Pop or fetch the most recent previous note
                 const prevNote = notesHistory.pop();
                 notesTextArea.value = prevNote;
                 localStorage.setItem('player_notes_history', JSON.stringify(notesHistory));
-                renderSidebarList();
+                renderSidebarList(noteSearchInput.value);
             } else {
                 alert("No previous notes found in history.");
             }
@@ -1612,7 +1704,6 @@
             }
         };
 
-        // Initialize sidebar list on load
         renderSidebarList();
     </script>
 </body>

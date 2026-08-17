@@ -63,16 +63,16 @@
             position: relative;
         }
 
-        /* Ambient Glow Behind Video Player */
+        /* Dynamic Frame-Reactive Ambient Glow */
         .ambient-glow {
             position: absolute;
-            inset: -4px;
-            background: linear-gradient(45deg, var(--accent), transparent, var(--accent-hover));
-            border-radius: calc(var(--radius) + 4px);
-            filter: blur(16px);
-            opacity: 0.35;
+            inset: -8px;
+            background: var(--accent);
+            border-radius: calc(var(--radius) + 6px);
+            filter: blur(24px);
+            opacity: 0.4;
             z-index: -1;
-            transition: opacity 0.5s ease;
+            transition: background 0.5s ease, opacity 0.5s ease;
             pointer-events: none;
         }
 
@@ -306,7 +306,7 @@
         }
 
         body.fullscreen-mode .ambient-glow {
-            opacity: 0.15; /* subtle ambient glow during fullscreen */
+            opacity: 0.25;
         }
 
         /* Smaller Hover Overlay Menu on the Right in Fullscreen */
@@ -359,9 +359,9 @@
     <div class="dashboard">
         <!-- Left Column: Player -->
         <div class="player-column" id="playerColumn">
-            <div class="ambient-glow"></div>
+            <div class="ambient-glow" id="ambientGlow"></div>
             <div class="player-wrapper" id="playerWrapper">
-                <video id="mainVideoPlayer" controls playsinline></video>
+                <video id="mainVideoPlayer" crossorigin="anonymous" controls playsinline></video>
                 <div class="video-info">
                     <div class="video-title" id="currentVideoTitle">No video</div>
                     <button class="fullscreen-btn" id="expandBtn">Expand</button>
@@ -408,6 +408,9 @@
         </div>
     </div>
 
+    <!-- Hidden canvas for sampling video frame colors -->
+    <canvas id="colorSamplerCanvas" style="display:none;" width="30" height="30"></canvas>
+
     <script>
         const videoPlayer = document.getElementById('mainVideoPlayer');
         const videoTitle = document.getElementById('currentVideoTitle');
@@ -418,10 +421,14 @@
         const langSelect = document.getElementById('langSelect');
         const expandBtn = document.getElementById('expandBtn');
         const minimizeBtn = document.getElementById('minimizeBtn');
+        const ambientGlow = document.getElementById('ambientGlow');
+        const colorCanvas = document.getElementById('colorSamplerCanvas');
+        const ctx = colorCanvas.getContext('2d');
         const htmlElement = document.documentElement;
 
         let activeSourceType = 'none';
         let mouseTimer = null;
+        let sampleInterval = null;
 
         const translations = {
             en: { title: "Player", desc: "Paste direct video link or pick a local device file.", load: "Load", file: "Choose Local File", none: "No video", custom: "Stream", expand: "Expand" },
@@ -488,6 +495,43 @@
                 document.body.classList.remove('show-controls');
             }, 2000);
         });
+
+        // Sample dominant color from video frame periodically while playing
+        function startColorSampling() {
+            if (sampleInterval) clearInterval(sampleInterval);
+            sampleInterval = setInterval(() => {
+                if (videoPlayer.paused || videoPlayer.ended) return;
+                try {
+                    ctx.drawImage(videoPlayer, 0, 0, 30, 30);
+                    const frameData = ctx.getImageData(0, 0, 30, 30).data;
+                    let r = 0, g = 0, b = 0, count = 0;
+                    
+                    // Sample every 4th pixel for performance
+                    for (let i = 0; i < frameData.length; i += 16) {
+                        r += frameData[i];
+                        g += frameData[i+1];
+                        b += frameData[i+2];
+                        count++;
+                    }
+                    
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+
+                    ambientGlow.style.background = `rgb(${r}, ${g}, ${b})`;
+                } catch (e) {
+                    // Handles CORS restrictions if cross-origin video is loaded without proper headers
+                }
+            }, 400);
+        }
+
+        videoPlayer.onplay = () => {
+            startColorSampling();
+        };
+
+        videoPlayer.onpause = () => {
+            if (sampleInterval) clearInterval(sampleInterval);
+        };
 
         loadUrlBtn.onclick = () => {
             const url = videoUrlInput.value.trim();

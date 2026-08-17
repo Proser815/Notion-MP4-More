@@ -60,6 +60,20 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            position: relative;
+        }
+
+        /* Ambient Glow Behind Video Player */
+        .ambient-glow {
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(45deg, var(--accent), transparent, var(--accent-hover));
+            border-radius: calc(var(--radius) + 4px);
+            filter: blur(16px);
+            opacity: 0.35;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
         }
 
         .controls-column {
@@ -291,6 +305,10 @@
             background: #000;
         }
 
+        body.fullscreen-mode .ambient-glow {
+            opacity: 0.15; /* subtle ambient glow during fullscreen */
+        }
+
         /* Smaller Hover Overlay Menu on the Right in Fullscreen */
         body.fullscreen-mode .controls-column {
             position: fixed;
@@ -341,6 +359,7 @@
     <div class="dashboard">
         <!-- Left Column: Player -->
         <div class="player-column" id="playerColumn">
+            <div class="ambient-glow"></div>
             <div class="player-wrapper" id="playerWrapper">
                 <video id="mainVideoPlayer" controls playsinline></video>
                 <div class="video-info">

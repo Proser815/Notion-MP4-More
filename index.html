@@ -124,7 +124,7 @@
         }
 
         /* Glass Surface Apply Dynamic Blur & Smooth Transitions */
-        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, input[type="text"], .extra-tool-btn {
+        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, input[type="text"] {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
@@ -202,7 +202,7 @@
             align-items: center;
         }
 
-        select, .theme-btn, .cinematic-btn, .glass-toggle-btn {
+        select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-main);
@@ -214,15 +214,26 @@
             outline: none;
         }
 
-        select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover {
+        select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover, .loop-badge-btn:hover {
             background: var(--bg-hover);
             transform: scale(1.02);
         }
 
-        .cinematic-btn.active, .glass-toggle-btn.active {
+        .cinematic-btn.active, .glass-toggle-btn.active, .loop-badge-btn.active {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
+        }
+
+        /* Tiny loop badge button in header */
+        .loop-badge-btn {
+            padding: 3px 6px;
+            font-size: 8px;
+            border-radius: 8px;
+            color: var(--text-muted);
+        }
+        .loop-badge-btn.active {
+            color: #fff;
         }
 
         /* Glass settings popover drawer */
@@ -245,7 +256,7 @@
         }
 
         .glass-settings-panel.open {
-            max-height: 260px;
+            max-height: 220px;
             opacity: 1;
             padding: 8px;
             margin-bottom: 2px;
@@ -296,37 +307,6 @@
         .color-dot.active {
             transform: scale(1.25);
             box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--accent);
-        }
-
-        /* Extra Tools Row (Loop & Boost inside settings) */
-        .settings-extra-row {
-            display: flex;
-            gap: 4px;
-            padding-top: 2px;
-        }
-
-        .extra-tool-btn {
-            flex: 1;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 4px 6px;
-            border-radius: 8px;
-            font-size: 9px;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .extra-tool-btn:hover {
-            background: var(--bg-hover);
-            color: var(--text-main);
-        }
-
-        .extra-tool-btn.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
         }
 
         .info-bar {
@@ -577,6 +557,7 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
+                    <button class="loop-badge-btn" id="loopBadgeBtn" title="Toggle Loop">🔁 Loop</button>
                     <button class="glass-toggle-btn" id="glassToggleBtn" title="Glass Settings">🪟</button>
                     <button class="cinematic-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
                     <select id="langSelect" aria-label="Language">
@@ -594,7 +575,7 @@
                 </div>
             </div>
 
-            <!-- Glass, Glow, Color Scheme & Loop/Boost Customizer Panel -->
+            <!-- Glass, Glow & Color Scheme Customizer Panel -->
             <div class="glass-settings-panel" id="glassSettingsPanel">
                 <div class="slider-row">
                     <label>Blur Intensity <span id="blurVal">16px</span></label>
@@ -607,10 +588,6 @@
                 <div class="slider-row">
                     <label>Ambient Glow <span id="glowVal">15%</span></label>
                     <input type="range" id="glowRange" min="0" max="100" value="15">
-                </div>
-                <div class="settings-extra-row">
-                    <button class="extra-tool-btn" id="loopToggleBtn">🔁 Loop: Off</button>
-                    <button class="extra-tool-btn" id="boostToggleBtn">🔊 Boost: Off</button>
                 </div>
                 <div class="color-picker-row" id="colorPickerRow">
                     <div class="color-dot active" data-color="amber" style="background: #e5b83b;" title="Amber"></div>
@@ -653,6 +630,7 @@
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const cinematicToggleBtn = document.getElementById('cinematicToggleBtn');
         const glassToggleBtn = document.getElementById('glassToggleBtn');
+        const loopBadgeBtn = document.getElementById('loopBadgeBtn');
         const glassSettingsPanel = document.getElementById('glassSettingsPanel');
         const blurRange = document.getElementById('blurRange');
         const opacityRange = document.getElementById('opacityRange');
@@ -669,18 +647,10 @@
         const ctx = colorCanvas.getContext('2d');
         const htmlElement = document.documentElement;
 
-        const loopToggleBtn = document.getElementById('loopToggleBtn');
-        const boostToggleBtn = document.getElementById('boostToggleBtn');
-
         let activeSourceType = 'none';
         let mouseTimer = null;
         let sampleInterval = null;
         let hasTriggeredConfetti = false;
-        let audioCtx = null;
-        let analyser = null;
-        let sourceNode = null;
-        let gainNode = null;
-        let isAudioSetup = false;
 
         const translations = {
             en: { title: "Player", desc: "Paste direct video link or pick a local device file.", load: "Load", file: "Choose Local File", none: "No video", custom: "Stream", expand: "Expand" },
@@ -722,6 +692,16 @@
             glassToggleBtn.classList.toggle('active');
         };
 
+        // Tiny Header Loop Button Handler
+        loopBadgeBtn.onclick = () => {
+            videoPlayer.loop = !videoPlayer.loop;
+            if (videoPlayer.loop) {
+                loopBadgeBtn.classList.add('active');
+            } else {
+                loopBadgeBtn.classList.remove('active');
+            }
+        };
+
         blurRange.oninput = (e) => {
             const val = e.target.value + 'px';
             htmlElement.style.setProperty('--glass-blur', val);
@@ -749,34 +729,6 @@
                 document.body.setAttribute('data-color', dot.getAttribute('data-color'));
             };
         });
-
-        // Loop Toggle Feature (inside settings drawer)
-        loopToggleBtn.onclick = () => {
-            videoPlayer.loop = !videoPlayer.loop;
-            if (videoPlayer.loop) {
-                loopToggleBtn.classList.add('active');
-                loopToggleBtn.textContent = "🔁 Loop: On";
-            } else {
-                loopToggleBtn.classList.remove('active');
-                loopToggleBtn.textContent = "🔁 Loop: Off";
-            }
-        };
-
-        // Volume Boost Toggle Feature (inside settings drawer)
-        boostToggleBtn.onclick = () => {
-            setupAudioContext();
-            if (gainNode) {
-                if (gainNode.gain.value === 1.0) {
-                    gainNode.gain.value = 2.5; // Boost volume 2.5x
-                    boostToggleBtn.classList.add('active');
-                    boostToggleBtn.textContent = "🔊 Boost: 2.5x";
-                } else {
-                    gainNode.gain.value = 1.0;
-                    boostToggleBtn.classList.remove('active');
-                    boostToggleBtn.textContent = "🔊 Boost: Off";
-                }
-            }
-        };
 
         const toggleFullscreen = () => {
             document.body.classList.toggle('fullscreen-mode');
@@ -814,27 +766,6 @@
             }, 2000);
         });
 
-        // Setup Web Audio API for Volume Boost
-        function setupAudioContext() {
-            if (isAudioSetup) return;
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioCtx.createAnalyser();
-                
-                sourceNode = audioCtx.createMediaElementSource(videoPlayer);
-                gainNode = audioCtx.createGain();
-                gainNode.gain.value = 1.0;
-
-                sourceNode.connect(gainNode);
-                gainNode.connect(analyser);
-                analyser.connect(audioCtx.destination);
-                
-                isAudioSetup = true;
-            } catch (e) {
-                // AudioContext fallback for restricted cross-origin policies
-            }
-        }
-
         // Sample dominant color with minimal footprint
         function startColorSampling() {
             if (sampleInterval) clearInterval(sampleInterval);
@@ -865,10 +796,6 @@
 
         videoPlayer.onplay = () => {
             hasTriggeredConfetti = false;
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            setupAudioContext();
             startColorSampling();
         };
 

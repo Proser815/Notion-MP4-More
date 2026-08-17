@@ -122,10 +122,10 @@
             transition: background-color 0.5s ease;
         }
 
-        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box, .notes-sidebar {
+        .control-card, .info-bar, .player-wrapper, .controls-column, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box, .notes-sidebar, .custom-select-trigger, .custom-select-options {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
         }
 
         body.cinematic-mode .controls-column {
@@ -215,8 +215,8 @@
         }
 
         .icon-top-btn svg {
-            width: 13px;
-            height: 13px;
+            width: 12px;
+            height: 12px;
             stroke: currentColor;
             stroke-width: 2;
             fill: none;
@@ -243,12 +243,109 @@
             flex-wrap: nowrap;
         }
 
-        select, .theme-btn {
+        /* --- Custom Animated Language Dropdown --- */
+        .custom-select-wrapper {
+            position: relative;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .custom-select-trigger {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-main);
             height: 24px;
-            padding: 0 5px;
+            padding: 0 6px;
+            border-radius: 7px;
+            font-size: 9px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .custom-select-trigger:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            transform: translateY(-0.5px);
+        }
+
+        .custom-select-trigger svg {
+            width: 8px;
+            height: 8px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .custom-select-wrapper.open .custom-select-trigger svg {
+            transform: rotate(180deg);
+        }
+
+        .custom-select-options {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 9px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            padding: 3px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 1000;
+            min-width: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px) scale(0.94);
+            transform-origin: top right;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.25s ease;
+        }
+
+        .custom-select-wrapper.open .custom-select-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .custom-option {
+            padding: 4px 8px;
+            font-size: 9px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .custom-option:hover {
+            background: var(--bg-hover);
+            color: var(--accent);
+        }
+
+        .custom-option.selected {
+            background: var(--accent);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .theme-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            height: 24px;
+            padding: 0 6px;
             border-radius: 7px;
             font-size: 9px;
             font-weight: 500;
@@ -258,7 +355,7 @@
             flex-shrink: 0;
         }
 
-        select:hover, .theme-btn:hover {
+        .theme-btn:hover {
             background: var(--bg-hover);
             border-color: var(--accent);
             transform: scale(1.02);
@@ -677,7 +774,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 16px;
-            width: 360px;
+            width: 340px;
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -821,41 +918,44 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
-                    <!-- Standardized Intuitive SVG Icons -->
+                    <!-- Improved & Intuitive SVG Icons -->
                     <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">
-                        <!-- Keyboard / Command Icon -->
-                        <svg viewBox="0 0 24 24"><path d="M18 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3z"/><path d="M7 8h.01M12 8h.01M17 8h.01M7 12h.01M12 12h.01M17 12h.01M8 16h8"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
                     </button>
                     <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">
-                        <!-- Repeat Arrows Icon -->
                         <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
                     </button>
-                    <button class="icon-top-btn" id="glassToggleBtn" title="Glass Settings">
-                        <!-- Sliders Customizer Icon -->
-                        <svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                    <button class="icon-top-btn" id="glassToggleBtn" title="Glass & Color Customizer">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
                     </button>
-                    <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater Mode">
-                        <!-- Clapperboard / Movie Icon -->
-                        <svg viewBox="0 0 24 24"><path d="M4 11h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8z"/><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3H4V6z"/><path d="M9 4v5M15 4v5"/></svg>
+                    <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater / Focused Mode">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                     </button>
-                    <button class="icon-top-btn" id="instructionHelpBtn" title="Help Guide">
-                        <!-- Information Circle Icon -->
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <button class="icon-top-btn" id="instructionHelpBtn" title="How to use & User Guide">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                     </button>
-                    <select id="langSelect" aria-label="Language">
-                        <option value="en">EN</option>
-                        <option value="zh">中</option>
-                        <option value="ja">日</option>
-                        <option value="de">DE</option>
-                        <option value="ko">한</option>
-                        <option value="fr">FR</option>
-                        <option value="it">IT</option>
-                        <option value="fa">فا</option>
-                    </select>
+                    
+                    <!-- Smooth Animated Custom Language Dropdown -->
+                    <div class="custom-select-wrapper" id="langSelectWrapper">
+                        <div class="custom-select-trigger" id="langSelectTrigger">
+                            <span id="currentLangLabel">EN</span>
+                            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                        </div>
+                        <div class="custom-select-options">
+                            <div class="custom-option selected" data-value="en">EN</div>
+                            <div class="custom-option" data-value="zh">中</div>
+                            <div class="custom-option" data-value="ja">日</div>
+                            <div class="custom-option" data-value="de">DE</div>
+                            <div class="custom-option" data-value="ko">한</div>
+                            <div class="custom-option" data-value="fr">FR</div>
+                            <div class="custom-option" data-value="it">IT</div>
+                            <div class="custom-option" data-value="fa">فا</div>
+                        </div>
+                    </div>
+
                     <button class="theme-btn" id="themeToggleBtn">Theme</button>
-                    <button class="icon-top-btn" id="minimizeBtn" title="Close">
-                        <!-- Close X Icon -->
-                        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <button class="icon-top-btn" id="minimizeBtn" title="Close / Exit Fullscreen">
+                        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
                     </button>
                 </div>
             </div>
@@ -903,7 +1003,7 @@
                 </div>
             </div>
 
-            <!-- Notes / Scratchpad Panel with Minimalist Logo -->
+            <!-- Notes & Scratchpad Panel -->
             <div class="notes-sidebar-container">
                 <div class="notes-card">
                     <div class="notes-header">
@@ -931,20 +1031,22 @@
                     </div>
                 </div>
 
-                <!-- Saved Notes Sidebar Drawer -->
+                <!-- Saved Notes Drawer Sidebar -->
                 <div class="notes-sidebar" id="notesSidebar">
                     <div class="notes-sidebar-header">
                         <span id="lblRecentNotes">Saved Notes</span>
                         <button class="fullscreen-btn" id="closeSidebarBtn" style="font-weight: 600; padding: 0 2px;">✕</button>
                     </div>
                     <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search saved notes..." />
-                    <div class="notes-sidebar-list" id="notesSidebarList"></div>
+                    <div class="notes-sidebar-list" id="notesSidebarList">
+                        <!-- Populated dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Keyboard Shortcut Guide Modal Overlay -->
+    <!-- Keyboard Shortcuts Modal -->
     <div class="shortcut-modal" id="shortcutModal">
         <div class="shortcut-box">
             <div class="shortcut-header">
@@ -963,15 +1065,17 @@
         </div>
     </div>
 
-    <!-- Detailed Instructions Modal Overlay -->
+    <!-- Detailed Instruction / Help Modal -->
     <div class="shortcut-modal" id="instructionModal">
         <div class="shortcut-box">
             <div class="shortcut-header">
-                <span id="instrModalTitle">Player Instructions</span>
+                <span id="instrModalTitle">User Instructions</span>
                 <button class="fullscreen-btn" id="closeInstructionModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
             </div>
             <div class="shortcut-list">
-                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.45; flex-direction: column; align-items: flex-start; gap: 8px;" id="instrModalText"></div>
+                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.45; flex-direction: column; align-items: flex-start; gap: 10px;" id="instrModalText">
+                    <!-- Populated dynamically -->
+                </div>
             </div>
         </div>
     </div>
@@ -1005,7 +1109,6 @@
         const blurVal = document.getElementById('blurVal');
         const opacityVal = document.getElementById('opacityVal');
         const glowVal = document.getElementById('glowVal');
-        const langSelect = document.getElementById('langSelect');
         const expandBtn = document.getElementById('expandBtn');
         const minimizeBtn = document.getElementById('minimizeBtn');
         const ambientGlow = document.getElementById('ambientGlow');
@@ -1050,11 +1153,38 @@
         let mouseTimer = null;
         let sampleInterval = null;
         let hasTriggeredConfetti = false;
-        
+        let selectedLang = 'en';
+
         let savedNotesList = JSON.parse(localStorage.getItem('player_saved_notes_list') || '[]');
         let activeNoteIndex = null;
 
-        // Accurate and natural multi-language definitions
+        // Animated Dropdown logic
+        const langSelectWrapper = document.getElementById('langSelectWrapper');
+        const langSelectTrigger = document.getElementById('langSelectTrigger');
+        const currentLangLabel = document.getElementById('currentLangLabel');
+        const customOptions = document.querySelectorAll('.custom-option');
+
+        langSelectTrigger.onclick = (e) => {
+            e.stopPropagation();
+            langSelectWrapper.classList.toggle('open');
+        };
+
+        document.addEventListener('click', () => {
+            langSelectWrapper.classList.remove('open');
+        });
+
+        customOptions.forEach(opt => {
+            opt.onclick = (e) => {
+                e.stopPropagation();
+                customOptions.forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                selectedLang = opt.getAttribute('data-value');
+                currentLangLabel.textContent = opt.textContent;
+                langSelectWrapper.classList.remove('open');
+                updateUI();
+            };
+        });
+
         const translations = {
             en: { 
                 title: "Player", 
@@ -1062,90 +1192,90 @@
                 file: "Choose Local File", 
                 urlPlaceholder: "URL (.mp4/.webm)...",
                 none: "No video loaded", 
-                custom: "Direct Stream", 
-                expand: "Fullscreen",
+                custom: "Network Stream", 
+                expand: "Expand",
                 theme: "Theme",
                 blur: "Blur Intensity",
                 opacity: "Glass Opacity",
                 glow: "Ambient Glow",
-                scratchpad: "Notes & Scratchpad",
+                scratchpad: "Scratchpad Notes",
                 recentNotes: "Saved Notes",
-                placeholderNotes: "Type notes or press '+ Time' to insert timestamps...",
+                placeholderNotes: "Jot down notes or timestamps...",
                 timeBtn: "+ Time",
                 recentBtn: "Saved Notes",
                 saveBtn: "Save",
-                clear: "Clear Text",
-                deleteNoteBtn: "Delete Selected",
-                download: "Export .txt",
+                clear: "Clear Editor",
+                deleteNoteBtn: "Delete Saved Note",
+                download: "Download .txt",
                 searchPlaceholder: "Search saved notes...",
                 setA: "Set A: --",
                 setB: "Set B: --",
-                clearAB: "Clear Loop",
-                noSavedNotes: "No saved notes yet",
-                noMatchingNotes: "No matching notes found",
+                clearAB: "Clear AB",
+                noSavedNotes: "No saved notes",
+                noMatchingNotes: "No matching notes",
                 savedAlert: "Note saved successfully!",
-                noNoteLoadedAlert: "No saved note is selected. Load one from the list to delete.",
-                confirmDelete: "Permanently delete this saved note?",
-                shortcutsTitle: "Keyboard Shortcuts",
+                noNoteLoadedAlert: "No saved note is currently selected. Please load one from Saved Notes first.",
+                confirmDelete: "Are you sure you want to permanently delete this saved note?",
+                shortcutsTitle: "Keyboard Shortcuts Guide",
                 scPlay: "Play / Pause",
                 scBack: "Skip Backward 5s",
                 scForward: "Skip Forward 5s",
                 scVol: "Volume Up / Down",
-                scFull: "Toggle Fullscreen",
-                scLoop: "Toggle Whole Video Loop",
-                scHelp: "Shortcut Guide",
-                instrTitle: "Comprehensive User Guide",
+                scFull: "Fullscreen Toggle",
+                scLoop: "Toggle Loop",
+                scHelp: "Shortcut Help",
+                instrTitle: "User Instructions & Feature Guide",
                 instrText: `
-                    <div><b>1. Media Playback</b><br>• <i>Network URL:</i> Paste a direct video link (.mp4/.webm) and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to pick a video from your device.</div>
-                    <div><b>2. A-B Loop Repeat</b><br>• Play your video, then click <b>Set A</b> to mark the starting boundary.<br>• Click <b>Set B</b> to mark the ending boundary.<br>• The video will continuously loop within segment A-B.<br>• Click <b>Clear Loop</b> to restore normal playback.</div>
-                    <div><b>3. Notes, Timestamps & Search</b><br>• Click <b>+ Time</b> to instantly insert the current timestamp into your text.<br>• Click <b>Save</b> to store notes in local browser memory.<br>• Open <b>Saved Notes</b> to filter, search, load, or delete saved records.</div>
-                    <div><b>4. Visual & Interface Customization</b><br>• Click the <b>Sliders Icon</b> to open settings for background blur, glass opacity, ambient glow intensity, and accent color themes.<br>• Click the <b>Clapperboard Icon</b> to activate Theater Mode, dimming surrounding controls.</div>
+                    <div><b>1. Video Playback Options</b><br>• <i>Network Stream:</i> Paste a direct video URL (.mp4, .webm) into the input box and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to select media from your device.</div>
+                    <div><b>2. A-B Segment Looping</b><br>• Click <b>Set A</b> to set the start timestamp for loop practice.<br>• Click <b>Set B</b> to set the ending point.<br>• Click <b>Clear AB</b> to reset and return to normal playback.</div>
+                    <div><b>3. Scratchpad & Timestamping</b><br>• Click <b>+ Time</b> to instantly insert the video's current position.<br>• Click <b>Save</b> to store notes locally.<br>• Use <b>Saved Notes</b> to browse, search, edit, or delete notes.</div>
+                    <div><b>4. Visual Customization</b><br>• Click the <b>Drop Icon</b> to tweak glass blur, transparency, and background colors.</div>
                 `
             },
             zh: { 
                 title: "播放器", 
                 load: "加载", 
-                file: "选择本地文件", 
+                file: "选择本地视频文件", 
                 urlPlaceholder: "输入视频网址 (.mp4/.webm)...",
-                none: "未加载视频", 
+                none: "未加载任何视频", 
                 custom: "网络视频流", 
-                expand: "全屏",
-                theme: "主题",
-                blur: "模糊强度",
+                expand: "全屏模式",
+                theme: "主题配色",
+                blur: "毛玻璃模糊度",
                 opacity: "玻璃不透明度",
-                glow: "环境光 glow",
-                scratchpad: "笔记与草稿",
-                recentNotes: "已存笔记",
-                placeholderNotes: "在此记录笔记或点击“+ 时间”插入时间戳...",
-                timeBtn: "+ 时间",
+                glow: "环境光晕亮度",
+                scratchpad: "随手记事本",
+                recentNotes: "已存笔记列表",
+                placeholderNotes: "在此记录笔记或按键添加时间戳...",
+                timeBtn: "+ 时间戳",
                 recentBtn: "已存笔记",
-                saveBtn: "保存",
-                clear: "清空内容",
-                deleteNoteBtn: "删除当前笔记",
+                saveBtn: "保存笔记",
+                clear: "清空编辑器",
+                deleteNoteBtn: "删除已存笔记",
                 download: "导出 .txt",
                 searchPlaceholder: "搜索已存笔记...",
-                setA: "设置 A点: --",
-                setB: "设置 B点: --",
-                clearAB: "清除 A-B",
+                setA: "起点 A: --",
+                setB: "终点 B: --",
+                clearAB: "清除 AB 循环",
                 noSavedNotes: "暂无保存的笔记",
-                noMatchingNotes: "未找到相关笔记",
-                savedAlert: "笔记保存成功！",
-                noNoteLoadedAlert: "当前未选中任何已存笔记。请先加载一条笔记再进行删除。",
-                confirmDelete: "确定要永久删除此条笔记吗？",
-                shortcutsTitle: "键盘快捷键",
+                noMatchingNotes: "未找到匹配笔记",
+                savedAlert: "笔记已成功保存！",
+                noNoteLoadedAlert: "当前未选中任何已存笔记。请先从列表中加载笔记后再行删除。",
+                confirmDelete: "确定要永久删除此条已存笔记吗？",
+                shortcutsTitle: "键盘快捷键指南",
                 scPlay: "播放 / 暂停",
                 scBack: "快退 5 秒",
                 scForward: "快进 5 秒",
-                scVol: "音量 调高 / 调低",
-                scFull: "切换全屏",
-                scLoop: "切换单曲/全片循环",
-                scHelp: "快捷键指南",
-                instrTitle: "详细使用指南",
+                scVol: "音量 增大 / 减小",
+                scFull: "切换全屏模式",
+                scLoop: "切换单曲循环",
+                scHelp: "快捷键帮助",
+                instrTitle: "使用指南与功能说明",
                 instrText: `
-                    <div><b>1. 视频播放</b><br>• <i>网络链接:</i> 粘贴直链 (.mp4/.webm) 后点击 <b>加载</b>。<br>• <i>本地文件:</i> 点击 <b>选择本地文件</b> 导入视频。</div>
-                    <div><b>2. A-B 片段反复循环</b><br>• 在视频播放到所需起点时点击 <b>设置 A点</b>。<br>• 在所需终点点击 <b>设置 B点</b>。<br>• 播放器将在 A 与 B 之间自动反复循环。<br>• 点击 <b>清除 A-B</b> 可恢复正常播放。</div>
-                    <div><b>3. 笔记、时间戳与搜索</b><br>• 点击 <b>+ 时间</b> 可将当前播放进度快速插入到编辑器中。<br>• 点击 <b>保存</b> 可将笔记存入本地浏览器。<br>• 点击 <b>已存笔记</b> 可展开侧边栏进行实时搜索、加载或删除历史记录。</div>
-                    <div><b>4. 界面与视觉自定义</b><br>• 点击 <b>滑块图标</b> 可自定义毛玻璃模糊度、透明度、背景光晕及色彩主题。<br>• 点击 <b>场记板图标</b> 可开启影院模式，聚焦视频内容。</div>
+                    <div><b>1. 视频加载与播放</b><br>• <i>网络视频:</i> 粘贴视频URL后点击<b>加载</b>。<br>• <i>本地文件:</i> 点击<b>选择本地视频文件</b>导入设备上的视频。</div>
+                    <div><b>2. A-B 片段循环复读</b><br>• 点击 <b>起点 A</b> 标记开始时间。<br>• 点击 <b>终点 B</b> 标记结束时间，视频将在该区间自动循环。<br>• 点击 <b>清除 AB</b> 恢复正常播放。</div>
+                    <div><b>3. 笔记与时间戳系统</b><br>• 点击 <b>+ 时间戳</b> 可自动插入当前播放进度。<br>• 点击 <b>保存笔记</b> 即可持久化存储。<br>• 点击 <b>已存笔记</b> 打开侧边栏，支持实时搜索与历史管理。</div>
+                    <div><b>4. 外观个性化定制</b><br>• 点击顶部<b>水滴图标</b>可自由调整玻璃模糊、透明度及主题色彩。</div>
                 `
             },
             ja: { 
@@ -1153,45 +1283,45 @@
                 load: "読み込み", 
                 file: "ローカルファイルを選択", 
                 urlPlaceholder: "動画URL (.mp4/.webm)...",
-                none: "動画未選択", 
-                custom: "ストリーム", 
-                expand: "全画面",
+                none: "動画が読み込まれていません", 
+                custom: "ネットワークストリーム", 
+                expand: "全画面表示",
                 theme: "テーマ",
                 blur: "ぼかし強度",
-                opacity: "ガラス透明度",
-                glow: "アンビエント発光",
+                opacity: "不透明度",
+                glow: "アンビエント光",
                 scratchpad: "メモ帳",
                 recentNotes: "保存済みメモ",
-                placeholderNotes: "メモを入力するか「+ 時間」でタイムスタンプを挿入...",
+                placeholderNotes: "メモやタイムスタンプを入力...",
                 timeBtn: "+ 時間",
                 recentBtn: "保存済みメモ",
                 saveBtn: "保存",
-                clear: "クリア",
-                deleteNoteBtn: "選択メモを削除",
+                clear: "エディタを清掃",
+                deleteNoteBtn: "メモを削除",
                 download: ".txt 出力",
-                searchPlaceholder: "メモを検索...",
-                setA: "A地点: --",
-                setB: "B地点: --",
-                clearAB: "AB解除",
+                searchPlaceholder: "保存済みメモを検索...",
+                setA: "開始 A: --",
+                setB: "終了 B: --",
+                clearAB: "AB リセット",
                 noSavedNotes: "保存されたメモはありません",
-                noMatchingNotes: "一致するメモがありません",
-                savedAlert: "メモを保存しました！",
-                noNoteLoadedAlert: "メモが選択されていません。リストからメモを選択して削除してください。",
-                confirmDelete: "このメモを削除してもよろしいですか？",
-                shortcutsTitle: "キーボードショートカット",
+                noMatchingNotes: "該当するメモがありません",
+                savedAlert: "メモを正常に保存しました！",
+                noNoteLoadedAlert: "現在選択されているメモがありません。先に一覧から読み込んでください。",
+                confirmDelete: "このメモを永久に削除してもよろしいですか？",
+                shortcutsTitle: "キーボードショートカットガイド",
                 scPlay: "再生 / 一時停止",
                 scBack: "5秒巻き戻し",
                 scForward: "5秒早送り",
-                scVol: "音量 調整",
+                scVol: "音量 上 / 下",
                 scFull: "全画面表示切り替え",
                 scLoop: "ループ切り替え",
-                scHelp: "ショートカット案内",
-                instrTitle: "詳細利用ガイド",
+                scHelp: "ヘルプ",
+                instrTitle: "取扱説明書＆機能ガイド",
                 instrText: `
-                    <div><b>1. 動画の再生</b><br>• <i>URL:</i> 直リンク (.mp4/.webm) を貼り付けて <b>読み込み</b> をクリック。<br>• <i>ローカル:</i> <b>ローカルファイルを選択</b> から動画を選択。</div>
-                    <div><b>2. A-B 区間リピート</b><br>• 開始位置で <b>A地点</b> をクリック。<br>• 終了位置で <b>B地点</b> をクリック。<br>• 指定した A-B 区間を自動で繰り返し再生します。<br>• <b>AB解除</b> で通常の再生に戻ります。</div>
-                    <div><b>3. メモ・タイムスタンプ・検索</b><br>• <b>+ 時間</b> をクリックすると、再生中のタイムスタンプが入力されます。<br>• <b>保存</b> でブラウザ内にメモを保存。<br>• <b>保存済みメモ</b> を開くと、検索や履歴の読み込み・削除が行えます。</div>
-                    <div><b>4. デザインのカスタマイズ</b><br>• <b>スライダーアイコン</b> から、ガラスぼかし、不透明度、グラデーションカラーを変更可能。<br>• <b>映画アイコン</b> でシアターモード（操作画面の減光）を切り替えられます。</div>
+                    <div><b>1. 動画の再生方法</b><br>• <i>URL再生:</i> リンクを貼り付けて <b>読み込み</b> をクリック。<br>• <i>ローカル再生:</i> <b>ファイルを選択</b> で端末内の動画を選択。</div>
+                    <div><b>2. A-B 区間リピート</b><br>• <b>開始 A</b> でリピート開始点を設定。<br>• <b>終了 B</b> で終了点を設定（自動ループ）。<br>• <b>AB リセット</b> で通常再生に戻ります。</div>
+                    <div><b>3. メモ＆タイムスタンプ機能</b><br>• <b>+ 時間</b> をクリックすると現在の再生時間を自動挿入。<br>• <b>保存</b> でメモをブラウザに保存。<br>• <b>保存済みメモ</b> から検索・読込・削除が可能です。</div>
+                    <div><b>4. カスタマイズ</b><br>• 上部の<b>ドロップアイコン</b>で背景の透過率やカラーを調整できます。</div>
                 `
             },
             de: { 
@@ -1200,235 +1330,234 @@
                 file: "Lokale Datei wählen", 
                 urlPlaceholder: "Video-URL (.mp4/.webm)...",
                 none: "Kein Video geladen", 
-                custom: "Direkter Stream", 
+                custom: "Netzwerk-Stream", 
                 expand: "Vollbild",
-                theme: "Design",
+                theme: "Thema",
                 blur: "Unschärfe",
-                opacity: "Glas-Deckkraft",
+                opacity: "Opazität",
                 glow: "Umgebungslicht",
-                scratchpad: "Notizen & Entwürfe",
+                scratchpad: "Notizblock",
                 recentNotes: "Gespeicherte Notizen",
-                placeholderNotes: "Notizen eingeben oder '+ Zeit' für Zeitstempel drücken...",
+                placeholderNotes: "Notizen oder Zeitstempel eingeben...",
                 timeBtn: "+ Zeit",
                 recentBtn: "Gespeichert",
                 saveBtn: "Speichern",
-                clear: "Text löschen",
-                deleteNoteBtn: "Eintrag löschen",
-                download: ".txt Exportieren",
-                searchPlaceholder: "Notizen durchsuchen...",
-                setA: "Punkt A: --",
-                setB: "Punkt B: --",
-                clearAB: "Schleife löschen",
-                noSavedNotes: "Noch keine Notizen gespeichert",
-                noMatchingNotes: "Keine passenden Notizen gefunden",
+                clear: "Editor leeren",
+                deleteNoteBtn: "Notiz löschen",
+                download: ".txt herunterladen",
+                searchPlaceholder: "Notizen suchen...",
+                setA: "Start A: --",
+                setB: "Ende B: --",
+                clearAB: "AB zurücksetzen",
+                noSavedNotes: "Keine gespeicherten Notizen",
+                noMatchingNotes: "Keine passenden Notizen",
                 savedAlert: "Notiz erfolgreich gespeichert!",
-                noNoteLoadedAlert: "Keine Notiz ausgewählt. Bitte laden Sie eine Notiz aus der Liste zum Löschen.",
-                confirmDelete: "Diese Notiz dauerhaft löschen?",
-                shortcutsTitle: "Tastenkombinationen",
+                noNoteLoadedAlert: "Keine gespeicherte Notiz ausgewählt. Bitte zuerst eine laden.",
+                confirmDelete: "Möchten Sie diese Notiz wirklich dauerhaft löschen?",
+                shortcutsTitle: "Tastenkombinationen-Anleitung",
                 scPlay: "Wiedergabe / Pause",
-                scBack: "5s zurückspringen",
-                scForward: "5s vorspringen",
+                scBack: "5s zurück",
+                scForward: "5s vor",
                 scVol: "Lautstärke +/-",
                 scFull: "Vollbild umschalten",
-                scLoop: "Video-Schleife umschalten",
-                scHelp: "Hilfe-Menü",
-                instrTitle: "Ausführliche Anleitung",
+                scLoop: "Schleife umschalten",
+                scHelp: "Hilfe",
+                instrTitle: "Benutzerhandbuch & Funktionen",
                 instrText: `
-                    <div><b>1. Medienwiedergabe</b><br>• <i>Internet-URL:</i> Füge einen Link (.mp4/.webm) ein und klicke auf <b>Laden</b>.<br>• <i>Lokale Datei:</i> Klicke auf <b>Lokale Datei wählen</b>.</div>
-                    <div><b>2. A-B Wiederholschleife</b><br>• Klicke bei der Startposition auf <b>Punkt A</b>.<br>• Klicke bei der Endposition auf <b>Punkt B</b>.<br>• Das Video wird kontinuierlich im Abschnitt A-B wiederholt.<br>• Klicke auf <b>Schleife löschen</b>, um die normale Wiedergabe fortzusetzen.</div>
-                    <div><b>3. Notizen, Zeitstempel & Suche</b><br>• Klicke auf <b>+ Zeit</b>, um den aktuellen Zeitstempel einzufügen.<br>• Klicke auf <b>Speichern</b>, um Notizen im Browser zu sichern.<br>• Öffne <b>Gespeichert</b>, um nach Notizen zu suchen oder sie zu verwalten.</div>
-                    <div><b>4. Anpassung der Benutzeroberfläche</b><br>• Klicke auf das <b>Regler-Symbol</b> für Unschärfe, Deckkraft, Leuchten und Farbschemata.<br>• Klicke auf das <b>Kino-Symbol</b> für den Theater-Modus.</div>
+                    <div><b>1. Videowiedergabe</b><br>• <i>URL:</i> Link einfügen & auf <b>Laden</b> klicken.<br>• <i>Lokale Datei:</i> Auf <b>Lokale Datei wählen</b> klicken.</div>
+                    <div><b>2. A-B Schleifenfunktion</b><br>• <b>Start A</b> legt den Anfangszeitpunkt fest.<br>• <b>Ende B</b> legt das Ende fest.<br>• <b>AB zurücksetzen</b> stellt die normale Wiedergabe wieder her.</div>
+                    <div><b>3. Notizen & Zeitstempel</b><br>• <b>+ Zeit</b> fügt die aktuelle Position ein.<br>• <b>Speichern</b> speichert die Notiz.<br>• Über <b>Gespeichert</b> können Notizen gesucht und verwaltet werden.</div>
+                    <div><b>4. Design anpassen</b><br>• Das <b>Tropfen-Icon</b> ermöglicht das Ändern von Glas-Effekten und Farben.</div>
                 `
             },
             ko: { 
                 title: "플레이어", 
                 load: "로드", 
-                file: "로컬 비디오 선택", 
+                file: "로컬 파일 선택", 
                 urlPlaceholder: "비디오 URL (.mp4/.webm)...",
-                none: "재생 중인 비디오 없음", 
-                custom: "스트림 재생", 
+                none: "로드된 비디오 없음", 
+                custom: "네트워크 스트림", 
                 expand: "전체 화면",
                 theme: "테마",
                 blur: "블러 강도",
-                opacity: "불투명도",
+                opacity: "유리 투명도",
                 glow: "주변 광채",
-                scratchpad: "노트 및 메모장",
-                recentNotes: "저장된 메모",
-                placeholderNotes: "메모를 작성하거나 '+ 시간'을 눌러 타임스탬프를 추가하세요...",
+                scratchpad: "연습장 메모",
+                recentNotes: "저장된 메모 목록",
+                placeholderNotes: "메모나 타임스탬프를 입력하세요...",
                 timeBtn: "+ 시간",
                 recentBtn: "저장된 메모",
                 saveBtn: "저장",
-                clear: "텍스트 지우기",
-                deleteNoteBtn: "선택 메모 삭제",
-                download: ".txt 내보내기",
-                searchPlaceholder: "메모 검색...",
-                setA: "A 지점: --",
-                setB: "B 지점: --",
-                clearAB: "구간 해제",
+                clear: "에디터 비우기",
+                deleteNoteBtn: "저장된 메모 삭제",
+                download: ".txt 다운로드",
+                searchPlaceholder: "저장된 메모 검색...",
+                setA: "시작 A: --",
+                setB: "종료 B: --",
+                clearAB: "AB 초기화",
                 noSavedNotes: "저장된 메모가 없습니다",
                 noMatchingNotes: "일치하는 메모가 없습니다",
                 savedAlert: "메모가 성공적으로 저장되었습니다!",
-                noNoteLoadedAlert: "선택된 메모가 없습니다. 삭제할 메모를 먼저 목록에서 선택하세요.",
-                confirmDelete: "이 메모를 삭제하시겠습니까?",
-                shortcutsTitle: "키보드 단축키",
+                noNoteLoadedAlert: "선택된 저장 메모가 없습니다. 먼저 목록에서 불러오세요.",
+                confirmDelete: "이 메모를 영구적으로 삭제하시겠습니까?",
+                shortcutsTitle: "키보드 단축키 안내",
                 scPlay: "재생 / 일시정지",
-                scBack: "5초 뒤로 이동",
-                scForward: "5초 앞으로 이동",
+                scBack: "5초 뒤로",
+                scForward: "5초 앞으로",
                 scVol: "음량 조절",
                 scFull: "전체 화면 전환",
-                scLoop: "전체 비디오 반복",
-                scHelp: "단축키 가이드",
-                instrTitle: "상세 사용 설명서",
+                scLoop: "반복 재생 전환",
+                scHelp: "단축키 도움말",
+                instrTitle: "사용 설명서 및 기능 가이드",
                 instrText: `
-                    <div><b>1. 비디오 재생</b><br>• <i>웹 URL:</i> 비디오 직링크 (.mp4/.webm) 입력 후 <b>로드</b> 클릭.<br>• <i>로컬 파일:</i> <b>로컬 비디오 선택</b> 버튼으로 파일 열기.</div>
-                    <div><b>2. A-B 구간 반복 재생</b><br>• 원하는 시작 위치에서 <b>A 지점</b> 클릭.<br>• 종료 위치에서 <b>B 지점</b> 클릭.<br>• A 구간부터 B 구간까지 연속 반복 재생됩니다.<br>• <b>구간 해제</b>를 누르면 일반 재생으로 돌아갑니다.</div>
-                    <div><b>3. 메모, 타임스탬프 및 검색</b><br>• <b>+ 시간</b> 클릭 시 현재 재생 시간이 메모장에 즉시 입력됩니다.<br>• <b>저장</b> 버튼으로 메모를 브라우저에 저장할 수 있습니다.<br>• <b>저장된 메모</b>를 통해 이전 메모를 검색, 불러오기 및 삭제하세요.</div>
-                    <div><b>4. UI 맞춤 설정</b><br>• <b>슬라이더 아이콘</b>을 눌러 유리 블러, 불투명도, 하이라이트 색상을 조절합니다.<br>• <b>영화 아이콘</b>을 눌러 시네마 모드를 활성화할 수 있습니다.</div>
+                    <div><b>1. 비디오 재생 방법</b><br>• <i>URL:</i> 링크를 입력하고 <b>로드</b>를 클릭하세요.<br>• <i>로컬 파일:</i> <b>로컬 파일 선택</b>을 클릭하여 재생할 파일을 선택하세요.</div>
+                    <div><b>2. A-B 구간 반복</b><br>• <b>시작 A</b>로 반복 시작 지점을 설정합니다.<br>• <b>종료 B</b>로 종료 지점을 설정합니다.<br>• <b>AB 초기화</b>로 구간 반복을 해제합니다.</div>
+                    <div><b>3. 메모 및 타임스탬프</b><br>• <b>+ 시간</b> 버튼으로 현재 재생 시간을 즉시 삽입합니다.<br>• <b>저장</b> 버튼으로 메모를 저장합니다.<br>• <b>저장된 메모</b>에서 검색 및 관리가 가능합니다.</div>
+                    <div><b>4. 디자인 설정</b><br>• 상단 <b>물방울 아이콘</b>을 이용해 블러 및 테마 색상을 변경할 수 있습니다.</div>
                 `
             },
             fr: { 
                 title: "Lecteur", 
                 load: "Charger", 
-                file: "Fichier local", 
+                file: "Choisir un fichier local", 
                 urlPlaceholder: "URL vidéo (.mp4/.webm)...",
                 none: "Aucune vidéo chargée", 
-                custom: "Flux direct", 
+                custom: "Flux Réseau", 
                 expand: "Plein écran",
                 theme: "Thème",
                 blur: "Intensité du flou",
                 opacity: "Opacité du verre",
                 glow: "Lueur ambiante",
-                scratchpad: "Notes & Brouillon",
+                scratchpad: "Bloc-notes",
                 recentNotes: "Notes enregistrées",
-                placeholderNotes: "Saisissez des notes ou appuyez sur '+ Temps' pour ajouter un horodatage...",
+                placeholderNotes: "Prenez des notes ou ajoutez des horodatages...",
                 timeBtn: "+ Temps",
                 recentBtn: "Notes enregistrées",
                 saveBtn: "Enregistrer",
-                clear: "Effacer",
+                clear: "Effacer l'éditeur",
                 deleteNoteBtn: "Supprimer la note",
-                download: "Exporter .txt",
-                searchPlaceholder: "Rechercher une note...",
-                setA: "Point A: --",
-                setB: "Point B: --",
-                clearAB: "Effacer boucle",
-                noSavedNotes: "Aucune note sauvegardée",
-                noMatchingNotes: "Aucun résultat trouvé",
+                download: "Télécharger .txt",
+                searchPlaceholder: "Rechercher des notes...",
+                setA: "Début A: --",
+                setB: "Fin B: --",
+                clearAB: "Effacer AB",
+                noSavedNotes: "Aucune note enregistrée",
+                noMatchingNotes: "Aucune note correspondante",
                 savedAlert: "Note enregistrée avec succès !",
-                noNoteLoadedAlert: "Aucune note sélectionnée. Choisissez-en une dans la liste pour la supprimer.",
-                confirmDelete: "Supprimer définitivement cette note ?",
-                shortcutsTitle: "Raccourcis Clavier",
+                noNoteLoadedAlert: "Aucune note sélectionnée. Veuillez en charger une depuis la liste.",
+                confirmDelete: "Voulez-vous vraiment supprimer définitivement cette note ?",
+                shortcutsTitle: "Guide des Raccourcis Clavier",
                 scPlay: "Lecture / Pause",
                 scBack: "Reculer de 5s",
                 scForward: "Avancer de 5s",
-                scVol: "Réglage du volume",
-                scFull: "Basculer en plein écran",
-                scLoop: "Boucle vidéo complète",
-                scHelp: "Guide des raccourcis",
-                instrTitle: "Guide d'Utilisation Détaillé",
+                scVol: "Volume Haut / Bas",
+                scFull: "Plein écran",
+                scLoop: "Activer la boucle",
+                scHelp: "Aide raccourcis",
+                instrTitle: "Guide d'Utilisation & Fonctionnalités",
                 instrText: `
-                    <div><b>1. Lecture Média</b><br>• <i>URL Web:</i> Collez un lien direct (.mp4/.webm) et cliquez sur <b>Charger</b>.<br>• <i>Fichier Local:</i> Cliquez sur <b>Fichier local</b> pour ouvrir un fichier.</div>
-                    <div><b>2. Boucle Répétée A-B</b><br>• Cliquez sur <b>Point A</b> pour fixer le début de la séquence.<br>• Cliquez sur <b>Point B</b> pour fixer la fin.<br>• La vidéo tournera en boucle continuellement entre A et B.<br>• Cliquez sur <b>Effacer boucle</b> pour reprendre la lecture normale.</div>
-                    <div><b>3. Notes, Horodatage & Recherche</b><br>• Cliquez sur <b>+ Temps</b> pour insérer la position temporelle actuelle.<br>• Cliquez sur <b>Enregistrer</b> pour sauvegarder dans votre navigateur.<br>• Ouvrez <b>Notes enregistrées</b> pour rechercher ou supprimer vos notes.</div>
-                    <div><b>4. Personnalisation Visuelle</b><br>• Cliquez sur l'<b>icône Réglages</b> pour ajuster le flou, l'opacité et les couleurs.<br>• Cliquez sur l'<b>icône Cinéma</b> pour tamiser l'interface.</div>
+                    <div><b>1. Option de Lecture Video</b><br>• <i>URL:</i> Collez un lien vidéo et cliquez sur <b>Charger</b>.<br>• <i>Fichier Local:</i> Cliquez sur <b>Choisir un fichier local</b>.</div>
+                    <div><b>2. Boucle A-B</b><br>• Cliquez sur <b>Début A</b> pour définir le début de la boucle.<br>• Cliquez sur <b>Fin B</b> pour définir la fin.<br>• Cliquez sur <b>Effacer AB</b> pour réinitialiser.</div>
+                    <div><b>3. Bloc-notes & Horodatage</b><br>• Cliquez sur <b>+ Temps</b> pour insérer le temps actuel.<br>• Cliquez sur <b>Enregistrer</b> pour sauvegarder la note.<br>• Accédez à vos notes via le menu <b>Notes enregistrées</b>.</div>
+                    <div><b>4. Personnalisation Visuelle</b><br>• L'icône <b>Goutte</b> permet d'ajuster le flou et les thèmes de couleur.</div>
                 `
             },
             it: { 
                 title: "Player", 
                 load: "Carica", 
-                file: "Seleziona file locale", 
+                file: "Scegli file locale", 
                 urlPlaceholder: "URL video (.mp4/.webm)...",
                 none: "Nessun video caricato", 
-                custom: "Flusso diretto", 
+                custom: "Flusso di Rete", 
                 expand: "Schermo intero",
                 theme: "Tema",
                 blur: "Intensità sfocatura",
                 opacity: "Opacità vetro",
                 glow: "Luce ambientale",
-                scratchpad: "Note & Appunti",
+                scratchpad: "Blocco note",
                 recentNotes: "Note salvate",
-                placeholderNotes: "Scrivi appunti o premi '+ Tempo' per inserire un timestamp...",
+                placeholderNotes: "Scrivi appunti o annota timestamp...",
                 timeBtn: "+ Tempo",
                 recentBtn: "Note salvate",
                 saveBtn: "Salva",
-                clear: "Svuolta testo",
-                deleteNoteBtn: "Elimina nota",
-                download: "Esporta .txt",
-                searchPlaceholder: "Cerca tra le note...",
-                setA: "Punto A: --",
-                setB: "Punto B: --",
-                clearAB: "Azzera loop",
+                clear: "Svuota editor",
+                deleteNoteBtn: "Elimina nota salvata",
+                download: "Scarica .txt",
+                searchPlaceholder: "Cerca note salvate...",
+                setA: "Inizio A: --",
+                setB: "Fine B: --",
+                clearAB: "Azzera AB",
                 noSavedNotes: "Nessuna nota salvata",
-                noMatchingNotes: "Nessun risultato trovato",
+                noMatchingNotes: "Nessuna nota trovata",
                 savedAlert: "Nota salvata con successo!",
-                noNoteLoadedAlert: "Nessuna nota selezionata. Selezionane una dall'elenco per eliminarla.",
-                confirmDelete: "Eliminare definitivamente questa nota?",
-                shortcutsTitle: "Scorciatoie da Tastiera",
+                noNoteLoadedAlert: "Nessuna nota selezionata. Caricane una dalla lista.",
+                confirmDelete: "Vuoi davvero eliminare definitivamente questa nota?",
+                shortcutsTitle: "Guida Scorciatoie da Tastiera",
                 scPlay: "Riproduci / Pausa",
                 scBack: "Indietro di 5s",
                 scForward: "Avanti di 5s",
-                scVol: "Regola volume",
+                scVol: "Volume Su / Giù",
                 scFull: "Schermo intero",
-                scLoop: "Ripeti intero video",
-                scHelp: "Guida tastiera",
-                instrTitle: "Guida Utente Dettagliata",
+                scLoop: "Ripeti video",
+                scHelp: "Guida scorciatoie",
+                instrTitle: "Manuale Utente & Funzionalità",
                 instrText: `
-                    <div><b>1. Riproduzione Video</b><br>• <i>URL Web:</i> Incolla un link diretto (.mp4/.webm) e clicca <b>Carica</b>.<br>• <i>File Locale:</i> Clicca <b>Seleziona file locale</b> per aprire un file.</div>
-                    <div><b>2. Ripetizione Loop A-B</b><br>• Clicca <b>Punto A</b> per impostare il punto di inizio.<br>• Clicca <b>Punto B</b> per il punto finale.<br>• Il video si ripeterà continuamente tra il punto A e B.<br>• Clicca <b>Azzera loop</b> per ripristinare la normale riproduzione.</div>
-                    <div><b>3. Note, Timestamp & Ricerca</b><br>• Clicca <b>+ Tempo</b> per inserire il punto temporale corrente.<br>• Clicca <b>Salva</b> per archiviare le note nel browser.<br>• Apri <b>Note salvate</b> per cercare o gestire le note precedenti.</div>
-                    <div><b>4. Personalizzazione Interfaccia</b><br>• Clicca sull'<b>icona Cursori</b> per modificare sfocatura, opacità e colori.<br>• Clicca sull'<b>icona Cinema</b> per oscurare i comandi circostanti.</div>
+                    <div><b>1. Riproduzione Video</b><br>• <i>URL:</i> Incolla un link e premi <b>Carica</b>.<br>• <i>File Locale:</i> Clicca su <b>Scegli file locale</b>.</div>
+                    <div><b>2. Ripetizione A-B</b><br>• Clicca <b>Inizio A</b> per impostare il punto di partenza.<br>• Clicca <b>Fine B</b> per il punto di arrivo.<br>• Clicca <b>Azzera AB</b> per ripristinare.</div>
+                    <div><b>3. Note e Timestamp</b><br>• Clicca <b>+ Tempo</b> per inserire il tempo di riproduzione.<br>• Clicca <b>Salva</b> per archiviare la nota.<br>• Consulta le note salvate tramite <b>Note salvate</b>.</div>
+                    <div><b>4. Personalizzazione Grafica</b><br>• Clicca l'icona <b>Goccia</b> per personalizzare sfocatura e colori.</div>
                 `
             },
             fa: { 
                 title: "پخش‌کننده", 
                 load: "بارگذاری", 
-                file: "انتخاب فایل ویدیو", 
+                file: "انتخاب فایل محلی", 
                 urlPlaceholder: "آدرس ویدیو (.mp4/.webm)...",
                 none: "ویدیویی بارگذاری نشده", 
-                custom: "پخش زنده", 
+                custom: "جریان شبکه", 
                 expand: "تمام‌صفحه",
                 theme: "پوسته",
                 blur: "شدت تاری",
                 opacity: "شفافیت شیشه",
                 glow: "درخشش محیطی",
-                scratchpad: "یادداشت‌ها و پیش‌نویس",
+                scratchpad: "دفترچه یادداشت",
                 recentNotes: "یادداشت‌های ذخیره‌شده",
-                placeholderNotes: "یادداشت بنویسید یا روی «+ زمان» برای درج زمان کلیک کنید...",
+                placeholderNotes: "یادداشت‌ها یا تایم‌استمپ‌های خود را بنویسید...",
                 timeBtn: "+ زمان",
                 recentBtn: "یادداشت‌ها",
                 saveBtn: "ذخیره",
-                clear: "پاک‌سازی متن",
+                clear: "پاک‌سازی ویرایشگر",
                 deleteNoteBtn: "حذف یادداشت",
-                download: "خروجی .txt",
+                download: "دانلود .txt",
                 searchPlaceholder: "جستجوی یادداشت‌ها...",
-                setA: "نقطه A: --",
-                setB: "نقطه B: --",
-                clearAB: "حذف تکرار",
+                setA: "شروع A: --",
+                setB: "پایان B: --",
+                clearAB: "حذف AB",
                 noSavedNotes: "هیچ یادداشتی ذخیره نشده است",
-                noMatchingNotes: "یادداشتی یافت نشد",
+                noMatchingNotes: "یادداشتی پیدا نشد",
                 savedAlert: "یادداشت با موفقیت ذخیره شد!",
-                noNoteLoadedAlert: "هیچ یادداشتی انتخاب نشده است. ابتدا یک یادداشت را برای حذف انتخاب کنید.",
+                noNoteLoadedAlert: "هیچ یادداشتی انتخاب نشده است. ابتدا یک یادداشت را بارگذاری کنید.",
                 confirmDelete: "آیا از حذف دائمی این یادداشت اطمینان دارید؟",
-                shortcutsTitle: "میانبرهای صفحه‌کلید",
+                shortcutsTitle: "راهنمای میانبرهای صفحه‌کلید",
                 scPlay: "پخش / مکث",
                 scBack: "۵ ثانیه عقب",
                 scForward: "۵ ثانیه جلو",
-                scVol: "تنظیم میزان صدا",
+                scVol: "تنظیم بلندی صدا",
                 scFull: "تغییر حالت تمام‌صفحه",
-                scLoop: "تکرار کل ویدیو",
+                scLoop: "تکرار ویدیو",
                 scHelp: "راهنمای میانبرها",
-                instrTitle: "راهنمای کامل استفاده",
+                instrTitle: "راهنمای کامل استفاده و امکانات",
                 instrText: `
-                    <div><b>۱. پخش ویدیو</b><br>• <i>آدرس اینترنتی:</i> لینک مستقیم (.mp4/.webm) را وارد کرده و <b>بارگذاری</b> را بزنید.<br>• <i>فایل محلی:</i> روی <b>انتخاب فایل ویدیو</b> کلیک کنید.</div>
-                    <div><b>۲. تکرار بازه مشخص A-B</b><br>• در نقطه شروع موردنظر روی <b>نقطه A</b> کلیک کنید.<br>• در نقطه پایان روی <b>نقطه B</b> کلیک کنید.<br>• ویدیو به‌صورت مداوم بین بازه A و B تکرار خواهد شد.<br>• روی <b>حذف تکرار</b> کلیک کنید تا به پخش معمولی بازگردید.</div>
-                    <div><b>۳. یادداشت، زمان‌بندی و جستجو</b><br>• روی <b>+ زمان</b> کلیک کنید تا زمان فعلی ویدیو ثبت شود.<br>• روی <b>ذخیره</b> کلیک کنید تا یادداشت در مرورگر ذخیره شود.<br>• از قسمت <b>یادداشت‌ها</b> می‌توانید یادداشت‌های قبلی را جستجو و مدیریت کنید.</div>
-                    <div><b>۴. شخصی‌سازی ظاهری</b><br>• روی <b>آیکون تنظیمات</b> کلیک کنید تا میزان تاری، شفافیت و رنگ‌ها را تغییر دهید.<br>• روی <b>آیکون سینما</b> کلیک کنید تا بقیه عناصر صفحه کم‌رنگ شوند.</div>
+                    <div><b>۱. پخش ویدیو</b><br>• <i>آدرس اینترنتی:</i> لینک ویدیو را وارد کرده و روی <b>بارگذاری</b> کلیک کنید.<br>• <i>فایل محلی:</i> روی <b>انتخاب فایل محلی</b> کلیک کنید.</div>
+                    <div><b>۲. تکرار بازه A-B</b><br>• روی <b>شروع A</b> برای تعیین نقطه شروع کلیک کنید.<br>• روی <b>پایان B</b> برای تعیین نقطه پایان کلیک کنید.<br>• روی <b>حذف AB</b> کلیک کنید تا بازنشانی شود.</div>
+                    <div><b>۳. ثبت یادداشت و زمان</b><br>• روی <b>+ زمان</b> کلیک کنید تا موقعیت فعلی ثبت شود.<br>• روی <b>ذخیره</b> کلیک کنید تا یادداشت ذخیره گردد.<br>• از منوی <b>یادداشت‌ها</b> می‌توانید آن‌ها را جستجو و مدیریت کنید.</div>
+                    <div><b>۴. شخصی‌سازی ظاهری</b><br>• با کلیک روی آیکون <b>قطره</b> می‌توانید جلوه‌های بصری و رنگ‌ها را تغییر دهید.</div>
                 `
             }
         };
 
         function updateUI() {
-            const lang = langSelect.value;
-            const t = translations[lang] || translations.en;
+            const t = translations[selectedLang] || translations.en;
             
             document.getElementById('appTitle').textContent = t.title;
             loadUrlBtn.textContent = t.load;
@@ -1473,7 +1602,6 @@
             renderSidebarList(noteSearchInput.value);
         }
 
-        langSelect.onchange = updateUI;
         themeToggleBtn.onclick = () => {
             htmlElement.setAttribute('data-theme', htmlElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         };
@@ -1528,8 +1656,7 @@
         };
 
         clearABtn.onclick = () => {
-            const lang = langSelect.value;
-            const t = translations[lang] || translations.en;
+            const t = translations[selectedLang] || translations.en;
             loopPointA = null;
             loopPointB = null;
             setABtn.textContent = t.setA;
@@ -1555,8 +1682,7 @@
         };
 
         function renderSidebarList(filterKeyword = '') {
-            const lang = langSelect.value;
-            const t = translations[lang] || translations.en;
+            const t = translations[selectedLang] || translations.en;
 
             notesSidebarList.innerHTML = '';
             const keyword = filterKeyword.toLowerCase().trim();
@@ -1595,9 +1721,7 @@
         }
 
         saveNoteBtn.onclick = () => {
-            const lang = langSelect.value;
-            const t = translations[lang] || translations.en;
-
+            const t = translations[selectedLang] || translations.en;
             const currentText = notesTextArea.value.trim();
             if (!currentText) return;
 
@@ -1648,9 +1772,7 @@
         };
 
         clearLoadedNoteBtn.onclick = () => {
-            const lang = langSelect.value;
-            const t = translations[lang] || translations.en;
-
+            const t = translations[selectedLang] || translations.en;
             if (activeNoteIndex === null) {
                 alert(t.noNoteLoadedAlert);
                 return;
@@ -1812,7 +1934,11 @@
             if (sampleInterval) clearInterval(sampleInterval);
             if (!videoPlayer.loop && !hasTriggeredConfetti) {
                 hasTriggeredConfetti = true;
-                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
             }
         };
 

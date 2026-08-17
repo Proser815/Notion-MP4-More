@@ -29,12 +29,18 @@
             --bg-surface: rgba(28, 28, 30, var(--glass-opacity, 0.85));
             --bg-hover: rgba(44, 44, 46, var(--glass-opacity, 0.85));
             --border-color: rgba(255, 255, 255, 0.1);
-            --accent: #ffb300;
-            --accent-hover: #e09b00;
             --text-main: #f5f5f7;
             --text-muted: #98989d;
             --shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         }
+
+        /* Preset Color Schemes (Soft, pastel/muted tones) */
+        body[data-color="amber"] { --accent: #e5b83b; --accent-hover: #d4a72d; }
+        body[data-color="sage"] { --accent: #7fa98b; --accent-hover: #6c9377; }
+        body[data-color="rose"] { --accent: #d4838f; --accent-hover: #be717d; }
+        body[data-color="lavender"] { --accent: #9d8ec4; --accent-hover: #8a7ab0; }
+        body[data-color="sky"] { --accent: #7ca9c9; --accent-hover: #6894b4; }
+        body[data-color="peach"] { --accent: #e09f6e; --accent-hover: #cc8b5b; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
@@ -174,7 +180,7 @@
         }
 
         .glass-settings-panel.open {
-            max-height: 150px;
+            max-height: 220px;
             opacity: 1;
             padding: 8px;
             margin-bottom: 2px;
@@ -199,6 +205,32 @@
             width: 100%;
             accent-color: var(--accent);
             cursor: pointer;
+        }
+
+        .color-picker-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+            padding-top: 2px;
+        }
+
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .color-dot:hover {
+            transform: scale(1.2);
+        }
+
+        .color-dot.active {
+            transform: scale(1.25);
+            box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--accent);
         }
 
         .info-bar {
@@ -429,7 +461,7 @@
         }
     </style>
 </head>
-<body>
+<body data-color="amber">
 
     <div class="dashboard">
         <!-- Left Column: Player -->
@@ -466,7 +498,7 @@
                 </div>
             </div>
 
-            <!-- Glass & Glow Customizer Panel -->
+            <!-- Glass, Glow & Color Scheme Customizer Panel -->
             <div class="glass-settings-panel" id="glassSettingsPanel">
                 <div class="slider-row">
                     <label>Blur Intensity <span id="blurVal">16px</span></label>
@@ -479,6 +511,14 @@
                 <div class="slider-row">
                     <label>Ambient Glow <span id="glowVal">15%</span></label>
                     <input type="range" id="glowRange" min="0" max="100" value="15">
+                </div>
+                <div class="color-picker-row" id="colorPickerRow">
+                    <div class="color-dot active" data-color="amber" style="background: #e5b83b;" title="Amber"></div>
+                    <div class="color-dot" data-color="sage" style="background: #7fa98b;" title="Sage"></div>
+                    <div class="color-dot" data-color="rose" style="background: #d4838f;" title="Rose"></div>
+                    <div class="color-dot" data-color="lavender" style="background: #9d8ec4;" title="Lavender"></div>
+                    <div class="color-dot" data-color="sky" style="background: #7ca9c9;" title="Sky"></div>
+                    <div class="color-dot" data-color="peach" style="background: #e09f6e;" title="Peach"></div>
                 </div>
             </div>
 
@@ -524,6 +564,7 @@
         const expandBtn = document.getElementById('expandBtn');
         const minimizeBtn = document.getElementById('minimizeBtn');
         const ambientGlow = document.getElementById('ambientGlow');
+        const colorDots = document.querySelectorAll('.color-dot');
         const colorCanvas = document.getElementById('colorSamplerCanvas');
         const ctx = colorCanvas.getContext('2d');
         const htmlElement = document.documentElement;
@@ -592,6 +633,14 @@
             htmlElement.style.setProperty('--glow-opacity', decimal);
             glowVal.textContent = raw + '%';
         };
+
+        colorDots.forEach(dot => {
+            dot.onclick = () => {
+                colorDots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+                document.body.setAttribute('data-color', dot.getAttribute('data-color'));
+            };
+        });
 
         const toggleFullscreen = () => {
             document.body.classList.toggle('fullscreen-mode');

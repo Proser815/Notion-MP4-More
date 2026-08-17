@@ -906,30 +906,33 @@
                             <span id="lblScratchpad">Scratchpad Notes</span>
                         </span>
                         <div style="display: flex; gap: 4px;">
-                            <button class="notes-btn" id="toggleSidebarBtn" title="View Recent Notes">Recent</button>
+                            <button class="notes-btn" id="toggleSidebarBtn" title="View Recent Notes">Saved Notes</button>
                             <button class="notes-btn" id="insertTimestampBtn" title="Insert current timestamp">+ Time</button>
                         </div>
                     </div>
                     <textarea id="notesTextArea" placeholder="Jot down notes or timestamps..."></textarea>
                     <div class="notes-footer">
-                        <button class="notes-btn" id="clearNotesBtn">Clear</button>
                         <div style="display: flex; gap: 4px;">
-                            <button class="notes-btn" id="loadPrevNoteBtn" title="Load Previous Note">Load Prev</button>
+                            <button class="notes-btn" id="saveNoteBtn" title="Save current note to saved list">Save</button>
+                            <button class="notes-btn" id="clearNotesBtn" title="Clear note box editor">Clear Editor</button>
+                        </div>
+                        <div style="display: flex; gap: 4px;">
+                            <button class="notes-btn" id="clearLoadedNoteBtn" title="Delete current note entry from saved history">Delete Saved Note</button>
                             <button class="notes-btn" id="downloadNotesBtn">Download .txt</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Notes Sidebar Drawer with Search & Filter Bar -->
+                <!-- Saved Notes Sidebar Drawer with Search & Filter Bar -->
                 <div class="notes-sidebar" id="notesSidebar">
                     <div class="notes-sidebar-header">
-                        <span id="lblRecentNotes">Recent Notes</span>
+                        <span id="lblRecentNotes">Saved Notes</span>
                         <button class="fullscreen-btn" id="closeSidebarBtn" style="font-weight: 600; padding: 0 2px;">✕</button>
                     </div>
-                    <!-- Feature 4: Note Search & Filter Bar -->
-                    <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search notes..." />
+                    <!-- Note Search & Filter Bar -->
+                    <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search saved notes..." />
                     <div class="notes-sidebar-list" id="notesSidebarList">
-                        <!-- Dynamically populated recent notes items -->
+                        <!-- Dynamically populated saved note items -->
                     </div>
                 </div>
             </div>
@@ -1013,9 +1016,10 @@
 
         const notesTextArea = document.getElementById('notesTextArea');
         const insertTimestampBtn = document.getElementById('insertTimestampBtn');
+        const saveNoteBtn = document.getElementById('saveNoteBtn');
         const clearNotesBtn = document.getElementById('clearNotesBtn');
+        const clearLoadedNoteBtn = document.getElementById('clearLoadedNoteBtn');
         const downloadNotesBtn = document.getElementById('downloadNotesBtn');
-        const loadPrevNoteBtn = document.getElementById('loadPrevNoteBtn');
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
         const closeSidebarBtn = document.getElementById('closeSidebarBtn');
         const notesSidebar = document.getElementById('notesSidebar');
@@ -1049,7 +1053,9 @@
         let sampleInterval = null;
         let hasTriggeredConfetti = false;
         
-        let notesHistory = JSON.parse(localStorage.getItem('player_notes_history') || '[]');
+        // Notes Data Model: Holds individual explicitly saved note files
+        let savedNotesList = JSON.parse(localStorage.getItem('player_saved_notes_list') || '[]');
+        let activeNoteIndex = null; // Track index of currently loaded saved note
 
         const translations = {
             en: { 
@@ -1064,12 +1070,11 @@
                 opacity: "Glass Opacity",
                 glow: "Ambient Glow",
                 scratchpad: "Scratchpad Notes",
-                recentNotes: "Recent Notes",
+                recentNotes: "Saved Notes",
                 placeholderNotes: "Jot down notes or timestamps...",
                 timeBtn: "+ Time",
-                recentBtn: "Recent",
-                loadPrev: "Load Prev",
-                clear: "Clear",
+                recentBtn: "Saved Notes",
+                clear: "Clear Editor",
                 download: "Download .txt",
                 shortcutsTitle: "Keyboard Shortcuts",
                 scPlay: "Play / Pause",
@@ -1098,12 +1103,11 @@
                 opacity: "玻璃透明度",
                 glow: "环境光晕",
                 scratchpad: "随手笔记",
-                recentNotes: "最近笔记",
+                recentNotes: "已存笔记",
                 placeholderNotes: "记录笔记或时间戳...",
                 timeBtn: "+ 时间",
-                recentBtn: "最近",
-                loadPrev: "加载上一条",
-                clear: "清空",
+                recentBtn: "已存笔记",
+                clear: "清空编辑器",
                 download: "下载 .txt",
                 shortcutsTitle: "键盘快捷键",
                 scPlay: "播放 / 暂停",
@@ -1132,12 +1136,11 @@
                 opacity: "ガラス不透明度",
                 glow: "アンビエント光",
                 scratchpad: "メモ帳",
-                recentNotes: "最近のメモ",
+                recentNotes: "保存済みメモ",
                 placeholderNotes: "メモやタイムスタンプを記入...",
                 timeBtn: "+ 時間",
-                recentBtn: "履歴",
-                loadPrev: "前を読込",
-                clear: "クリア",
+                recentBtn: "保存済みメモ",
+                clear: "消去",
                 download: "txtダウンロード",
                 shortcutsTitle: "キーボードショートカット",
                 scPlay: "再生 / 一時停止",
@@ -1166,11 +1169,10 @@
                 opacity: "Glas-Opazität",
                 glow: "Umgebungsleuchten",
                 scratchpad: "Notizen",
-                recentNotes: "Letzte Notizen",
+                recentNotes: "Gespeicherte Notizen",
                 placeholderNotes: "Notizen oder Zeitstempel...",
                 timeBtn: "+ Zeit",
-                recentBtn: "Letzte",
-                loadPrev: "Letzte laden",
+                recentBtn: "Gespeichert",
                 clear: "Löschen",
                 download: ".txt herunterladen",
                 shortcutsTitle: "Tastenkombinationen",
@@ -1200,11 +1202,10 @@
                 opacity: "유리 불투명도",
                 glow: "주변 광채",
                 scratchpad: "스크래치패드 메모",
-                recentNotes: "최근 메모",
+                recentNotes: "저장된 메모",
                 placeholderNotes: "메모나 타임스탬프를 적어두세요...",
                 timeBtn: "+ 시간",
-                recentBtn: "최근",
-                loadPrev: "이전 불러오기",
+                recentBtn: "저장된 메모",
                 clear: "지우기",
                 download: ".txt 다운로드",
                 shortcutsTitle: "키보드 단축키",
@@ -1234,11 +1235,10 @@
                 opacity: "Opacité du verre",
                 glow: "Lueur ambiante",
                 scratchpad: "Bloc-notes",
-                recentNotes: "Notes récentes",
+                recentNotes: "Notes enregistrées",
                 placeholderNotes: "Notez des remarques ou horodatages...",
                 timeBtn: "+ Temps",
-                recentBtn: "Récent",
-                loadPrev: "Précédent",
+                recentBtn: "Enregistrées",
                 clear: "Effacer",
                 download: "Télécharger .txt",
                 shortcutsTitle: "Raccourcis clavier",
@@ -1268,11 +1268,10 @@
                 opacity: "Opacità vetro",
                 glow: "Luce ambientale",
                 scratchpad: "Blocco note",
-                recentNotes: "Note recenti",
+                recentNotes: "Note salvate",
                 placeholderNotes: "Scrivi appunti o timestamp...",
                 timeBtn: "+ Tempo",
-                recentBtn: "Recenti",
-                loadPrev: "Carica prec.",
+                recentBtn: "Salvate",
                 clear: "Cancella",
                 download: "Scarica .txt",
                 shortcutsTitle: "Scorciatoie da tastiera",
@@ -1302,11 +1301,10 @@
                 opacity: "شفافیت شیشه",
                 glow: "درخشش محیطی",
                 scratchpad: "یادداشت‌ها",
-                recentNotes: "یادداشت‌های اخیر",
+                recentNotes: "یادداشت‌های ذخیره‌شده",
                 placeholderNotes: "یادداشت‌ها یا تایم‌استمپ‌ها را بنویسید...",
                 timeBtn: "+ زمان",
-                recentBtn: "اخیر",
-                loadPrev: "قبلی",
+                recentBtn: "ذخیره‌شده",
                 clear: "پاک کردن",
                 download: "دانلود .txt",
                 shortcutsTitle: "میانبرهای صفحه کلید",
@@ -1344,10 +1342,9 @@
             notesTextArea.placeholder = t.placeholderNotes;
             insertTimestampBtn.textContent = t.timeBtn;
             toggleSidebarBtn.textContent = t.recentBtn;
-            loadPrevNoteBtn.textContent = t.loadPrev;
             clearNotesBtn.textContent = t.clear;
             downloadNotesBtn.textContent = t.download;
-            noteSearchInput.placeholder = lang === 'zh' ? "搜索笔记..." : (lang === 'ja' ? "メモを検索..." : (lang === 'de' ? "Notizen suchen..." : (lang === 'ko' ? "메모 검색..." : (lang === 'fr' ? "Rechercher..." : (lang === 'it' ? "Cerca note..." : (lang === 'fa' ? "جستجوی یادداشت..." : "Search notes..."))))));
+            noteSearchInput.placeholder = lang === 'zh' ? "搜索已存笔记..." : (lang === 'ja' ? "保存済みメモを検索..." : (lang === 'de' ? "Notizen suchen..." : (lang === 'ko' ? "저장된 메모 검색..." : (lang === 'fr' ? "Rechercher..." : (lang === 'it' ? "Cerca note..." : (lang === 'fa' ? "جستجوی یادداشت..." : "Search saved notes..."))))));
 
             lblKeyboardShortcuts.textContent = t.shortcutsTitle;
             scPlay.textContent = t.scPlay;
@@ -1446,48 +1443,60 @@
             }
         };
 
-        function saveCurrentNoteToHistory() {
-            const currentText = notesTextArea.value.trim();
-            if (currentText) {
-                if (notesHistory.length === 0 || notesHistory[notesHistory.length - 1] !== currentText) {
-                    notesHistory.push(currentText);
-                    if (notesHistory.length > 25) notesHistory.shift();
-                    localStorage.setItem('player_notes_history', JSON.stringify(notesHistory));
-                    renderSidebarList(noteSearchInput.value);
-                }
-            }
-        }
-
-        // Filterable Notes Sidebar List Renderer
+        // Render saved notes list in sidebar (filtering only explicitly saved notes)
         function renderSidebarList(filterKeyword = '') {
             notesSidebarList.innerHTML = '';
             const keyword = filterKeyword.toLowerCase().trim();
-            
-            const filteredNotes = notesHistory.filter(noteText => 
-                noteText.toLowerCase().includes(keyword)
-            );
 
-            if (filteredNotes.length === 0) {
+            const filteredEntries = savedNotesList
+                .map((noteText, originalIndex) => ({ noteText, originalIndex }))
+                .filter(item => item.noteText.toLowerCase().includes(keyword));
+
+            if (filteredEntries.length === 0) {
                 const emptyMsg = document.createElement('div');
                 emptyMsg.style.cssText = 'padding: 6px; color: var(--text-muted); font-size: 8px; text-align: center;';
-                emptyMsg.textContent = notesHistory.length === 0 ? 'No notes yet' : 'No matching notes';
+                emptyMsg.textContent = savedNotesList.length === 0 ? 'No saved notes' : 'No matching notes';
                 notesSidebarList.appendChild(emptyMsg);
                 return;
             }
 
-            [...filteredNotes].reverse().forEach((noteText) => {
-                const item = document.createElement('div');
-                item.className = 'sidebar-note-item';
-                item.title = noteText;
-                item.textContent = noteText;
-                item.onclick = () => {
-                    saveCurrentNoteToHistory();
-                    notesTextArea.value = noteText;
+            [...filteredEntries].reverse().forEach((item) => {
+                const elem = document.createElement('div');
+                elem.className = 'sidebar-note-item';
+                elem.title = item.noteText;
+                elem.textContent = item.noteText;
+                
+                if (activeNoteIndex === item.originalIndex) {
+                    elem.style.borderColor = 'var(--accent)';
+                    elem.style.fontWeight = '600';
+                }
+
+                elem.onclick = () => {
+                    notesTextArea.value = item.noteText;
+                    activeNoteIndex = item.originalIndex;
                     notesSidebar.classList.remove('open');
+                    renderSidebarList(noteSearchInput.value);
                 };
-                notesSidebarList.appendChild(item);
+                notesSidebarList.appendChild(elem);
             });
         }
+
+        // Explicit Note Save Handler
+        saveNoteBtn.onclick = () => {
+            const currentText = notesTextArea.value.trim();
+            if (!currentText) return;
+
+            if (activeNoteIndex !== null) {
+                savedNotesList[activeNoteIndex] = currentText;
+            } else {
+                savedNotesList.push(currentText);
+                activeNoteIndex = savedNotesList.length - 1;
+            }
+
+            localStorage.setItem('player_saved_notes_list', JSON.stringify(savedNotesList));
+            renderSidebarList(noteSearchInput.value);
+            alert("Note saved successfully!");
+        };
 
         noteSearchInput.oninput = (e) => {
             renderSidebarList(e.target.value);
@@ -1515,29 +1524,27 @@
             notesTextArea.value = val.substring(0, start) + timestampText + val.substring(end);
             notesTextArea.selectionStart = notesTextArea.selectionEnd = start + timestampText.length;
             notesTextArea.focus();
-            saveCurrentNoteToHistory();
         };
 
-        loadPrevNoteBtn.onclick = () => {
-            saveCurrentNoteToHistory();
-            if (notesHistory.length > 0) {
-                const prevNote = notesHistory.pop();
-                notesTextArea.value = prevNote;
-                localStorage.setItem('player_notes_history', JSON.stringify(notesHistory));
-                renderSidebarList(noteSearchInput.value);
-            } else {
-                alert("No previous notes found in history.");
-            }
-        };
-
-        notesTextArea.oninput = () => {
-            saveCurrentNoteToHistory();
-        };
-
+        // Clear only text editor content
         clearNotesBtn.onclick = () => {
-            if (confirm("Clear all notes?")) {
-                saveCurrentNoteToHistory();
+            notesTextArea.value = '';
+            activeNoteIndex = null;
+            renderSidebarList(noteSearchInput.value);
+        };
+
+        // Delete currently loaded note file completely from storage
+        clearLoadedNoteBtn.onclick = () => {
+            if (activeNoteIndex === null) {
+                alert("No saved note is currently selected. Load a saved note first to delete it.");
+                return;
+            }
+            if (confirm("Delete this saved note entry permanently?")) {
+                savedNotesList.splice(activeNoteIndex, 1);
+                localStorage.setItem('player_saved_notes_list', JSON.stringify(savedNotesList));
                 notesTextArea.value = '';
+                activeNoteIndex = null;
+                renderSidebarList(noteSearchInput.value);
             }
         };
 

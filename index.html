@@ -1273,7 +1273,7 @@
                 scHelp: "Aiuto scorciatoie",
                 instrTitle: "Istruzioni",
                 instrText: `
-                    <div>• <b>Streaming URL:</b> Incolla il link video e clicca <b>Carica</b>.</div>
+                    <div>• <b>Streaming URL:</b> Incolla il video link e clicca <b>Carica</b>.</div>
                     <div>• <b>File locali:</b> Scegli un file dal tuo dispositivo per avviarlo.</div>
                     <div>• <b>Blocco note & Loop A-B:</b> Usa <b>Set A</b> e <b>Set B</b> per ripetere sezioni video.</div>
                 `
@@ -1675,7 +1675,7 @@
         };
 
         videoPlayer.onended = () => {
-            if (sampleIntentInterval) clearInterval(sampleInterval);
+            if (sampleInterval) clearInterval(sampleInterval);
             if (!videoPlayer.loop && !hasTriggeredConfetti) {
                 hasTriggeredConfetti = true;
                 confetti({

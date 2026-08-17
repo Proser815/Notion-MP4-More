@@ -21,6 +21,7 @@
             --transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             --glass-blur: 16px;
             --glass-opacity: 0.85;
+            --glow-opacity: 0.15;
         }
 
         [data-theme="dark"] {
@@ -51,10 +52,11 @@
             transition: background-color 0.5s ease;
         }
 
-        /* Glass Surface Apply Dynamic Blur */
-        .control-card, .info-bar, .player-wrapper, .controls-column.fullscreen-glass {
+        /* Glass Surface Apply Dynamic Blur & Smooth Transitions */
+        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, input[type="text"] {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
         }
 
         /* Cinematic Lights-Out Mode */
@@ -62,7 +64,6 @@
             opacity: 0.2;
             filter: blur(5px);
             pointer-events: auto;
-            transition: var(--transition);
         }
 
         body.cinematic-mode .controls-column:hover {
@@ -96,10 +97,10 @@
             inset: -2px;
             background: var(--accent);
             border-radius: calc(var(--radius) + 2px);
-            filter: blur(12px);
-            opacity: 0.15;
+            filter: blur(14px);
+            opacity: var(--glow-opacity);
             z-index: -1;
-            transition: background 0.6s ease, opacity 0.6s ease;
+            transition: background 0.6s ease, opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             pointer-events: none;
         }
 
@@ -107,7 +108,6 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
         }
 
         .header-row {
@@ -122,6 +122,7 @@
             font-weight: 600;
             margin: 0;
             letter-spacing: -0.2px;
+            transition: color 0.4s ease;
         }
 
         .header-controls {
@@ -140,7 +141,6 @@
             font-weight: 500;
             cursor: pointer;
             outline: none;
-            transition: var(--transition);
         }
 
         select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover {
@@ -160,15 +160,25 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 8px;
-            display: none;
+            display: flex;
             flex-direction: column;
             gap: 6px;
             box-shadow: var(--shadow);
             font-size: 9px;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin: 0;
+            border-width: 0;
+            transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s ease, margin 0.4s ease, border-width 0.4s ease;
         }
 
         .glass-settings-panel.open {
-            display: flex;
+            max-height: 150px;
+            opacity: 1;
+            padding: 8px;
+            margin-bottom: 2px;
+            border-width: 1px;
         }
 
         .slider-row {
@@ -182,6 +192,7 @@
             justify-content: space-between;
             color: var(--text-muted);
             font-weight: 500;
+            transition: color 0.4s ease;
         }
 
         input[type="range"] {
@@ -209,6 +220,7 @@
             text-overflow: ellipsis;
             overflow: hidden;
             width: 100%;
+            transition: color 0.4s ease;
         }
 
         .control-card {
@@ -238,7 +250,6 @@
             border-radius: 10px;
             font-size: 9px;
             outline: none;
-            transition: var(--transition);
         }
 
         [data-theme="dark"] input[type="text"] {
@@ -261,8 +272,8 @@
             cursor: pointer;
             font-size: 9px;
             white-space: nowrap;
-            transition: var(--transition);
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .action-btn:hover, .file-label:hover {
@@ -286,7 +297,6 @@
             display: flex;
             flex-direction: column;
             box-shadow: var(--shadow);
-            transition: var(--transition);
             position: relative;
         }
 
@@ -295,7 +305,6 @@
             aspect-ratio: 16/9;
             background: #000;
             outline: none;
-            transition: var(--transition);
         }
 
         .video-info {
@@ -304,6 +313,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: border-color 0.4s ease;
         }
 
         .video-title {
@@ -314,6 +324,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             flex: 1;
+            transition: color 0.4s ease;
         }
 
         .fullscreen-btn {
@@ -325,7 +336,7 @@
             cursor: pointer;
             padding: 2px 4px;
             border-radius: 6px;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
         .fullscreen-btn:hover {
@@ -376,7 +387,7 @@
         }
 
         body.fullscreen-mode .ambient-glow {
-            opacity: 0.1;
+            opacity: calc(var(--glow-opacity) * 0.5);
         }
 
         /* Smaller Hover Overlay Menu on the Right in Fullscreen */
@@ -394,7 +405,7 @@
             opacity: 0;
             pointer-events: none;
             transform: translateX(15px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
         }
 
         body.fullscreen-mode .player-wrapper .video-info {
@@ -455,7 +466,7 @@
                 </div>
             </div>
 
-            <!-- Glassmorphism Customizer Panel -->
+            <!-- Glass & Glow Customizer Panel -->
             <div class="glass-settings-panel" id="glassSettingsPanel">
                 <div class="slider-row">
                     <label>Blur Intensity <span id="blurVal">16px</span></label>
@@ -464,6 +475,10 @@
                 <div class="slider-row">
                     <label>Glass Opacity <span id="opacityVal">85%</span></label>
                     <input type="range" id="opacityRange" min="10" max="100" value="85">
+                </div>
+                <div class="slider-row">
+                    <label>Ambient Glow <span id="glowVal">15%</span></label>
+                    <input type="range" id="glowRange" min="0" max="100" value="15">
                 </div>
             </div>
 
@@ -501,8 +516,10 @@
         const glassSettingsPanel = document.getElementById('glassSettingsPanel');
         const blurRange = document.getElementById('blurRange');
         const opacityRange = document.getElementById('opacityRange');
+        const glowRange = document.getElementById('glowRange');
         const blurVal = document.getElementById('blurVal');
         const opacityVal = document.getElementById('opacityVal');
+        const glowVal = document.getElementById('glowVal');
         const langSelect = document.getElementById('langSelect');
         const expandBtn = document.getElementById('expandBtn');
         const minimizeBtn = document.getElementById('minimizeBtn');
@@ -567,6 +584,13 @@
             const decimal = raw / 100;
             htmlElement.style.setProperty('--glass-opacity', decimal);
             opacityVal.textContent = raw + '%';
+        };
+
+        glowRange.oninput = (e) => {
+            const raw = e.target.value;
+            const decimal = raw / 100;
+            htmlElement.style.setProperty('--glow-opacity', decimal);
+            glowVal.textContent = raw + '%';
         };
 
         const toggleFullscreen = () => {

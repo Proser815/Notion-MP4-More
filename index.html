@@ -416,10 +416,20 @@
             color: var(--text-muted);
         }
 
-        .notes-header span {
+        .notes-title-group {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
+        }
+
+        .notes-title-group svg {
+            width: 11px;
+            height: 11px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         textarea {
@@ -728,15 +738,15 @@
             <!-- Glass, Glow & Color Scheme Customizer Panel -->
             <div class="glass-settings-panel" id="glassSettingsPanel">
                 <div class="slider-row">
-                    <label>Blur Intensity <span id="blurVal">16px</span></label>
+                    <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
                     <input type="range" id="blurRange" min="0" max="40" value="16">
                 </div>
                 <div class="slider-row">
-                    <label>Glass Opacity <span id="opacityVal">85%</span></label>
+                    <label><span id="lblOpacity">Glass Opacity</span> <span id="opacityVal">85%</span></label>
                     <input type="range" id="opacityRange" min="10" max="100" value="85">
                 </div>
                 <div class="slider-row">
-                    <label>Ambient Glow <span id="glowVal">15%</span></label>
+                    <label><span id="lblGlow">Ambient Glow</span> <span id="glowVal">15%</span></label>
                     <input type="range" id="glowRange" min="0" max="100" value="15">
                 </div>
                 <div class="color-picker-row" id="colorPickerRow">
@@ -762,10 +772,13 @@
                 </div>
             </div>
 
-            <!-- Mini Notes / Scratchpad Panel -->
+            <!-- Mini Notes / Scratchpad Panel with Minimalist Logo -->
             <div class="notes-card">
                 <div class="notes-header">
-                    <span>📝 Scratchpad Notes</span>
+                    <span class="notes-title-group">
+                        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <span id="lblScratchpad">Scratchpad Notes</span>
+                    </span>
                     <button class="notes-btn" id="insertTimestampBtn" title="Insert current timestamp">+ Time</button>
                 </div>
                 <textarea id="notesTextArea" placeholder="Jot down notes or timestamps..."></textarea>
@@ -781,17 +794,17 @@
     <div class="shortcut-modal" id="shortcutModal">
         <div class="shortcut-box">
             <div class="shortcut-header">
-                <span>Keyboard Shortcuts</span>
+                <span id="lblKeyboardShortcuts">Keyboard Shortcuts</span>
                 <button class="fullscreen-btn" id="closeShortcutModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
             </div>
             <div class="shortcut-list">
-                <div class="shortcut-item"><span>Play / Pause</span><kbd>Space / K</kbd></div>
-                <div class="shortcut-item"><span>Skip Backward 5s</span><kbd>J / ←</kbd></div>
-                <div class="shortcut-item"><span>Skip Forward 5s</span><kbd>L / →</kbd></div>
-                <div class="shortcut-item"><span>Volume Up / Down</span><kbd>↑ / ↓</kbd></div>
-                <div class="shortcut-item"><span>Fullscreen Toggle</span><kbd>F</kbd></div>
-                <div class="shortcut-item"><span>Toggle Loop</span><kbd>R</kbd></div>
-                <div class="shortcut-item"><span>Shortcut Help</span><kbd>?</kbd></div>
+                <div class="shortcut-item"><span id="scPlay">Play / Pause</span><kbd>Space / K</kbd></div>
+                <div class="shortcut-item"><span id="scBack">Skip Backward 5s</span><kbd>J / ←</kbd></div>
+                <div class="shortcut-item"><span id="scForward">Skip Forward 5s</span><kbd>L / →</kbd></div>
+                <div class="shortcut-item"><span id="scVol">Volume Up / Down</span><kbd>↑ / ↓</kbd></div>
+                <div class="shortcut-item"><span id="scFull">Fullscreen Toggle</span><kbd>F</kbd></div>
+                <div class="shortcut-item"><span id="scLoop">Toggle Loop</span><kbd>R</kbd></div>
+                <div class="shortcut-item"><span id="scHelp">Shortcut Help</span><kbd>?</kbd></div>
             </div>
         </div>
     </div>
@@ -857,6 +870,19 @@
         const clearNotesBtn = document.getElementById('clearNotesBtn');
         const downloadNotesBtn = document.getElementById('downloadNotesBtn');
 
+        const lblBlur = document.getElementById('lblBlur');
+        const lblOpacity = document.getElementById('lblOpacity');
+        const lblGlow = document.getElementById('lblGlow');
+        const lblScratchpad = document.getElementById('lblScratchpad');
+        const lblKeyboardShortcuts = document.getElementById('lblKeyboardShortcuts');
+        const scPlay = document.getElementById('scPlay');
+        const scBack = document.getElementById('scBack');
+        const scForward = document.getElementById('scForward');
+        const scVol = document.getElementById('scVol');
+        const scFull = document.getElementById('scFull');
+        const scLoop = document.getElementById('scLoop');
+        const scHelp = document.getElementById('scHelp');
+
         let activeSourceType = 'none';
         let mouseTimer = null;
         let sampleInterval = null;
@@ -870,6 +896,23 @@
                 none: "No video", 
                 custom: "Stream", 
                 expand: "Expand",
+                theme: "Theme",
+                blur: "Blur Intensity",
+                opacity: "Glass Opacity",
+                glow: "Ambient Glow",
+                scratchpad: "Scratchpad Notes",
+                placeholderNotes: "Jot down notes or timestamps...",
+                timeBtn: "+ Time",
+                clear: "Clear",
+                download: "Download .txt",
+                shortcutsTitle: "Keyboard Shortcuts",
+                scPlay: "Play / Pause",
+                scBack: "Skip Backward 5s",
+                scForward: "Skip Forward 5s",
+                scVol: "Volume Up / Down",
+                scFull: "Fullscreen Toggle",
+                scLoop: "Toggle Loop",
+                scHelp: "Shortcut Help",
                 instrTitle: "How to Play",
                 instrText: `
                     <div>• <b>URL Streaming:</b> Paste a direct video link (such as .mp4 or .webm) into the input box and click <b>Load</b> to start playback.</div>
@@ -884,6 +927,23 @@
                 none: "无视频", 
                 custom: "流", 
                 expand: "全屏",
+                theme: "主题",
+                blur: "模糊强度",
+                opacity: "玻璃透明度",
+                glow: "环境光晕",
+                scratchpad: "随手笔记",
+                placeholderNotes: "记录笔记或时间戳...",
+                timeBtn: "+ 时间",
+                clear: "清空",
+                download: "下载 .txt",
+                shortcutsTitle: "键盘快捷键",
+                scPlay: "播放 / 暂停",
+                scBack: "后退 5秒",
+                scForward: "前进 5秒",
+                scVol: "音量 增 / 减",
+                scFull: "全屏切换",
+                scLoop: "循环切换",
+                scHelp: "快捷键帮助",
                 instrTitle: "播放说明",
                 instrText: `
                     <div>• <b>URL流播放:</b> 将直接视频链接（如 .mp4 或 .webm）粘贴到输入框中并点击<b>加载</b>开始播放。</div>
@@ -898,6 +958,23 @@
                 none: "動画なし", 
                 custom: "ストリーム", 
                 expand: "拡大",
+                theme: "テーマ",
+                blur: "ぼかし強度",
+                opacity: "ガラス不透明度",
+                glow: "アンビエント光",
+                scratchpad: "メモ帳",
+                placeholderNotes: "メモやタイムスタンプを記入...",
+                timeBtn: "+ 時間",
+                clear: "クリア",
+                download: "txtダウンロード",
+                shortcutsTitle: "キーボードショートカット",
+                scPlay: "再生 / 一時停止",
+                scBack: "5秒巻き戻し",
+                scForward: "5秒早送り",
+                scVol: "音量 大 / 小",
+                scFull: "全画面切り替え",
+                scLoop: "ループ切り替え",
+                scHelp: "ショートカットヘルプ",
                 instrTitle: "再生方法",
                 instrText: `
                     <div>• <b>URL再生:</b> 直接動画リンク（.mp4や.webmなど）を入力欄に貼り付け、<b>読込</b>をクリックして再生します。</div>
@@ -912,6 +989,23 @@
                 none: "Kein Video", 
                 custom: "Stream", 
                 expand: "Vollbild",
+                theme: "Thema",
+                blur: "Unschärfe",
+                opacity: "Glas-Opazität",
+                glow: "Umgebungsleuchten",
+                scratchpad: "Notizen",
+                placeholderNotes: "Notizen oder Zeitstempel...",
+                timeBtn: "+ Zeit",
+                clear: "Löschen",
+                download: ".txt herunterladen",
+                shortcutsTitle: "Tastenkombinationen",
+                scPlay: "Wiedergabe / Pause",
+                scBack: "5s zurück",
+                scForward: "5s vor",
+                scVol: "Lautstärke Leise / Laut",
+                scFull: "Vollbild umschalten",
+                scLoop: "Schleife umschalten",
+                scHelp: "Hilfe",
                 instrTitle: "Anleitung",
                 instrText: `
                     <div>• <b>URL-Streaming:</b> Fügen Sie einen direkten Videolink (z. B. .mp4 oder .webm) ein und klicken Sie auf <b>Laden</b>.</div>
@@ -926,6 +1020,23 @@
                 none: "비디오 없음", 
                 custom: "스트림", 
                 expand: "확대",
+                theme: "테마",
+                blur: "블러 강도",
+                opacity: "유리 불투명도",
+                glow: "주변 광채",
+                scratchpad: "스크래치패드 메모",
+                placeholderNotes: "메모나 타임스탬프를 적어두세요...",
+                timeBtn: "+ 시간",
+                clear: "지우기",
+                download: ".txt 다운로드",
+                shortcutsTitle: "키보드 단축키",
+                scPlay: "재생 / 일시정지",
+                scBack: "5초 뒤로",
+                scForward: "5초 앞으로",
+                scVol: "볼륨 업 / 다운",
+                scFull: "전체 화면 토글",
+                scLoop: "반복 토글",
+                scHelp: "단축키 도움말",
                 instrTitle: "재생 방법",
                 instrText: `
                     <div>• <b>URL 스트리밍:</b> 직접 비디오 링크(.mp4 또는 .webm)를 입력창에 붙여넣고 <b>로드</b>를 클릭하세요.</div>
@@ -940,6 +1051,23 @@
                 none: "Aucune vidéo", 
                 custom: "Flux", 
                 expand: "Agrandir",
+                theme: "Thème",
+                blur: "Intensité du flou",
+                opacity: "Opacité du verre",
+                glow: "Lueur ambiante",
+                scratchpad: "Bloc-notes",
+                placeholderNotes: "Notez des remarques ou horodatages...",
+                timeBtn: "+ Temps",
+                clear: "Effacer",
+                download: "Télécharger .txt",
+                shortcutsTitle: "Raccourcis clavier",
+                scPlay: "Lecture / Pause",
+                scBack: "Reculer de 5s",
+                scForward: "Avancer de 5s",
+                scVol: "Volume Haut / Bas",
+                scFull: "Plein écran",
+                scLoop: "Boucle",
+                scHelp: "Aide",
                 instrTitle: "Instructions",
                 instrText: `
                     <div>• <b>Flux URL:</b> Collez un lien vidéo direct (.mp4 ou .webm) et cliquez sur <b>Charger</b> pour lancer la lecture.</div>
@@ -954,6 +1082,23 @@
                 none: "Nessun video", 
                 custom: "Flusso", 
                 expand: "Espandi",
+                theme: "Tema",
+                blur: "Intensità sfocatura",
+                opacity: "Opacità vetro",
+                glow: "Luce ambientale",
+                scratchpad: "Blocco note",
+                placeholderNotes: "Scrivi appunti o timestamp...",
+                timeBtn: "+ Tempo",
+                clear: "Cancella",
+                download: "Scarica .txt",
+                shortcutsTitle: "Scorciatoie da tastiera",
+                scPlay: "Riproduci / Pausa",
+                scBack: "Indietro 5s",
+                scForward: "Avanti 5s",
+                scVol: "Volume Su / Giù",
+                scFull: "Schermo intero",
+                scLoop: "Ripeti",
+                scHelp: "Aiuto scorciatoie",
                 instrTitle: "Istruzioni",
                 instrText: `
                     <div>• <b>Streaming URL:</b> Incolla un link video diretto (.mp4 o .webm) e clicca <b>Carica</b>.</div>
@@ -968,11 +1113,28 @@
                 none: "ویدیویی نیست", 
                 custom: "جریان", 
                 expand: "بزرگ",
+                theme: "پوسته",
+                blur: "شدت تاری",
+                opacity: "شفافیت شیشه",
+                glow: "درخشش محیطی",
+                scratchpad: "یادداشت‌ها",
+                placeholderNotes: "یادداشت‌ها یا تایم‌استمپ‌ها را بنویسید...",
+                timeBtn: "+ زمان",
+                clear: "پاک کردن",
+                download: "دانلود .txt",
+                shortcutsTitle: "میانبرهای صفحه کلید",
+                scPlay: "پخش / مکث",
+                scBack: "پنج ثانیه عقب",
+                scForward: "پنج ثانیه جلو",
+                scVol: "بلندی صدا کم / زیاد",
+                scFull: "تمام صفحه",
+                scLoop: "تکرار",
+                scHelp: "راهنمای میانبر",
                 instrTitle: "راهنما",
                 instrText: `
                     <div>• <b>پخش آنلاین:</b> لینک مستقیم ویدیو (.mp4 یا .webm) را وارد کرده و روی <b>بارگذاری</b> کلیک کنید.</div>
                     <div>• <b>فایل محلی:</b> برای انتخاب و پخش فایل از روی دستگاه، <b>انتخاب فایل</b> را بزنید.</div>
-                    <div>• <b>يادداشت:</b> یادداشت‌berت برداری کنید یا با <b>+ زمان</b> تایم‌استمپ‌ها را ثبت و دانلود کنید.</div>
+                    <div>• <b>يادداشت:</b> یادداشت‌برداری کنید یا با <b>+ زمان</b> تایم‌استمپ‌ها را ثبت و دانلود کنید.</div>
                 `
             }
         };
@@ -985,7 +1147,26 @@
             loadUrlBtn.textContent = t.load;
             document.getElementById('labelBrowse').childNodes[0].nodeValue = t.file + " ";
             expandBtn.textContent = t.expand;
+            themeToggleBtn.textContent = t.theme;
             
+            lblBlur.textContent = t.blur;
+            lblOpacity.textContent = t.opacity;
+            lblGlow.textContent = t.glow;
+            lblScratchpad.textContent = t.scratchpad;
+            notesTextArea.placeholder = t.placeholderNotes;
+            insertTimestampBtn.textContent = t.timeBtn;
+            clearNotesBtn.textContent = t.clear;
+            downloadNotesBtn.textContent = t.download;
+
+            lblKeyboardShortcuts.textContent = t.shortcutsTitle;
+            scPlay.textContent = t.scPlay;
+            scBack.textContent = t.scBack;
+            scForward.textContent = t.scForward;
+            scVol.textContent = t.scVol;
+            scFull.textContent = t.scFull;
+            scLoop.textContent = t.scLoop;
+            scHelp.textContent = t.scHelp;
+
             instrModalTitle.textContent = t.instrTitle;
             instrModalText.innerHTML = t.instrText;
 

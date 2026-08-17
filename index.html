@@ -44,6 +44,24 @@
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
             overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Cinematic Lights-Out Mode (Dims everything outside the player) */
+        body.cinematic-mode {
+            background-color: rgba(0, 0, 0, 0.92);
+        }
+
+        body.cinematic-mode .controls-column {
+            opacity: 0.15;
+            filter: blur(4px);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        body.cinematic-mode .player-wrapper {
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px var(--accent);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .dashboard {
@@ -80,7 +98,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
         }
 
         .header-row {
@@ -102,7 +120,7 @@
             gap: 4px;
         }
 
-        select, .theme-btn {
+        select, .theme-btn, .cinematic-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-main);
@@ -115,9 +133,15 @@
             transition: var(--transition);
         }
 
-        select:hover, .theme-btn:hover {
+        select:hover, .theme-btn:hover, .cinematic-btn:hover {
             background: var(--bg-hover);
             transform: scale(1.02);
+        }
+
+        .cinematic-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
         }
 
         .info-bar {
@@ -306,7 +330,7 @@
         }
 
         body.fullscreen-mode .ambient-glow {
-            opacity: 0.1; /* Barely perceptible minimalist ambient trace in fullscreen */
+            opacity: 0.1;
         }
 
         /* Smaller Hover Overlay Menu on the Right in Fullscreen */
@@ -374,6 +398,7 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
+                    <button class="cinematic-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
                     <select id="langSelect" aria-label="Language">
                         <option value="en">EN</option>
                         <option value="zh">中</option>
@@ -418,6 +443,7 @@
         const loadUrlBtn = document.getElementById('loadUrlBtn');
         const localFileInput = document.getElementById('localFileInput');
         const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const cinematicToggleBtn = document.getElementById('cinematicToggleBtn');
         const langSelect = document.getElementById('langSelect');
         const expandBtn = document.getElementById('expandBtn');
         const minimizeBtn = document.getElementById('minimizeBtn');
@@ -458,6 +484,11 @@
         langSelect.onchange = updateUI;
         themeToggleBtn.onclick = () => {
             htmlElement.setAttribute('data-theme', htmlElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        };
+
+        cinematicToggleBtn.onclick = () => {
+            document.body.classList.toggle('cinematic-mode');
+            cinematicToggleBtn.classList.toggle('active');
         };
 
         const toggleFullscreen = () => {

@@ -63,16 +63,16 @@
             position: relative;
         }
 
-        /* Enhanced Dynamic Frame-Reactive Ambient Glow (Slightly richer & brighter) */
+        /* Minimal Subtly Reactive Ambient Glow */
         .ambient-glow {
             position: absolute;
-            inset: -12px;
+            inset: -2px;
             background: var(--accent);
-            border-radius: calc(var(--radius) + 8px);
-            filter: blur(28px);
-            opacity: 0.65;
+            border-radius: calc(var(--radius) + 2px);
+            filter: blur(12px);
+            opacity: 0.15;
             z-index: -1;
-            transition: background 0.4s ease, opacity 0.4s ease;
+            transition: background 0.6s ease, opacity 0.6s ease;
             pointer-events: none;
         }
 
@@ -306,7 +306,7 @@
         }
 
         body.fullscreen-mode .ambient-glow {
-            opacity: 0.45; /* Enhanced bloom in fullscreen mode */
+            opacity: 0.1; /* Barely perceptible minimalist ambient trace in fullscreen */
         }
 
         /* Smaller Hover Overlay Menu on the Right in Fullscreen */
@@ -496,7 +496,7 @@
             }, 2000);
         });
 
-        // Sample dominant color from video frame periodically while playing (boosted saturation/vibrancy slightly)
+        // Sample dominant color with minimal, subtle footprint
         function startColorSampling() {
             if (sampleInterval) clearInterval(sampleInterval);
             sampleInterval = setInterval(() => {
@@ -521,7 +521,7 @@
                 } catch (e) {
                     // CORS fallback safely handled
                 }
-            }, 300);
+            }, 600);
         }
 
         videoPlayer.onplay = () => {

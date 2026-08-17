@@ -124,7 +124,7 @@
         }
 
         /* Glass Surface Apply Dynamic Blur & Smooth Transitions */
-        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, input[type="text"] {
+        .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
@@ -202,7 +202,7 @@
             align-items: center;
         }
 
-        select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn {
+        select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-main);
@@ -214,7 +214,7 @@
             outline: none;
         }
 
-        select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover, .loop-badge-btn:hover {
+        select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover, .loop-badge-btn:hover, .shortcut-btn:hover {
             background: var(--bg-hover);
             transform: scale(1.02);
         }
@@ -397,6 +397,81 @@
             display: none;
         }
 
+        /* Mini Notes / Scratchpad Panel */
+        .notes-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shadow);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .notes-header span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid transparent;
+            color: var(--text-main);
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-size: 9px;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+        }
+
+        [data-theme="dark"] textarea {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        textarea:focus {
+            background: var(--bg-surface);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(229, 184, 59, 0.2);
+        }
+
+        .notes-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notes-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .notes-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+            border-color: var(--accent);
+        }
+
         .player-wrapper {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
@@ -450,6 +525,73 @@
         .fullscreen-btn:hover {
             background: var(--bg-hover);
             color: var(--text-main);
+        }
+
+        /* Keyboard Shortcut Modal Overlay */
+        .shortcut-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .shortcut-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .shortcut-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px;
+            width: 260px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .shortcut-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .shortcut-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 9px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+        }
+
+        .shortcut-item kbd {
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: inherit;
+            color: var(--text-main);
+            font-weight: 600;
         }
 
         /* Full Webpage / Expand Mode */
@@ -552,11 +694,12 @@
             </div>
         </div>
 
-        <!-- Right Column: Controls, Settings & Info -->
+        <!-- Right Column: Controls, Settings, Notes & Info -->
         <div class="controls-column" id="controlsColumn">
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
+                    <button class="shortcut-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">⌨️</button>
                     <button class="loop-badge-btn" id="loopBadgeBtn" title="Toggle Loop">🔁 Loop</button>
                     <button class="glass-toggle-btn" id="glassToggleBtn" title="Glass Settings">🪟</button>
                     <button class="cinematic-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
@@ -612,8 +755,40 @@
                 </div>
             </div>
 
+            <!-- Mini Notes / Scratchpad Panel -->
+            <div class="notes-card">
+                <div class="notes-header">
+                    <span>📝 Scratchpad Notes</span>
+                    <button class="notes-btn" id="insertTimestampBtn" title="Insert current timestamp">+ Time</button>
+                </div>
+                <textarea id="notesTextArea" placeholder="Jot down notes or timestamps..."></textarea>
+                <div class="notes-footer">
+                    <button class="notes-btn" id="clearNotesBtn">Clear</button>
+                    <button class="notes-btn" id="downloadNotesBtn">Download .txt</button>
+                </div>
+            </div>
+
             <div class="info-bar">
                 <p class="info-text" id="infoDesc">Paste direct video link or pick a local device file.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcut Guide Modal Overlay -->
+    <div class="shortcut-modal" id="shortcutModal">
+        <div class="shortcut-box">
+            <div class="shortcut-header">
+                <span>Keyboard Shortcuts</span>
+                <button class="fullscreen-btn" id="closeShortcutModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
+            </div>
+            <div class="shortcut-list">
+                <div class="shortcut-item"><span>Play / Pause</span><kbd>Space / K</kbd></div>
+                <div class="shortcut-item"><span>Skip Backward 5s</span><kbd>J / ←</kbd></div>
+                <div class="shortcut-item"><span>Skip Forward 5s</span><kbd>L / →</kbd></div>
+                <div class="shortcut-item"><span>Volume Up / Down</span><kbd>↑ / ↓</kbd></div>
+                <div class="shortcut-item"><span>Fullscreen Toggle</span><kbd>F</kbd></div>
+                <div class="shortcut-item"><span>Toggle Loop</span><kbd>R</kbd></div>
+                <div class="shortcut-item"><span>Shortcut Help</span><kbd>?</kbd></div>
             </div>
         </div>
     </div>
@@ -631,6 +806,9 @@
         const cinematicToggleBtn = document.getElementById('cinematicToggleBtn');
         const glassToggleBtn = document.getElementById('glassToggleBtn');
         const loopBadgeBtn = document.getElementById('loopBadgeBtn');
+        const shortcutHelpBtn = document.getElementById('shortcutHelpBtn');
+        const shortcutModal = document.getElementById('shortcutModal');
+        const closeShortcutModal = document.getElementById('closeShortcutModal');
         const glassSettingsPanel = document.getElementById('glassSettingsPanel');
         const blurRange = document.getElementById('blurRange');
         const opacityRange = document.getElementById('opacityRange');
@@ -646,6 +824,11 @@
         const colorCanvas = document.getElementById('colorSamplerCanvas');
         const ctx = colorCanvas.getContext('2d');
         const htmlElement = document.documentElement;
+
+        const notesTextArea = document.getElementById('notesTextArea');
+        const insertTimestampBtn = document.getElementById('insertTimestampBtn');
+        const clearNotesBtn = document.getElementById('clearNotesBtn');
+        const downloadNotesBtn = document.getElementById('downloadNotesBtn');
 
         let activeSourceType = 'none';
         let mouseTimer = null;
@@ -701,6 +884,84 @@
                 loopBadgeBtn.classList.remove('active');
             }
         };
+
+        // Keyboard Shortcut Modal Handlers
+        shortcutHelpBtn.onclick = () => shortcutModal.classList.add('open');
+        closeShortcutModal.onclick = () => shortcutModal.classList.remove('open');
+        shortcutModal.onclick = (e) => {
+            if (e.target === shortcutModal) shortcutModal.classList.remove('open');
+        };
+
+        // Notes Scratchpad Handlers
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        insertTimestampBtn.onclick = () => {
+            const currentTime = formatTime(videoPlayer.currentTime || 0);
+            const timestampText = `[${currentTime}] `;
+            const start = notesTextArea.selectionStart;
+            const end = notesTextArea.selectionEnd;
+            const val = notesTextArea.value;
+            notesTextArea.value = val.substring(0, start) + timestampText + val.substring(end);
+            notesTextArea.selectionStart = notesTextArea.selectionEnd = start + timestampText.length;
+            notesTextArea.focus();
+        };
+
+        clearNotesBtn.onclick = () => {
+            if (confirm("Clear all notes?")) {
+                notesTextArea.value = '';
+            }
+        };
+
+        downloadNotesBtn.onclick = () => {
+            const text = notesTextArea.value;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'player-notes.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        // Global Keyboard Shortcut Listener
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            const key = e.key.toLowerCase();
+            if (e.key === '?' || key === '/') {
+                e.preventDefault();
+                shortcutModal.classList.toggle('open');
+                return;
+            }
+
+            if (key === ' ' || key === 'k') {
+                e.preventDefault();
+                if (videoPlayer.paused) videoPlayer.play();
+                else videoPlayer.pause();
+            } else if (key === 'j' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - 5);
+            } else if (key === 'l' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                videoPlayer.currentTime = Math.min(videoPlayer.duration || 0, videoPlayer.currentTime + 5);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                videoPlayer.volume = Math.min(1, videoPlayer.volume + 0.1);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                videoPlayer.volume = Math.max(0, videoPlayer.volume - 0.1);
+            } else if (key === 'f') {
+                e.preventDefault();
+                toggleFullscreen();
+            } else if (key === 'r') {
+                e.preventDefault();
+                loopBadgeBtn.click();
+            }
+        });
 
         blurRange.oninput = (e) => {
             const val = e.target.value + 'px';

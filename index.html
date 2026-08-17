@@ -145,10 +145,10 @@
 
         .dashboard {
             width: 100%;
-            max-width: 680px;
+            max-width: 760px; /* Made slightly wider to reduce button cramping */
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 8px;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 10px;
             align-items: stretch;
             transition: var(--transition);
         }
@@ -224,7 +224,7 @@
 
         .header-controls {
             display: flex;
-            gap: 3px;
+            gap: 4px; /* Increased gap slightly for a cleaner layout */
             align-items: center;
         }
 
@@ -540,7 +540,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 16px;
-            width: 260px;
+            width: 300px; /* Slightly wider modal to accommodate detailed instructions nicely */
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
@@ -628,7 +628,7 @@
             position: fixed;
             top: 16px;
             right: 16px;
-            width: 250px;
+            width: 270px;
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: 14px;
@@ -651,7 +651,7 @@
             transform: translateX(0);
         }
 
-        @media (max-width: 540px) {
+        @media (max-width: 600px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
@@ -781,8 +781,10 @@
                 <button class="fullscreen-btn" id="closeInstructionModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
             </div>
             <div class="shortcut-list">
-                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.4;" id="instrModalText">
-                    Paste a direct video link (.mp4 / .webm) into the URL field and click Load, or choose a video file directly from your local device.
+                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.5; flex-direction: column; align-items: flex-start; gap: 6px;" id="instrModalText">
+                    <div>• <b>URL Streaming:</b> Paste a direct video link (such as .mp4 or .webm) into the input box and click <b>Load</b> to start playback.</div>
+                    <div>• <b>Local Files:</b> Click <b>Choose Local File</b> to select and play any video stored directly on your local device.</div>
+                    <div>• <b>Scratchpad:</b> Jot down notes or click <b>+ Time</b> to log exact playback timestamps, then download them as a .txt file.</div>
                 </div>
             </div>
         </div>
@@ -846,7 +848,11 @@
                 custom: "Stream", 
                 expand: "Expand",
                 instrTitle: "How to Play",
-                instrText: "Paste a direct video link (.mp4 / .webm) into the URL field and click Load, or choose a video file directly from your local device."
+                instrText: `
+                    <div>• <b>URL Streaming:</b> Paste a direct video link (such as .mp4 or .webm) into the input box and click <b>Load</b> to start playback.</div>
+                    <div>• <b>Local Files:</b> Click <b>Choose Local File</b> to select and play any video stored directly on your local device.</div>
+                    <div>• <b>Scratchpad:</b> Jot down notes or click <b>+ Time</b> to log exact playback timestamps, then download them as a .txt file.</div>
+                `
             },
             zh: { 
                 title: "播放器", 
@@ -856,7 +862,11 @@
                 custom: "流", 
                 expand: "全屏",
                 instrTitle: "播放说明",
-                instrText: "将直接视频链接（.mp4 / .webm）粘贴到URL输入框中并点击加载，或者直接从本地设备选择视频文件。"
+                instrText: `
+                    <div>• <b>URL流播放:</b> 将直接视频链接（如 .mp4 或 .webm）粘贴到输入框中并点击<b>加载</b>开始播放。</div>
+                    <div>• <b>本地文件:</b> 点击<b>选择本地文件</b>来选择并播放您设备上存储的视频。</div>
+                    <div>• <b>记事本:</b> 随时记录笔记，或点击<b>+ 时间</b>记录精确的时间戳，并可下载为 .txt 文件。</div>
+                `
             },
             ja: { 
                 title: "プレーヤー", 
@@ -866,7 +876,11 @@
                 custom: "ストリーム", 
                 expand: "拡大",
                 instrTitle: "再生方法",
-                instrText: "URL欄に直接動画リンク（.mp4 / .webm）を貼り付けて「読込」をクリックするか、ローカルデバイスから動画ファイルを選択してください。"
+                instrText: `
+                    <div>• <b>URL再生:</b> 直接動画リンク（.mp4や.webmなど）を入力欄に貼り付け、<b>読込</b>をクリックして再生します。</div>
+                    <div>• <b>ローカルファイル:</b> <b>ファイル選択</b>をクリックして、デバイス内の動画ファイルを直接再生します。</div>
+                    <div>• <b>メモ帳:</b> メモを残したり、<b>+ 時間</b>で正確な再生タイムスタンプを記録し、txt形式でダウンロードできます。</div>
+                `
             },
             de: { 
                 title: "Player", 
@@ -876,7 +890,11 @@
                 custom: "Stream", 
                 expand: "Vollbild",
                 instrTitle: "Anleitung",
-                instrText: "Fügen Sie einen direkten Videolink (.mp4 / .webm) in das URL-Feld ein und klicken Sie auf Laden, oder wählen Sie eine Videodatei von Ihrem Gerät aus."
+                instrText: `
+                    <div>• <b>URL-Streaming:</b> Fügen Sie einen direkten Videolink (z. B. .mp4 oder .webm) ein und klicken Sie auf <b>Laden</b>.</div>
+                    <div>• <b>Lokale Dateien:</b> Klicken Sie auf <b>Datei wählen</b>, um ein Video von Ihrem Gerät abzuspielen.</div>
+                    <div>• <b>Notizen:</b> Machen Sie Notizen oder nutzen Sie <b>+ Zeit</b>, um Zeitstempel zu erfassen und als .txt zu speichern.</div>
+                `
             },
             ko: { 
                 title: "플레이어", 
@@ -886,7 +904,11 @@
                 custom: "스트림", 
                 expand: "확대",
                 instrTitle: "재생 방법",
-                instrText: "URL 필드에 직접 비디오 링크(.mp4 / .webm)를 붙여넣고 로드를 클릭하거나 로컬 기기에서 비디오 파일을 선택하세요."
+                instrText: `
+                    <div>• <b>URL 스트리밍:</b> 직접 비디오 링크(.mp4 또는 .webm)를 입력창에 붙여넣고 <b>로드</b>를 클릭하세요.</div>
+                    <div>• <b>로컬 파일:</b> <b>로컬 파일 선택</b>을 눌러 기기에 저장된 영상을 재생합니다.</div>
+                    <div>• <b>메모장:</b> 메모를 작성하거나 <b>+ 시간</b>을 눌러 타임스탬프를 기록하고 텍스트 파일로 다운로드하세요.</div>
+                `
             },
             fr: { 
                 title: "Lecteur", 
@@ -896,7 +918,11 @@
                 custom: "Flux", 
                 expand: "Agrandir",
                 instrTitle: "Instructions",
-                instrText: "Collez un lien vidéo direct (.mp4 / .webm) dans le champ URL et cliquez sur Charger, ou choisissez un fichier vidéo directement depuis votre appareil."
+                instrText: `
+                    <div>• <b>Flux URL:</b> Collez un lien vidéo direct (.mp4 ou .webm) et cliquez sur <b>Charger</b> pour lancer la lecture.</div>
+                    <div>• <b>Fichiers locaux:</b> Cliquez sur <b>Choisir un fichier</b> pour lire une vidéo de votre appareil.</div>
+                    <div>• <b>Bloc-notes:</b> Prenez des notes ou cliquez sur <b>+ Temps</b> pour enregistrer des repères temporels.</div>
+                `
             },
             it: { 
                 title: "Player", 
@@ -906,7 +932,11 @@
                 custom: "Flusso", 
                 expand: "Espandi",
                 instrTitle: "Istruzioni",
-                instrText: "Incolla un link video diretto (.mp4 / .webm) nel campo URL e clicca Carica, oppure seleziona un file video dal tuo dispositivo."
+                instrText: `
+                    <div>• <b>Streaming URL:</b> Incolla un link video diretto (.mp4 o .webm) e clicca <b>Carica</b>.</div>
+                    <div>• <b>File locali:</b> Clicca <b>Scegli file</b> per riprodurre un video dal tuo dispositivo.</div>
+                    <div>• <b>Blocco note:</b> Prendi appunti o clicca <b>+ Tempo</b> per registrare i timestamp e scaricarli in .txt.</div>
+                `
             },
             fa: { 
                 title: "پخش کننده", 
@@ -916,7 +946,11 @@
                 custom: "جریان", 
                 expand: "بزرگ",
                 instrTitle: "راهنما",
-                instrText: "لینک مستقیم ویدیو (.mp4 / .webm) را در فیلد URL وارد کرده و بارگذاری را بزنید، یا یک فایل ویدیویی از دستگاه خود انتخاب کنید."
+                instrText: `
+                    <div>• <b>پخش آنلاین:</b> لینک مستقیم ویدیو (.mp4 یا .webm) را وارد کرده و روی <b>بارگذاری</b> کلیک کنید.</div>
+                    <div>• <b>فایل محلی:</b> برای انتخاب و پخش فایل از روی دستگاه، <b>انتخاب فایل</b> را بزنید.</div>
+                    <div>• <b>يادداشت:</b> یادداشت‌berت برداری کنید یا با <b>+ زمان</b> تایم‌استمپ‌ها را ثبت و دانلود کنید.</div>
+                `
             }
         };
 
@@ -930,7 +964,7 @@
             expandBtn.textContent = t.expand;
             
             instrModalTitle.textContent = t.instrTitle;
-            instrModalText.textContent = t.instrText;
+            instrModalText.innerHTML = t.instrText;
 
             if (activeSourceType === 'none') videoTitle.textContent = t.none;
             else if (activeSourceType === 'custom') videoTitle.textContent = t.custom;

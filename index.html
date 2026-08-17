@@ -34,7 +34,6 @@
             --shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         }
 
-        /* Preset Color Schemes: Light & Dark surface tints mapped dynamically */
         body[data-color="amber"] {
             --accent: #e5b83b; --accent-hover: #d4a72d;
             --bg-surface: rgba(252, 248, 236, var(--glass-opacity, 0.85));
@@ -123,14 +122,12 @@
             transition: background-color 0.5s ease;
         }
 
-        /* Glass Surface Apply Dynamic Blur & Smooth Transitions */
         .control-card, .info-bar, .player-wrapper, .controls-column, select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
         }
 
-        /* Cinematic Lights-Out Mode */
         body.cinematic-mode .controls-column {
             opacity: 0.2;
             filter: blur(5px);
@@ -189,54 +186,70 @@
         }
 
         h1 {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             margin: 0;
             letter-spacing: -0.2px;
             transition: color 0.4s ease;
         }
 
-        .header-controls {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        select, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn {
+        /* Unified Icon-Only Button Styling for Clean Visual Harmony */
+        .icon-top-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: 500;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             outline: none;
+            padding: 0;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        select:hover, .theme-btn:hover, .cinematic-btn:hover, .glass-toggle-btn:hover, .loop-badge-btn:hover, .shortcut-btn:hover {
+        .icon-top-btn:hover {
             background: var(--bg-hover);
-            transform: scale(1.02);
+            transform: scale(1.06);
+            border-color: var(--accent);
         }
 
-        .cinematic-btn.active, .glass-toggle-btn.active, .loop-badge-btn.active {
+        .icon-top-btn.active {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
         }
 
-        /* Tiny loop badge button in header */
-        .loop-badge-btn {
-            padding: 3px 6px;
-            font-size: 8px;
-            border-radius: 8px;
-            color: var(--text-muted);
-        }
-        .loop-badge-btn.active {
-            color: #fff;
+        /* Styled compact select and theme buttons matching height & radius */
+        .header-controls {
+            display: flex;
+            gap: 3px;
+            align-items: center;
         }
 
-        /* Glass settings popover drawer */
+        select, .theme-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            height: 26px;
+            padding: 0 6px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        select:hover, .theme-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
         .glass-settings-panel {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
@@ -397,7 +410,6 @@
             display: none;
         }
 
-        /* Mini Notes / Scratchpad Panel */
         .notes-card {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
@@ -527,7 +539,6 @@
             color: var(--text-main);
         }
 
-        /* Keyboard Shortcut Modal Overlay */
         .shortcut-modal {
             position: fixed;
             inset: 0;
@@ -594,7 +605,6 @@
             font-weight: 600;
         }
 
-        /* Full Webpage / Expand Mode */
         body.fullscreen-mode {
             padding: 0;
             background-color: #000;
@@ -640,7 +650,6 @@
             opacity: calc(var(--glow-opacity) * 0.5);
         }
 
-        /* Smaller Hover Overlay Menu on the Right in Fullscreen */
         body.fullscreen-mode .controls-column {
             position: fixed;
             top: 16px;
@@ -699,10 +708,10 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
-                    <button class="shortcut-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">⌨️</button>
-                    <button class="loop-badge-btn" id="loopBadgeBtn" title="Toggle Loop">🔁 Loop</button>
-                    <button class="glass-toggle-btn" id="glassToggleBtn" title="Glass Settings">🪟</button>
-                    <button class="cinematic-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
+                    <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">⌨️</button>
+                    <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">🔁</button>
+                    <button class="icon-top-btn" id="glassToggleBtn" title="Glass Settings">🪟</button>
+                    <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater Mode">✨</button>
                     <select id="langSelect" aria-label="Language">
                         <option value="en">EN</option>
                         <option value="zh">中</option>
@@ -714,7 +723,7 @@
                         <option value="fa">فا</option>
                     </select>
                     <button class="theme-btn" id="themeToggleBtn">Theme</button>
-                    <button class="fullscreen-btn" id="minimizeBtn" style="font-weight: 600; padding: 3px 6px;">✕</button>
+                    <button class="icon-top-btn" id="minimizeBtn" title="Close" style="font-weight: 600;">✕</button>
                 </div>
             </div>
 
@@ -875,7 +884,6 @@
             glassToggleBtn.classList.toggle('active');
         };
 
-        // Tiny Header Loop Button Handler
         loopBadgeBtn.onclick = () => {
             videoPlayer.loop = !videoPlayer.loop;
             if (videoPlayer.loop) {
@@ -885,14 +893,12 @@
             }
         };
 
-        // Keyboard Shortcut Modal Handlers
         shortcutHelpBtn.onclick = () => shortcutModal.classList.add('open');
         closeShortcutModal.onclick = () => shortcutModal.classList.remove('open');
         shortcutModal.onclick = (e) => {
             if (e.target === shortcutModal) shortcutModal.classList.remove('open');
         };
 
-        // Notes Scratchpad Handlers
         function formatTime(seconds) {
             const m = Math.floor(seconds / 60);
             const s = Math.floor(seconds % 60);
@@ -927,7 +933,6 @@
             URL.revokeObjectURL(url);
         };
 
-        // Global Keyboard Shortcut Listener
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
@@ -1027,7 +1032,6 @@
             }, 2000);
         });
 
-        // Sample dominant color with minimal footprint
         function startColorSampling() {
             if (sampleInterval) clearInterval(sampleInterval);
             sampleInterval = setInterval(() => {
@@ -1049,9 +1053,7 @@
                     b = Math.floor(b / count);
 
                     ambientGlow.style.background = `rgb(${r}, ${g}, ${b})`;
-                } catch (e) {
-                    // CORS fallback safely handled
-                }
+                } catch (e) {}
             }, 600);
         }
 

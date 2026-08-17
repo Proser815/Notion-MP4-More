@@ -47,21 +47,21 @@
             transition: background-color 0.5s ease;
         }
 
-        /* Cinematic Lights-Out Mode (Dims everything outside the player) */
-        body.cinematic-mode {
-            background-color: rgba(0, 0, 0, 0.92);
-        }
-
+        /* Cinematic Lights-Out Mode (Keeps theme color, only blurs controls & dims dashboard) */
         body.cinematic-mode .controls-column {
-            opacity: 0.15;
-            filter: blur(4px);
-            pointer-events: none;
+            opacity: 0.2;
+            filter: blur(5px);
+            pointer-events: auto;
             transition: var(--transition);
         }
 
+        body.cinematic-mode .controls-column:hover {
+            opacity: 1;
+            filter: blur(0);
+        }
+
         body.cinematic-mode .player-wrapper {
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px var(--accent);
-            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 15px var(--accent);
         }
 
         .dashboard {

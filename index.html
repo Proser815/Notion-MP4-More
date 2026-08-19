@@ -183,7 +183,7 @@
         .header-row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             padding: 0 2px;
             gap: 6px;
             position: relative;
@@ -192,7 +192,7 @@
         h1 {
             font-size: 13px;
             font-weight: 600;
-            margin: 4px 0 0 0;
+            margin: 0;
             letter-spacing: -0.2px;
             transition: color 0.4s ease;
             white-space: nowrap;
@@ -243,7 +243,6 @@
             gap: 4px;
             align-items: center;
             justify-content: flex-end;
-            flex-wrap: wrap;
             flex: 1;
         }
 
@@ -251,17 +250,18 @@
             display: flex;
             gap: 4px;
             align-items: center;
-            flex-wrap: wrap;
             overflow: hidden;
-            max-width: 100%;
+            max-width: 1000px;
             opacity: 1;
             transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
         }
 
         .collapsible-group.collapsed {
-            max-width: 0;
-            opacity: 0;
+            max-width: 0 !important;
+            opacity: 0 !important;
             pointer-events: none;
+            margin: 0;
+            padding: 0;
         }
 
         .custom-select-wrapper {

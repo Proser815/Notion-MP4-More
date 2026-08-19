@@ -132,6 +132,7 @@
             opacity: 0.2;
             filter: blur(5px);
             pointer-events: auto;
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         body.cinematic-mode .controls-column:hover {
@@ -141,6 +142,7 @@
 
         body.cinematic-mode .player-wrapper {
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 15px var(--accent);
+            transition: box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .dashboard {
@@ -224,12 +226,17 @@
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .icon-top-btn:hover {
             background: var(--bg-hover);
             transform: scale(1.06);
             border-color: var(--accent);
+        }
+
+        .icon-top-btn:active {
+            transform: scale(0.95);
         }
 
         .icon-top-btn.active {
@@ -329,7 +336,7 @@
             pointer-events: none;
             transform: translateY(-8px) scale(0.94);
             transform-origin: top right;
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.25s ease;
+            transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1), transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.25s ease;
         }
 
         .custom-select-wrapper.open .custom-select-options {
@@ -346,7 +353,7 @@
             border-radius: 6px;
             cursor: pointer;
             color: var(--text-main);
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -355,6 +362,7 @@
         .custom-option:hover {
             background: var(--bg-hover);
             color: var(--accent);
+            transform: translateX(2px);
         }
 
         .custom-option.selected {
@@ -376,12 +384,17 @@
             outline: none;
             box-sizing: border-box;
             flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .theme-btn:hover {
             background: var(--bg-hover);
             border-color: var(--accent);
             transform: scale(1.02);
+        }
+
+        .theme-btn:active {
+            transform: scale(0.96);
         }
 
         .collapsible-panel {
@@ -404,7 +417,7 @@
             pointer-events: none;
             transform: translateY(-8px) scale(0.98);
             transform-origin: top right;
-            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.25s ease;
+            transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1), transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.25s ease;
         }
 
         .collapsible-panel.open {
@@ -418,6 +431,7 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
+            transition: all 0.3s ease;
         }
 
         .slider-row label {
@@ -432,6 +446,7 @@
             width: 100%;
             accent-color: var(--accent);
             cursor: pointer;
+            transition: transform 0.2s ease;
         }
 
         .color-picker-row {
@@ -448,7 +463,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
         }
 
         .color-dot:hover {
@@ -469,6 +484,7 @@
             flex-direction: column;
             gap: 6px;
             box-shadow: var(--shadow);
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .control-row {
@@ -487,6 +503,7 @@
             border-radius: 10px;
             font-size: 9px;
             outline: none;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         [data-theme="dark"] input[type="text"] {
@@ -497,6 +514,7 @@
             background: var(--bg-surface);
             border-color: var(--accent);
             box-shadow: 0 0 0 2px rgba(229, 184, 59, 0.2);
+            transform: translateY(-0.5px);
         }
 
         .action-btn, .file-label {
@@ -524,6 +542,12 @@
 
         .action-btn.ab-active {
             background: #ff5252;
+            animation: pulseAB 1.5s infinite;
+        }
+        @keyframes pulseAB {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
         }
         .action-btn.ab-active:hover {
             background: #ff1744;
@@ -543,6 +567,7 @@
             gap: 4px;
             box-shadow: var(--shadow);
             position: relative;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .notes-header {
@@ -567,6 +592,7 @@
             align-items: center;
             justify-content: center;
             color: var(--accent);
+            transition: transform 0.3s ease;
         }
 
         .notes-logo-minimal svg {
@@ -592,6 +618,7 @@
             box-sizing: border-box;
             outline: none;
             font-family: inherit;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         [data-theme="dark"] textarea {
@@ -619,13 +646,18 @@
             font-size: 8px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .notes-btn:hover {
             background: var(--bg-hover);
             color: var(--text-main);
             border-color: var(--accent);
+            transform: translateY(-0.5px);
+        }
+
+        .notes-btn:active {
+            transform: scale(0.95);
         }
 
         .notes-sidebar-container {
@@ -650,7 +682,7 @@
             pointer-events: none;
             transform: translateX(-10px);
             z-index: 20;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             box-sizing: border-box;
         }
 
@@ -682,6 +714,7 @@
             outline: none;
             box-sizing: border-box;
             margin-bottom: 2px;
+            transition: all 0.25s ease;
         }
         [data-theme="dark"] .notes-search-input {
             background: rgba(0, 0, 0, 0.2);
@@ -709,7 +742,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             color: var(--text-main);
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         [data-theme="dark"] .sidebar-note-item {
@@ -719,6 +752,7 @@
         .sidebar-note-item:hover {
             background: var(--bg-hover);
             border-color: var(--accent);
+            transform: translateX(2px);
         }
 
         .player-wrapper {
@@ -730,6 +764,7 @@
             flex-direction: column;
             box-shadow: var(--shadow);
             position: relative;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         video, canvas#glCanvas {
@@ -801,6 +836,10 @@
             transform: scale(1.08);
         }
 
+        .fullscreen-btn:active {
+            transform: scale(0.95);
+        }
+
         .fullscreen-btn:hover svg {
             transform: scale(1.1);
         }
@@ -817,7 +856,7 @@
             z-index: 10000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .shortcut-modal.open {
@@ -837,6 +876,12 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .shortcut-modal.open .shortcut-box {
+            transform: scale(1);
         }
 
         .shortcut-header {
@@ -859,6 +904,7 @@
             justify-content: space-between;
             align-items: center;
             color: var(--text-muted);
+            transition: color 0.3s ease;
         }
 
         .shortcut-item kbd {
@@ -869,6 +915,7 @@
             font-family: inherit;
             color: var(--text-main);
             font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         body.fullscreen-mode {
@@ -1025,6 +1072,11 @@
                                 <div class="custom-option" data-value="fr">FR</div>
                                 <div class="custom-option" data-value="it">IT</div>
                                 <div class="custom-option" data-value="fa">فا</div>
+                                <div class="custom-option" data-value="es">ES</div>
+                                <div class="custom-option" data-value="pt">PT</div>
+                                <div class="custom-option" data-value="ru">RU</div>
+                                <div class="custom-option" data-value="hi">हि</div>
+                                <div class="custom-option" data-value="ar">عربي</div>
                             </div>
                         </div>
 
@@ -1077,11 +1129,11 @@
                     <div class="slider-row">
                         <label><span id="lblLut">Color Grading Preset</span></label>
                         <select id="lutPresetSelect" style="width: 100%; font-size: 9px; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                            <option value="none">None</option>
-                            <option value="warm">Warm Vintage</option>
-                            <option value="cool">Cool Cyberpunk</option>
-                            <option value="dramatic">Dramatic Contrast</option>
-                            <option value="sepia">Sepia Tone</option>
+                            <option value="none" id="optLutNone">None</option>
+                            <option value="warm" id="optLutWarm">Warm Vintage</option>
+                            <option value="cool" id="optLutCool">Cool Cyberpunk</option>
+                            <option value="dramatic" id="optLutDramatic">Dramatic Contrast</option>
+                            <option value="sepia" id="optLutSepia">Sepia Tone</option>
                         </select>
                     </div>
                 </div>
@@ -1605,6 +1657,11 @@
                 scFull: "Fullscreen Toggle",
                 scLoop: "Toggle Loop",
                 scHelp: "Shortcut Help",
+                lutNone: "None",
+                lutWarm: "Warm Vintage",
+                lutCool: "Cool Cyberpunk",
+                lutDramatic: "Dramatic Contrast",
+                lutSepia: "Sepia Tone",
                 instrTitle: "User Instructions & Feature Guide",
                 instrText: `
                     <div><b>1. WebGL Acceleration & Real-time Filters</b><br>• Real-time video manipulation with customizable brightness, contrast, saturation, sharpness, and LUT preset color grading.</div>
@@ -1650,6 +1707,11 @@
                 scFull: "切换全屏模式",
                 scLoop: "切换单曲循环",
                 scHelp: "快捷键帮助",
+                lutNone: "无滤镜",
+                lutWarm: "温暖复古",
+                lutCool: "赛博朋克冷色",
+                lutDramatic: "戏剧性对比",
+                lutSepia: "怀旧复古褐",
                 instrTitle: "使用指南与功能说明",
                 instrText: `
                     <div><b>1. WebGL 硬件加速与实时滤镜</b><br>• 实时调整亮度、对比度、饱和度、锐化以及 LUT 调色预设。</div>
@@ -1675,7 +1737,7 @@
                 recentBtn: "保存済みメモ",
                 saveBtn: "保存",
                 clear: "エディタを清掃",
-                deleteNoteBtn: "メモ strike",
+                deleteNoteBtn: "メモ削除",
                 download: ".txt 出力",
                 searchPlaceholder: "保存済みメモを検索...",
                 setA: "開始 A: --",
@@ -1694,6 +1756,11 @@
                 scFull: "全画面表示切り替え",
                 scLoop: "ループ切り替え",
                 scHelp: "ヘルプ",
+                lutNone: "なし",
+                lutWarm: "ウォームビンテージ",
+                lutCool: "クールサイバーパンク",
+                lutDramatic: "ドラマチックコントラスト",
+                lutSepia: "セピア",
                 instrTitle: "取扱説明書＆機能ガイド",
                 instrText: `
                     <div><b>1. リアルタイムビデオフィルター</b><br>• 明るさ、コントラスト、彩度、シャープネス、LUTプリセット調色をリアルタイム処理。</div>
@@ -1737,6 +1804,11 @@
                 scFull: "Vollbild umschalten",
                 scLoop: "Schleife umschalten",
                 scHelp: "Hilfe",
+                lutNone: "Keine",
+                lutWarm: "Warm Vintage",
+                lutCool: "Cool Cyberpunk",
+                lutDramatic: "Dramatischer Kontrast",
+                lutSepia: "Sepia-Ton",
                 instrTitle: "Benutzerhandbuch & Funktionen",
                 instrText: `
                     <div><b>1. WebGL Filter & Audio-EQ</b><br>• Steuerung für Helligkeit, Kontrast, LUT-Farbkorrektur sowie Dialogue Boost und Kompressor.</div>
@@ -1779,6 +1851,11 @@
                 scFull: "전체 화면 전환",
                 scLoop: "반복 재생 전환",
                 scHelp: "단축키 도움말",
+                lutNone: "없음",
+                lutWarm: "따뜻한 빈티지",
+                lutCool: "쿨 사이버펑크",
+                lutDramatic: "극적인 대비",
+                lutSepia: "세피아 톤",
                 instrTitle: "사용 설명서 및 기능 가이드",
                 instrText: `
                     <div><b>1. 실시간 비디오 필터 & 오디오 EQ</b><br>• 밝기, 대비, 선명도, LUT 색상 보정 및 대사 강조, 폭발음 압축기(리미터) 지원.</div>
@@ -1821,6 +1898,11 @@
                 scFull: "Plein écran",
                 scLoop: "Activer la boucle",
                 scHelp: "Aide raccourcis",
+                lutNone: "Aucun",
+                lutWarm: "Vintage Chaud",
+                lutCool: "Cyberpunk Froid",
+                lutDramatic: "Contraste Dramatique",
+                lutSepia: "Sépia",
                 instrTitle: "Guide d'Utilisation & Fonctionnalités",
                 instrText: `
                     <div><b>1. Filtres vidéo WebGL & EQ Audio</b><br>• Boost de dialogue, limiteur, contrôles de luminosité, contraste et LUT.</div>
@@ -1863,6 +1945,11 @@
                 scFull: "Schermo intero",
                 scLoop: "Ripeti video",
                 scHelp: "Guida scorciatoie",
+                lutNone: "Nessuno",
+                lutWarm: "Vintage Caldo",
+                lutCool: "Cyberpunk Freddo",
+                lutDramatic: "Contrasto Drammatico",
+                lutSepia: "Seppia",
                 instrTitle: "Manuale Utente & Funzionalità",
                 instrText: `
                     <div><b>1. Filtri WebGL & Equalizzazione Audio</b><br>• Regola brillantezza, contrasto, nitidezza, LUT ed equalizzatore audio.</div>
@@ -1905,10 +1992,240 @@
                 scFull: "تغییر حالت تمام‌صفحه",
                 scLoop: "تکرار ویدیو",
                 scHelp: "راهنمای میانبرها",
+                lutNone: "هیچ‌کدام",
+                lutWarm: "وینتیج گرم",
+                lutCool: "سایبرپانک سرد",
+                lutDramatic: "کنتراست دراماتیک",
+                lutSepia: "سپیا",
                 instrTitle: "راهنمای کامل استفاده و امکانات",
                 instrText: `
                     <div><b>۱. فیلترهای ویدیویی و اکولایزر صدا</b><br>• تنظیم درخشندگی، کنتراست، وضوح،LUT وتقویت صدا.</div>
                 `
+            },
+            es: {
+                title: "Reproductor",
+                load: "Cargar",
+                file: "Elegir archivo local",
+                urlPlaceholder: "URL de video (.mp4/.webm)...",
+                none: "Ningún video cargado",
+                custom: "Transmisión de red",
+                theme: "Tema",
+                blur: "Intensidad de desenfoque",
+                opacity: "Opacidad del vidrio",
+                glow: "Brillo ambiental",
+                scratchpad: "Bloc de notas",
+                recentNotes: "Notas guardadas",
+                placeholderNotes: "Anota notas o marcas de tiempo...",
+                timeBtn: "+ Tiempo",
+                recentBtn: "Notas guardadas",
+                saveBtn: "Guardar",
+                clear: "Limpiar editor",
+                deleteNoteBtn: "Eliminar nota",
+                download: "Descargar .txt",
+                searchPlaceholder: "Buscar notas guardadas...",
+                setA: "Inicio A: --",
+                setB: "Fin B: --",
+                clearAB: "Borrar AB",
+                noSavedNotes: "No hay notas guardadas",
+                noMatchingNotes: "No hay notas coincidentes",
+                savedAlert: "¡Nota guardada con éxito!",
+                noNoteLoadedAlert: "No hay ninguna nota seleccionada.",
+                confirmDelete: "¿Estás seguro de eliminar esta nota?",
+                shortcutsTitle: "Atajos de teclado",
+                scPlay: "Reproducir / Pausa",
+                scBack: "Retroceder 5s",
+                scForward: "Avanzar 5s",
+                scVol: "Subir / Bajar volumen",
+                scFull: "Pantalla completa",
+                scLoop: "Bucle",
+                scHelp: "Ayuda",
+                lutNone: "Ninguno",
+                lutWarm: "Vintage cálido",
+                lutCool: "Ciberpunk frío",
+                lutDramatic: "Contraste dramático",
+                lutSepia: "Sepia",
+                instrTitle: "Instrucciones de usuario",
+                instrText: "<div><b>1. Filtros WebGL y Audio EQ</b><br>• Control de brillo, contraste, saturación y ecualización de audio.</div>"
+            },
+            pt: {
+                title: "Reprodutor",
+                load: "Carregar",
+                file: "Escolher arquivo local",
+                urlPlaceholder: "URL do vídeo (.mp4/.webm)...",
+                none: "Nenhum vídeo carregado",
+                custom: "Transmissão de rede",
+                theme: "Tema",
+                blur: "Intensidade do desfoque",
+                opacity: "Opacidade do vidro",
+                glow: "Brilho ambiente",
+                scratchpad: "Bloco de notas",
+                recentNotes: "Notas salvas",
+                placeholderNotes: "Anote notas ou marcas de tempo...",
+                timeBtn: "+ Tempo",
+                recentBtn: "Notas salvas",
+                saveBtn: "Salvar",
+                clear: "Limpar editor",
+                deleteNoteBtn: "Excluir nota",
+                download: "Baixar .txt",
+                searchPlaceholder: "Pesquisar notas salvas...",
+                setA: "Início A: --",
+                setB: "Fim B: --",
+                clearAB: "Limpar AB",
+                noSavedNotes: "Nenhuma nota salva",
+                noMatchingNotes: "Nenhuma nota correspondente",
+                savedAlert: "Nota salva com sucesso!",
+                noNoteLoadedAlert: "Nenhuma nota selecionada.",
+                confirmDelete: "Tem certeza que deseja excluir esta nota?",
+                shortcutsTitle: "Atalhos de teclado",
+                scPlay: "Reproduzir / Pausa",
+                scBack: "Voltar 5s",
+                scForward: "Avançar 5s",
+                scVol: "Aumentar / Diminuir volume",
+                scFull: "Tela cheia",
+                scLoop: "Repetir",
+                scHelp: "Ajuda",
+                lutNone: "Nenhum",
+                lutWarm: "Vintage Quente",
+                lutCool: "Cyberpunk Frio",
+                lutDramatic: "Contraste Dramático",
+                lutSepia: "Sépia",
+                instrTitle: "Instruções do usuário",
+                instrText: "<div><b>1. Filtros WebGL e Equalizador de Áudio</b><br>• Controles de brilho, contraste e áudio avançados.</div>"
+            },
+            ru: {
+                title: "Плеер",
+                load: "Загрузить",
+                file: "Выбрать файл",
+                urlPlaceholder: "URL видео (.mp4/.webm)...",
+                none: "Видео не загружено",
+                custom: "Сетевой поток",
+                theme: "Тема",
+                blur: "Интенсивность размытия",
+                opacity: "Прозрачность стекла",
+                glow: "Окружающее свечение",
+                scratchpad: "Блокнот",
+                recentNotes: "Сохраненные заметки",
+                placeholderNotes: "Записывайте заметки или таймкоды...",
+                timeBtn: "+ Время",
+                recentBtn: "Заметки",
+                saveBtn: "Сохранить",
+                clear: "Очистить",
+                deleteNoteBtn: "Удалить заметку",
+                download: "Скачать .txt",
+                searchPlaceholder: "Поиск заметок...",
+                setA: "Точка A: --",
+                setB: "Точка B: --",
+                clearAB: "Сбросить AB",
+                noSavedNotes: "Нет сохраненных заметок",
+                noMatchingNotes: "Нет подходящих заметок",
+                savedAlert: "Заметка успешно сохранена!",
+                noNoteLoadedAlert: "Заметка не выбрана.",
+                confirmDelete: "Вы уверены, что хотите удалить эту заметку?",
+                shortcutsTitle: "Горячие клавиши",
+                scPlay: "Воспроизведение / Пауза",
+                scBack: "Назад 5с",
+                scForward: "Вперед 5с",
+                scVol: "Громкость +/-",
+                scFull: "Полноэкранный режим",
+                scLoop: "Повтор",
+                scHelp: "Помощь",
+                lutNone: "Нет",
+                lutWarm: "Теплый винтаж",
+                lutCool: "Холодный киберпанк",
+                lutDramatic: "Драматичный контраст",
+                lutSepia: "Сепия",
+                instrTitle: "Инструкция пользователя",
+                instrText: "<div><b>1. WebGL фильтры и аудио эквалайзер</b><br>• Настройка яркости, контрастности и аудио.</div>"
+            },
+            hi: {
+                title: "плеयर",
+                load: "लोड",
+                file: "लोकल फ़ाइल चुनें",
+                urlPlaceholder: "वीडियो URL (.mp4/.webm)...",
+                none: "कोई वीडियो लोड नहीं हुआ",
+                custom: "नेटवर्क स्ट्रीम",
+                theme: "थीम",
+                blur: "धुंधलापन",
+                opacity: "पारदर्शिता",
+                glow: "ग्लो",
+                scratchpad: "नोट्स",
+                recentNotes: "सहेजे गए नोट्स",
+                placeholderNotes: "नोट्स या टाइमस्टैम्प लिखें...",
+                timeBtn: "+ समय",
+                recentBtn: "नोट्स",
+                saveBtn: "सहेजें",
+                clear: "साफ़ करें",
+                deleteNoteBtn: "नोट हटाएं",
+                download: ".txt डाउनलोड करें",
+                searchPlaceholder: "नोट्स खोजें...",
+                setA: "सेट A: --",
+                setB: "सेट B: --",
+                clearAB: "AB साफ़ करें",
+                noSavedNotes: "कोई सहेजा हुआ नोट नहीं",
+                noMatchingNotes: "कोई मेल खाता नोट नहीं",
+                savedAlert: "नोट सफलतापूर्वक सहेजा गया!",
+                noNoteLoadedAlert: "कोई नोट चयनित नहीं है।",
+                confirmDelete: "क्या आप इस नोट को हटाना चाहते हैं?",
+                shortcutsTitle: "कीबोर्ड शॉर्टकट",
+                scPlay: "चलाएं / रोकें",
+                scBack: "5 सेकंड पीछे",
+                scForward: "5 सेकंड आगे",
+                scVol: "वॉल्यूम कम/ज़्यादा",
+                scFull: "फुलस्क्रीन",
+                scLoop: "लूप",
+                scHelp: "मदद",
+                lutNone: "कोई नहीं",
+                lutWarm: "वार्म विंटेज",
+                lutCool: "कूल साइबरपंक",
+                lutDramatic: "ड्रामेटिक कंट्रास्ट",
+                lutSepia: "सेपिया",
+                instrTitle: "निर्देश",
+                instrText: "<div><b>1. WebGL फ़िल्टर और ऑडियो EQ</b><br>• चमक, कंट्रास्ट और ऑडियो नियंत्रण।</div>"
+            },
+            ar: {
+                title: "مشغل",
+                load: "تحميل",
+                file: "اختر ملف محلي",
+                urlPlaceholder: "رابط الفيديو (.mp4/.webm)...",
+                none: "لا يوجد فيديو محمل",
+                custom: "بث شبكي",
+                theme: "السمة",
+                blur: "شدة التموية",
+                opacity: "شفافية الزجاج",
+                glow: "التوهج المحيط",
+                scratchpad: "ملاحظات سريعة",
+                recentNotes: "الملاحظات المحفوظة",
+                placeholderNotes: "اكتب ملاحظاتك أو طوابع الوقت...",
+                timeBtn: "+ الوقت",
+                recentBtn: "الملاحظات",
+                saveBtn: "حفظ",
+                clear: "مسح المحرر",
+                deleteNoteBtn: "حذف الملاحظة",
+                download: "تحميل .txt",
+                searchPlaceholder: "بحث في الملاحظات...",
+                setA: "تعيين A: --",
+                setB: "تعيين B: --",
+                clearAB: "مسح AB",
+                noSavedNotes: "لا توجد ملاحظات محفوظة",
+                noMatchingNotes: "لا توجد ملاحظات مطابقة",
+                savedAlert: "تم حفظ الملاحظة بنجاح!",
+                noNoteLoadedAlert: "لم يتم اختيار أي ملاحظة.",
+                confirmDelete: "هل أنت متأكد من حذف هذه الملاحظة؟",
+                shortcutsTitle: "اختصارات لوحة المفاتيح",
+                scPlay: "تشغيل / إيقاف مؤقت",
+                scBack: "رجوع 5 ثوانٍ",
+                scForward: "تقديم 5 ثوانٍ",
+                scVol: "رفع / تخفيض الصوت",
+                scFull: "ملء الشاشة",
+                scLoop: "تكرار",
+                scHelp: "مساعدة",
+                lutNone: "بلا",
+                lutWarm: "دافئ كلاسيكي",
+                lutCool: "سايبربانك بارد",
+                lutDramatic: "تباين درامي",
+                lutSepia: "بني داكن",
+                instrTitle: "تعليمات المستخدم",
+                instrText: "<div><b>1. مرشحات WebGL وموازن الصوت</b><br>• تحكم في السطوع والتباين والصوت.</div>"
             }
         };
 
@@ -1934,6 +2251,12 @@
             clearLoadedNoteBtn.textContent = t.deleteNoteBtn;
             downloadNotesBtn.textContent = t.download;
             noteSearchInput.placeholder = t.searchPlaceholder;
+
+            document.getElementById('optLutNone').textContent = t.lutNone;
+            document.getElementById('optLutWarm').textContent = t.lutWarm;
+            document.getElementById('optLutCool').textContent = t.lutCool;
+            document.getElementById('optLutDramatic').textContent = t.lutDramatic;
+            document.getElementById('optLutSepia').textContent = t.lutSepia;
 
             if (loopPointA === null) setABtn.textContent = t.setA;
             if (loopPointB === null) setBBtn.textContent = t.setB;
@@ -2380,7 +2703,7 @@
         };
 
         loadUrlBtn.onclick = () => {
-            const url = videoUrlInput.value.trim();
+            const url = videoUrlInput.value.txtTrim ? videoUrlInput.value.trim() : videoUrlInput.value.trim();
             if (url) {
                 videoPlayer.src = url;
                 activeSourceType = 'custom';

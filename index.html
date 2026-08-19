@@ -180,7 +180,6 @@
             flex-direction: column;
             gap: 6px;
             position: relative;
-            /* Ensures panels and dropdowns inside stay completely clear of under-layers */
             z-index: 100;
             overflow: visible;
         }
@@ -192,7 +191,6 @@
             padding: 0 2px;
             gap: 6px;
             position: relative;
-            /* Crucial fix: changed from hidden to visible so dropdown menus aren't clipped */
             overflow: visible;
         }
 
@@ -299,8 +297,8 @@
             position: relative;
             user-select: none;
             flex-shrink: 0;
-            /* Ultra-high stacking context to completely prevent clipping or hiding under the UI */
-            z-index: 999999;
+            /* Maximized stacking layer priority so it sits upfront of the page */
+            z-index: 2147483647;
         }
 
         .custom-select-trigger {
@@ -349,21 +347,20 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: 9px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
             padding: 4px;
             display: flex;
             flex-direction: column;
             gap: 2px;
-            z-index: 1000000;
-            min-width: 95px;
-            max-height: 200px;
+            z-index: 2147483647;
+            min-width: 105px;
+            max-height: 220px;
             overflow-y: auto;
             
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
             transform: translateY(-8px) scale(0.96);
-            /* Smooth easing for opening/closing */
             transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
             
             scrollbar-width: thin;

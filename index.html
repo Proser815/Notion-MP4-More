@@ -18,6 +18,7 @@
             --text-muted: #8e8e93;
             --radius: 14px;
             --shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            /* Smoother, springier cubic-bezier transition curve */
             --transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
             --glass-blur: 16px;
             --glass-opacity: 0.85;
@@ -174,13 +175,12 @@
             pointer-events: none;
         }
 
-        /* FIXED: Changed overflow to visible so dropdown elements aren't clipped */
         .controls-column {
             display: flex;
             flex-direction: column;
             gap: 6px;
             position: relative;
-            z-index: 999999;
+            z-index: 100;
             overflow: visible;
         }
 
@@ -339,7 +339,6 @@
             transform: rotate(180deg);
         }
 
-        /* FIXED: Maximum z-index and fixed rendering context to sit absolute top */
         .custom-select-options {
             position: absolute;
             top: calc(100% + 6px);
@@ -347,7 +346,7 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: 9px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
             padding: 4px;
             display: flex;
             flex-direction: column;
@@ -804,12 +803,9 @@
             transition: var(--transition);
         }
 
-        /* FIXED: Locked uniform sizing box using object-fit and rigid aspect ratio constraints */
         video, canvas#glCanvas {
             width: 100%;
-            height: 100%;
             aspect-ratio: 16/9;
-            object-fit: cover;
             background: #000;
             outline: none;
         }
@@ -1044,6 +1040,7 @@
                 <canvas id="glCanvas"></canvas>
                 <div class="video-info">
                     <div class="video-title" id="currentVideoTitle">No video</div>
+                    <!-- Upgraded Expand / Fullscreen SVG Icon Button -->
                     <button class="fullscreen-btn" id="expandBtn" title="Toggle Fullscreen">
                         <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
                     </button>
@@ -1056,11 +1053,14 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
+                    <!-- Collapse Toggle Button -->
                     <button class="icon-top-btn" id="collapseToggleBtn" title="Toggle Navigation Bar">
                         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
 
+                    <!-- Collapsible Container for Header Buttons with Reorganised Clusters -->
                     <div class="collapsible-group" id="collapsibleNav">
+                        <!-- Cluster 1: Audio & Video Adjustments -->
                         <div class="button-cluster">
                             <button class="icon-top-btn" id="audioSettingsBtn" title="Audio Compressor / Equalizer">
                                 <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5v14M7 8v8M22 10v4M2 10v4"/></svg>
@@ -1073,6 +1073,7 @@
                             </button>
                         </div>
 
+                        <!-- Cluster 2: Layout & Appearance Customizer -->
                         <div class="button-cluster">
                             <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">
                                 <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
@@ -1085,6 +1086,7 @@
                             </button>
                         </div>
 
+                        <!-- Cluster 3: Help & Localization / Theme -->
                         <div class="button-cluster">
                             <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">
                                 <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
@@ -1093,7 +1095,7 @@
                                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                             </button>
                             
-                            <!-- Dropdown menu -->
+                            <!-- Smooth Animated Custom Language Dropdown -->
                             <div class="custom-select-wrapper" id="langSelectWrapper">
                                 <div class="custom-select-trigger" id="langSelectTrigger">
                                     <span id="currentLangLabel">EN</span>
@@ -1125,7 +1127,7 @@
                     </button>
                 </div>
 
-                <!-- Panels -->
+                <!-- Audio Compressor / Equalizer Panel -->
                 <div class="collapsible-panel" id="audioSettingsPanel">
                     <div class="slider-row">
                         <label><span id="lblDialogue">Dialogue Boost</span> <span id="dialogueVal">0 dB</span></label>
@@ -1145,6 +1147,7 @@
                     </div>
                 </div>
 
+                <!-- Real-time Video Filters Panel -->
                 <div class="collapsible-panel" id="videoFiltersPanel">
                     <div class="slider-row">
                         <label><span id="lblBrightness">Brightness</span> <span id="brightnessVal">0</span></label>
@@ -1174,6 +1177,7 @@
                     </div>
                 </div>
 
+                <!-- Glass, Glow & Color Scheme Customizer Panel -->
                 <div class="collapsible-panel" id="glassSettingsPanel">
                     <div class="slider-row">
                         <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
@@ -1209,6 +1213,7 @@
                         <input type="file" id="localFileInput" accept="video/*">
                     </label>
                 </div>
+                <!-- A-B Repeat Control Row -->
                 <div class="control-row" style="justify-content: space-between; gap: 3px;">
                     <button class="notes-btn" id="setABtn" style="flex:1;">Set A: --</button>
                     <button class="notes-btn" id="setBBtn" style="flex:1;">Set B: --</button>
@@ -1216,6 +1221,7 @@
                 </div>
             </div>
 
+            <!-- Notes & Scratchpad Panel -->
             <div class="notes-sidebar-container">
                 <div class="notes-card">
                     <div class="notes-header">
@@ -1243,18 +1249,22 @@
                     </div>
                 </div>
 
+                <!-- Saved Notes Drawer Sidebar -->
                 <div class="notes-sidebar" id="notesSidebar">
                     <div class="notes-sidebar-header">
                         <span id="lblRecentNotes">Saved Notes</span>
                         <button class="fullscreen-btn" id="closeSidebarBtn" style="border:none; background:transparent;">✕</button>
                     </div>
                     <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search saved notes..." />
-                    <div class="notes-sidebar-list" id="notesSidebarList"></div>
+                    <div class="notes-sidebar-list" id="notesSidebarList">
+                        <!-- Populated dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Keyboard Shortcuts Modal -->
     <div class="shortcut-modal" id="shortcutModal">
         <div class="shortcut-box">
             <div class="shortcut-header">
@@ -1273,6 +1283,7 @@
         </div>
     </div>
 
+    <!-- Detailed Instruction / Help Modal -->
     <div class="shortcut-modal" id="instructionModal">
         <div class="shortcut-box" style="width: 380px;">
             <div class="shortcut-header">
@@ -1280,7 +1291,9 @@
                 <button class="fullscreen-btn" id="closeInstructionModal" style="border:none; background:transparent;">✕</button>
             </div>
             <div class="shortcut-list">
-                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.5; flex-direction: column; align-items: flex-start; gap: 10px;" id="instrModalText"></div>
+                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.5; flex-direction: column; align-items: flex-start; gap: 10px;" id="instrModalText">
+                    <!-- Populated dynamically -->
+                </div>
             </div>
         </div>
     </div>
@@ -1665,18 +1678,756 @@
                 scVol: "Volume Up / Down", scFull: "Fullscreen Toggle", scLoop: "Toggle Loop", scHelp: "Shortcut Help",
                 lutNone: "None", lutWarm: "Warm Vintage", lutCool: "Cool Cyberpunk", lutDramatic: "Dramatic Contrast", lutSepia: "Sepia Tone",
                 instrTitle: "Complete User Guide & Instructions",
-                instrText: "<div><b>1. Media Loading Options</b></div>"
+                instrText: `
+                    <div><b>1. Media Loading Options</b><br>• <i>Network Stream:</i> Paste a direct video file link (.mp4/.webm) into the URL bar and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to open a video from your device storage.</div>
+                    <div><b>2. WebGL Hardware Filters & Color Grading</b><br>• Access the filters panel to adjust real-time Brightness, Contrast, Saturation, Sharpness, and pick Cinematic LUT color presets.</div>
+                    <div><b>3. Professional Audio EQ & Limiter</b><br>• Use the Audio settings to boost Dialogue frequencies, apply an Explosion Limiter compressor, or modify Bass and Treble gains.</div>
+                    <div><b>4. Scratchpad Notes & Interactive Timestamps</b><br>• Click <b>+ Time</b> to stamp the current video time into your scratchpad. Click any timestamp link inside saved notes to instantly seek to that video moment.</div>
+                `
+            },
+            zh: { 
+                title: "播放器", load: "加载", file: "选择本地视频文件", urlPlaceholder: "输入视频网址 (.mp4/.webm)...",
+                none: "未加载任何视频", custom: "网络视频流", theme: "主题配色",
+                blur: "毛玻璃模糊度", opacity: "玻璃不透明度", glow: "环境光晕亮度",
+                scratchpad: "随手记事本", recentNotes: "已存笔记列表", placeholderNotes: "在此记录笔记或按键添加时间戳...",
+                timeBtn: "+ 时间戳", recentBtn: "已存笔记", saveBtn: "保存笔记", clear: "清空编辑器",
+                deleteNoteBtn: "删除已存笔记", download: "导出 .txt", searchPlaceholder: "搜索已存笔记...",
+                setA: "起点 A: --", setB: "终点 B: --", clearAB: "清除 AB 循环",
+                noSavedNotes: "暂无保存的笔记", noMatchingNotes: "未找到匹配笔记",
+                savedAlert: "笔记已成功保存！", noNoteLoadedAlert: "当前未选中任何已存笔记。",
+                confirmDelete: "确定要永久删除此条已存笔记吗？", shortcutsTitle: "键盘快捷键指南",
+                scPlay: "播放 / 暂停", scBack: "快退 5 秒", scForward: "快进 5 秒",
+                scVol: "音量 增大 / 减小", scFull: "切换全屏模式", scLoop: "切换单曲循环", scHelp: "快捷键帮助",
+                lutNone: "无滤镜", lutWarm: "温暖复古", lutCool: "赛博朋克冷色", lutDramatic: "戏剧性对比", lutSepia: "怀旧复古褐",
+                instrTitle: "详细使用指南与功能说明",
+                instrText: `
+                    <div><b>1. 媒体加载方式</b><br>• <i>网络流:</i> 在输入框中粘贴直链 (.mp4/.webm) 后点击<b>加载</b>。<br>• <i>本地文件:</i> 点击<b>选择本地视频文件</b>导入设备中的视频。</div>
+                    <div><b>2. WebGL 硬件滤镜与调色</b><br>• 开启视频滤镜面板，实时调节亮度、对比度、饱和度、锐化及 LUT 预设。</div>
+                    <div><b>3. 专业音频均衡与压缩</b><br>• 使用音频面板调节人声增强、爆破音平滑压缩、低音与高音增益。</div>
+                    <div><b>4. 记事本与互动时间戳</b><br>• 点击 <b>+ 时间戳</b> 记录当前播放时刻。点击笔记中的时间戳链接可一键跳转至对应进度！</div>
+                `
+            },
+            ja: { 
+                title: "プレーヤー", load: "読み込み", file: "ローカルファイルを選択", urlPlaceholder: "動画URL (.mp4/.webm)...",
+                none: "動画が読み込まれていません", custom: "ネットワークストリーム", theme: "テーマ",
+                blur: "ぼかし強度", opacity: "不透明度", glow: "アンビエント光",
+                scratchpad: "メモ帳", recentNotes: "保存済みメモ", placeholderNotes: "メモやタイムスタンプを入力...",
+                timeBtn: "+ 時間", recentBtn: "保存済みメモ", saveBtn: "保存", clear: "エディタを清掃",
+                deleteNoteBtn: "メモ削除", download: ".txt 出力", searchPlaceholder: "保存済みメモを検索...",
+                setA: "開始 A: --", setB: "終了 B: --", clearAB: "AB リセット",
+                noSavedNotes: "保存されたメモはありません", noMatchingNotes: "該当するメモがありません",
+                savedAlert: "メモを正常に保存しました！", noNoteLoadedAlert: "メモが選択されていません。",
+                confirmDelete: "このメモを永久に削除しますか？", shortcutsTitle: "キーボードショートカット",
+                scPlay: "再生 / 一時停止", scBack: "5秒巻き戻し", scForward: "5秒早送り",
+                scVol: "音量 上 / 下", scFull: "全画面切替", scLoop: "ループ切替", scHelp: "ヘルプ",
+                lutNone: "なし", lutWarm: "ウォームビンテージ", lutCool: "クールサイバーパンク", lutDramatic: "ドラマチックコントラスト", lutSepia: "セピア",
+                instrTitle: "詳細な取扱説明書と機能ガイド",
+                instrText: `
+                    <div><b>1. メディアの読み込み</b><br>• <i>ネットワーク:</i> URLを入力して<b>読み込み</b>を押下。<br>• <i>ローカル:</i> デバイス内のファイルを選択。</div>
+                    <div><b>2. WebGLフィルター & カラー調整</b><br>• リアルタイムで明るさ、コントラスト、LUTプリセットを適用。</div>
+                `
+            },
+            de: { 
+                title: "Player", load: "Laden", file: "Lokale Datei wählen", urlPlaceholder: "Video-URL (.mp4/.webm)...",
+                none: "Kein Video geladen", custom: "Netzwerk-Stream", theme: "Thema",
+                blur: "Unschärfe", opacity: "Opazität", glow: "Umgebungslicht",
+                scratchpad: "Notizblock", recentNotes: "Gespeicherte Notizen", placeholderNotes: "Notizen oder Zeitstempel eingeben...",
+                timeBtn: "+ Zeit", recentBtn: "Gespeichert", saveBtn: "Speichern", clear: "Editor leeren",
+                deleteNoteBtn: "Notiz löschen", download: ".txt herunterladen", searchPlaceholder: "Notizen suchen...",
+                setA: "Start A: --", setB: "Ende B: --", clearAB: "AB zurücksetzen",
+                noSavedNotes: "Keine Notizen", noMatchingNotes: "Keine Treffer",
+                savedAlert: "Notiz gespeichert!", noNoteLoadedAlert: "Keine Notiz ausgewählt.",
+                confirmDelete: "Notiz unwiderruflich löschen?", shortcutsTitle: "Tastenkombinationen",
+                scPlay: "Wiedergabe / Pause", scBack: "5s zurück", scForward: "5s vor",
+                scVol: "Lautstärke +/-", scFull: "Vollbild", scLoop: "Schleife", scHelp: "Hilfe",
+                lutNone: "Keine", lutWarm: "Warm Vintage", lutCool: "Cool Cyberpunk", lutDramatic: "Dramatischer Kontrast", lutSepia: "Sepia-Ton",
+                instrTitle: "Benutzerhandbuch & Anleitung",
+                instrText: `
+                    <div><b>1. Medienwiedergabe & Laden</b><br>• URL einfügen oder lokale Datei auswählen.</div>
+                    <div><b>2. WebGL-Filter & Audio-EQ</b><br>• Helligkeit, Kontrast, Kompressor und Equalizer anpassen.</div>
+                `
+            },
+            ko: { 
+                title: "플레이어", load: "로드", file: "로컬 파일 선택", urlPlaceholder: "비디오 URL (.mp4/.webm)...",
+                none: "로드된 비디오 없음", custom: "네트워크 스트림", theme: "테마",
+                blur: "블러 강도", opacity: "유리 투명도", glow: "주변 광채",
+                scratchpad: "연습장 메모", recentNotes: "저장된 메모 목록", placeholderNotes: "메모나 타임스탬프를 입력하세요...",
+                timeBtn: "+ 시간", recentBtn: "저장된 메모", saveBtn: "저장", clear: "에디터 비우기",
+                deleteNoteBtn: "저장된 메모 삭제", download: ".txt 다운로드", searchPlaceholder: "저장된 메모 검색...",
+                setA: "시작 A: --", setB: "종료 B: --", clearAB: "AB 초기화",
+                noSavedNotes: "저장된 메모 없음", noMatchingNotes: "일치하는 메모 없음",
+                savedAlert: "메모가 저장되었습니다!", noNoteLoadedAlert: "선택된 메모가 없습니다.",
+                confirmDelete: "이 메모를 삭제하시겠습니까?", shortcutsTitle: "키보드 단축키",
+                scPlay: "재생 / 일시정지", scBack: "5초 뒤로", scForward: "5초 앞으로",
+                scVol: "음량 조절", scFull: "전체 화면", scLoop: "반복 재생", scHelp: "도움말",
+                lutNone: "없음", lutWarm: "따뜻한 빈티지", lutCool: "쿨 사이버펑크", lutDramatic: "극적인 대비", lutSepia: "세피아 톤",
+                instrTitle: "사용 설명서 및 상세 기능 안내",
+                instrText: `
+                    <div><b>1. 비디오 소스 로드</b><br>• 네트워크 URL 주소를 입력하거나 로컬 파일을 선택하세요.</div>
+                    <div><b>2. 실시간 WebGL 필터 및 오디오 EQ</b><br>• 밝기, 대비, 대사 강조 및 폭발음 압축기(리미터)를 설정할 수 있습니다.</div>
+                `
+            },
+            fr: { 
+                title: "Lecteur", load: "Charger", file: "Choisir un fichier local", urlPlaceholder: "URL vidéo (.mp4/.webm)...",
+                none: "Aucune vidéo chargée", custom: "Flux Réseau", theme: "Thème",
+                blur: "Intensité du flou", opacity: "Opacité du verre", glow: "Lueur ambiante",
+                scratchpad: "Bloc-notes", recentNotes: "Notes enregistrées", placeholderNotes: "Prenez des notes ou ajoutez des horodatages...",
+                timeBtn: "+ Temps", recentBtn: "Notes enregistrées", saveBtn: "Enregistrer", clear: "Effacer l'éditeur",
+                deleteNoteBtn: "Supprimer la note", download: "Télécharger .txt", searchPlaceholder: "Rechercher des notes...",
+                setA: "Début A: --", setB: "Fin B: --", clearAB: "Effacer AB",
+                noSavedNotes: "Aucune note", noMatchingNotes: "Aucune correspondance",
+                savedAlert: "Note enregistrée !", noNoteLoadedAlert: "Aucune note sélectionnée.",
+                confirmDelete: "Voulez-vous supprimer cette note ?", shortcutsTitle: "Raccourcis Clavier",
+                scPlay: "Lecture / Pause", scBack: "Reculer de 5s", scForward: "Avancer de 5s",
+                scVol: "Volume Haut / Bas", scFull: "Plein écran", scLoop: "Boucle", scHelp: "Aide",
+                lutNone: "Aucun", lutWarm: "Vintage Chaud", lutCool: "Cyberpunk Froid", lutDramatic: "Contraste Dramatique", lutSepia: "Sépia",
+                instrTitle: "Guide d'Utilisation Détaillé",
+                instrText: `
+                    <div><b>1. Chargement des médias</b><br>• Entrez une URL réseau ou choisissez un fichier local.</div>
+                    <div><b>2. Filtres WebGL & Égaliseur Audio</b><br>• Personnalisez la luminosité, le contraste et les effets audio.</div>
+                `
+            },
+            it: { 
+                title: "Player", load: "Carica", file: "Scegli file locale", urlPlaceholder: "URL video (.mp4/.webm)...",
+                none: "Nessun video caricato", custom: "Flusso di Rete", theme: "Tema",
+                blur: "Intensità sfocatura", opacity: "Opacità vetro", glow: "Luce ambientale",
+                scratchpad: "Blocco note", recentNotes: "Note salvate", placeholderNotes: "Scrivi appunti o annota timestamp...",
+                timeBtn: "+ Tempo", recentBtn: "Note salvate", saveBtn: "Salva", clear: "Svuota editor",
+                deleteNoteBtn: "Elimina nota", download: "Scarica .txt", searchPlaceholder: "Cerca note...",
+                setA: "Inizio A: --", setB: "Fine B: --", clearAB: "Azzera AB",
+                noSavedNotes: "Nessuna nota", noMatchingNotes: "Nessun risultato",
+                savedAlert: "Nota salvata!", noNoteLoadedAlert: "Nessuna nota selezionata.",
+                confirmDelete: "Eliminare definitivamente la nota?", shortcutsTitle: "Scorciatoie da Tastiera",
+                scPlay: "Riproduci / Pausa", scBack: "Indietro 5s", scForward: "Avanti 5s",
+                scVol: "Volume Su / Giù", scFull: "Schermo intero", scLoop: "Ripeti", scHelp: "Aiuto",
+                lutNone: "Nessuno", lutWarm: "Vintage Caldo", lutCool: "Cyberpunk Freddo", lutDramatic: "Contrasto Drammatico", lutSepia: "Seppia",
+                instrTitle: "Manuale Utente & Guida Dettagliata",
+                instrText: `
+                    <div><b>1. Caricamento Video</b><br>• Inserisci l'URL di rete o seleziona un file locale.</div>
+                    <div><b>2. Filtri WebGL e Equalizzatore</b><br>• Regola luminosità, contrasto e opzioni audio avanzate.</div>
+                `
+            },
+            fa: { 
+                title: "پخش‌کننده", load: "بارگذاری", file: "انتخاب فایل محلی", urlPlaceholder: "آدرس ویدیو (.mp4/.webm)...",
+                none: "ویدیویی بارگذاری نشده", custom: "جریان شبکه", theme: "پوسته",
+                blur: "شدت تاری", opacity: "شفافیت شیشه", glow: "درخشش محیطی",
+                scratchpad: "دفترچه یادداشت", recentNotes: "یادداشت‌ها", placeholderNotes: "یادداشت‌ها یا تایم‌استمپ‌ها...",
+                timeBtn: "+ زمان", recentBtn: "یادداشت‌ها", saveBtn: "ذخیره", clear: "پاک‌سازی",
+                deleteNoteBtn: "حذف یادداشت", download: "دانلود .txt", searchPlaceholder: "جستجوی یادداشت...",
+                setA: "شروع A: --", setB: "پایان B: --", clearAB: "حذف AB",
+                noSavedNotes: "هیچ یادداشتی نیست", noMatchingNotes: "نتیجه‌ای یافت نشد",
+                savedAlert: "یادداشت ذخیره شد!", noNoteLoadedAlert: "یادداشتی انتخاب نشده است.",
+                confirmDelete: "آیا این یادداشت حذف شود؟", shortcutsTitle: "میانبرهای صفحه‌کلید",
+                scPlay: "پخش / مکث", scBack: "۵ ثانیه عقب", scForward: "۵ ثانیه جلو",
+                scVol: "تنظیم صدا", scFull: "تمام‌صفحه", scLoop: "تکرار", scHelp: "راهنما",
+                lutNone: "هیچ‌کدام", lutWarm: "وینتیج گرم", lutCool: "سایبرپانک سرد", lutDramatic: "کنتراست دراماتیک", lutSepia: "سپیا",
+                instrTitle: "راهنمای کامل و دستورالعمل‌ها",
+                instrText: `
+                    <div><b>۱. بارگذاری ویدیو</b><br>• آدرس مستقیم یا فایل محلی خود را وارد کنید.</div>
+                    <div><b>۲. فیلترهای تصویری و اکولایزر صوتی</b><br>• تنظیمات درخشندگی، کنتراست و صوت را مدیریت کنید.</div>
+                `
+            },
+            es: {
+                title: "Reproductor", load: "Cargar", file: "Elegir archivo local", urlPlaceholder: "URL de video (.mp4/.webm)...",
+                none: "Ningún video cargado", custom: "Transmisión de red", theme: "Tema",
+                blur: "Desenfoque", opacity: "Opacidad", glow: "Brillo ambiental",
+                scratchpad: "Bloc de notas", recentNotes: "Notas guardadas", placeholderNotes: "Anota notas o marcas de tiempo...",
+                timeBtn: "+ Tiempo", recentBtn: "Notas guardadas", saveBtn: "Guardar", clear: "Limpiar",
+                deleteNoteBtn: "Eliminar nota", download: "Descargar .txt", searchPlaceholder: "Buscar notas...",
+                setA: "Inicio A: --", setB: "Fin B: --", clearAB: "Borrar AB",
+                noSavedNotes: "Sin notas", noMatchingNotes: "Sin coincidencias",
+                savedAlert: "¡Nota guardada!", noNoteLoadedAlert: "Ninguna nota seleccionada.",
+                confirmDelete: "¿Eliminar esta nota?", shortcutsTitle: "Atajos de teclado",
+                scPlay: "Reproducir / Pausa", scBack: "Retroceder 5s", scForward: "Avanzar 5s",
+                scVol: "Volumen +/-", scFull: "Pantalla completa", scLoop: "Bucle", scHelp: "Ayuda",
+                lutNone: "Ninguno", lutWarm: "Vintage cálido", lutCool: "Ciberpunk frío", lutDramatic: "Contraste dramático", lutSepia: "Sepia",
+                instrTitle: "Guía de Usuario Detallada",
+                instrText: `
+                    <div><b>1. Carga de medios</b><br>• Inserte una URL de red o seleccione un archivo local.</div>
+                    <div><b>2. Filtros WebGL y Ecualizador</b><br>• Modifique brillo, contraste y propiedades de audio.</div>
+                `
+            },
+            pt: {
+                title: "Reprodutor", load: "Carregar", file: "Escolher arquivo local", urlPlaceholder: "URL do vídeo (.mp4/.webm)...",
+                none: "Nenhum vídeo carregado", custom: "Transmissão de rede", theme: "Tema",
+                blur: "Desfoque", opacity: "Opacidade", glow: "Brillo ambiente",
+                scratchpad: "Bloco de notas", recentNotes: "Notas salvas", placeholderNotes: "Anote notas ou marcas de tempo...",
+                timeBtn: "+ Tempo", recentBtn: "Notas salvas", saveBtn: "Salvar", clear: "Limpar",
+                deleteNoteBtn: "Excluir nota", download: "Baixar .txt", searchPlaceholder: "Pesquisar notas...",
+                setA: "Início A: --", setB: "Fim B: --", clearAB: "Limpar AB",
+                noSavedNotes: "Sem notas", noMatchingNotes: "Nenhum resultado",
+                savedAlert: "Nota salva!", noNoteLoadedAlert: "Nenhuma nota selecionada.",
+                confirmDelete: "Deseja excluir esta nota?", shortcutsTitle: "Atalhos de teclado",
+                scPlay: "Reproduzir / Pausa", scBack: "Voltar 5s", scForward: "Avançar 5s",
+                scVol: "Volume +/-", scFull: "Tela cheia", scLoop: "Repetir", scHelp: "Ajuda",
+                lutNone: "Nenhum", lutWarm: "Vintage Quente", lutCool: "Cyberpunk Frio", lutDramatic: "Contraste Dramático", lutSepia: "Sépia",
+                instrTitle: "Guia Detalhado do Usuário",
+                instrText: `
+                    <div><b>1. Carregamento de Mídia</b><br>• Insira um link direto ou escolha um arquivo local.</div>
+                    <div><b>2. Filtros WebGL e Equalizador</b><br>• Ajuste brilho, contraste e áudio avançado.</div>
+                `
+            },
+            ru: {
+                title: "Плеер", load: "Загрузить", file: "Выбрать файл", urlPlaceholder: "URL видео (.mp4/.webm)...",
+                none: "Видео не загружено", custom: "Сетевой поток", theme: "Тема",
+                blur: "Размытие", opacity: "Прозрачность", glow: "Свечение",
+                scratchpad: "Блокнот", recentNotes: "Сохраненные заметки", placeholderNotes: "Записывайте заметки...",
+                timeBtn: "+ Время", recentBtn: "Заметки", saveBtn: "Сохранить", clear: "Очистить",
+                deleteNoteBtn: "Удалить заметку", download: "Скачать .txt", searchPlaceholder: "Поиск заметок...",
+                setA: "Точка A: --", setB: "Точка B: --", clearAB: "Сбросить AB",
+                noSavedNotes: "Нет заметок", noMatchingNotes: "Нет результатов",
+                savedAlert: "Заметка сохранена!", noNoteLoadedAlert: "Заметка не выбрана.",
+                confirmDelete: "Удалить эту заметку?", shortcutsTitle: "Горячие клавиши",
+                scPlay: "Воспроизведение / Пауза", scBack: "Назад 5с", scForward: "Вперед 5с",
+                scVol: "Громкость +/-", scFull: "На весь экран", scLoop: "Повтор", scHelp: "Помощь",
+                lutNone: "Нет", lutWarm: "Теплый винтаж", lutCool: "Холодный киберпанк", lutDramatic: "Драматичный контраст", lutSepia: "Сепия",
+                instrTitle: "Подробная Инструкция Пользователя",
+                instrText: `
+                    <div><b>1. Загрузка видео</b><br>• Вставьте ссылку или выберите файл на устройстве.</div>
+                    <div><b>2. WebGL фильтры и аудио EQ</b><br>• Настраивайте яркость, контраст и эквалайзер в реальном времени.</div>
+                `
+            },
+            hi: {
+                title: "плеयर", load: "लोड", file: "लोकल फ़ाइल चुनें", urlPlaceholder: "वीडियो URL (.mp4/.webm)...",
+                none: "कोई वीडियो लोड नहीं हुआ", custom: "नेटवर्क स्ट्रीम", theme: "थीम",
+                blur: "धुंधलापन", opacity: "पारदर्शिता", glow: "ग्लो",
+                scratchpad: "नोट्स", recentNotes: "सहेजे गए नोट्स", placeholderNotes: "नोट्स लिखें...",
+                timeBtn: "+ समय", recentBtn: "नोट्स", saveBtn: "सहेजें", clear: "साफ़ करें",
+                deleteNoteBtn: "नोट हटाएं", download: ".txt डाउनलोड", searchPlaceholder: "नोट्स खोजें...",
+                setA: "सेट A: --", setB: "सेट B: --", clearAB: "AB साफ़ करें",
+                noSavedNotes: "कोई नोट नहीं", noMatchingNotes: "कोई परिणाम नहीं",
+                savedAlert: "नोट सहेजा गया!", noNoteLoadedAlert: "कोई नोट चयनित नहीं।",
+                confirmDelete: "क्या आप इस नोट को हटाना चाहते हैं?", shortcutsTitle: "कीबोर्ड शॉर्टकट",
+                scPlay: "चलाएं / रोकें", scBack: "5 सेकंड पीछे", scForward: "5 सेकंड आगे",
+                scVol: "वॉल्यूम +/-", scFull: "फुलस्क्रीन", scLoop: "लूप", scHelp: "मदद",
+                lutNone: "कोई नहीं", lutWarm: "वार्म विंटेज", lutCool: "कूल साइबरपंक", lutDramatic: "ड्रामेटिक कंट्रास्ट", lutSepia: "सेपिया",
+                instrTitle: "विस्तृत उपयोगकर्ता निर्देश",
+                instrText: `
+                    <div><b>1. मीडिया लोड करना</b><br>• URL दर्ज करें या लोकल फ़ाइल चुनें।</div>
+                    <div><b>2. WebGL फ़िल्टर और ऑडियो EQ</b><br>• चमक, कंट्रास्ट और ऑडियो विकल्प प्रबंधित करें।</div>
+                `
+            },
+            ar: {
+                title: "مشغل", load: "تحميل", file: "اختر ملف محلي", urlPlaceholder: "رابط الفيديو (.mp4/.webm)...",
+                none: "لا يوجد فيديو محمل", custom: "بث شبكي", theme: "السمة",
+                blur: "التمويه", opacity: "الشفافية", glow: "التوهج",
+                scratchpad: "ملاحظات سريعة", recentNotes: "الملاحظات المحفوظة", placeholderNotes: "اكتب ملاحظاتك...",
+                timeBtn: "+ الوقت", recentBtn: "الملاحظات", saveBtn: "حفظ", clear: "مسح",
+                deleteNoteBtn: "حذف الملاحظة", download: "تحميل .txt", searchPlaceholder: "بحث في الملاحظات...",
+                setA: "تعيين A: --", setB: "تعيين B: --", clearAB: "مسح AB",
+                noSavedNotes: "لا توجد ملاحظات", noMatchingNotes: "لا توجد نتائج",
+                savedAlert: "تم الحفظ بنجاح!", noNoteLoadedAlert: "لم يتم اختيار ملاحظة.",
+                confirmDelete: "هل تريد حذف هذه الملاحظة؟", shortcutsTitle: "اختصارات لوحة المفاتيح",
+                scPlay: "تشغيل / إيقاف", scBack: "رجوع 5ث", scForward: "تقديم 5ث",
+                scVol: "الصوت +/-", scFull: "ملء الشاشة", scLoop: "تكرار", scHelp: "مساعدة",
+                lutNone: "بلا", lutWarm: "دافئ كلاسيكي", lutCool: "سايبربانك بارد", lutDramatic: "تباين درامي", lutSepia: "بني داكن",
+                instrTitle: "دليل المستخدم الشامل والتعليمات",
+                instrText: `
+                    <div><b>1. تحميل الوسائط</b><br>• الصق رابط الفيديو المباشر أو اختر ملفاً محلياً.</div>
+                    <div><b>2. مرشحات WebGL والتلوين</b><br>• تحكم في السطوع والتباين والحدة في الوقت الفعلي.</div>
+                `
             }
         };
 
         function updateUI() {
             const t = translations[selectedLang] || translations.en;
+            
             document.getElementById('appTitle').textContent = t.title;
             loadUrlBtn.textContent = t.load;
             videoUrlInput.placeholder = t.urlPlaceholder;
+            document.getElementById('labelBrowse').childNodes[0].nodeValue = t.file + " ";
+            themeToggleBtn.textContent = t.theme;
+            
+            lblBlur.textContent = t.blur;
+            lblOpacity.textContent = t.opacity;
+            lblGlow.textContent = t.glow;
+            lblScratchpad.textContent = t.scratchpad;
+            lblRecentNotes.textContent = t.recentNotes;
+            notesTextArea.placeholder = t.placeholderNotes;
+            insertTimestampBtn.textContent = t.timeBtn;
+            toggleSidebarBtn.textContent = t.recentBtn;
+            saveNoteBtn.textContent = t.saveBtn;
+            clearNotesBtn.textContent = t.clear;
+            clearLoadedNoteBtn.textContent = t.deleteNoteBtn;
+            downloadNotesBtn.textContent = t.download;
+            noteSearchInput.placeholder = t.searchPlaceholder;
+
+            document.getElementById('optLutNone').textContent = t.lutNone;
+            document.getElementById('optLutWarm').textContent = t.lutWarm;
+            document.getElementById('optLutCool').textContent = t.lutCool;
+            document.getElementById('optLutDramatic').textContent = t.lutDramatic;
+            document.getElementById('optLutSepia').textContent = t.lutSepia;
+
+            if (loopPointA === null) setABtn.textContent = t.setA;
+            if (loopPointB === null) setBBtn.textContent = t.setB;
+            clearABtn.textContent = t.clearAB;
+
+            lblKeyboardShortcuts.textContent = t.shortcutsTitle;
+            scPlay.textContent = t.scPlay;
+            scBack.textContent = t.scBack;
+            scForward.textContent = t.scForward;
+            scVol.textContent = t.scVol;
+            scFull.textContent = t.scFull;
+            scLoop.textContent = t.scLoop;
+            scHelp.textContent = t.scHelp;
+
+            instrModalTitle.textContent = t.instrTitle;
+            instrModalText.innerHTML = t.instrText;
+
+            if (activeSourceType === 'none') videoTitle.textContent = t.none;
+            else if (activeSourceType === 'custom') videoTitle.textContent = t.custom;
+
+            renderSidebarList(noteSearchInput.value);
         }
+
+        themeToggleBtn.onclick = () => {
+            htmlElement.setAttribute('data-theme', htmlElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        };
+
+        cinematicToggleBtn.onclick = () => {
+            document.body.classList.toggle('cinematic-mode');
+            cinematicToggleBtn.classList.toggle('active');
+        };
+
+        glassToggleBtn.onclick = () => {
+            const isOpen = glassSettingsPanel.classList.contains('open');
+            audioSettingsPanel.classList.remove('open');
+            audioSettingsBtn.classList.remove('active');
+            videoFiltersPanel.classList.remove('open');
+            videoFiltersBtn.classList.remove('active');
+            langSelectWrapper.classList.remove('open');
+
+            glassSettingsPanel.classList.toggle('open', !isOpen);
+            glassToggleBtn.classList.toggle('active', !isOpen);
+        };
+
+        audioSettingsBtn.onclick = () => {
+            const isOpen = audioSettingsPanel.classList.contains('open');
+            glassSettingsPanel.classList.remove('open');
+            glassToggleBtn.classList.remove('active');
+            videoFiltersPanel.classList.remove('open');
+            videoFiltersBtn.classList.remove('active');
+            langSelectWrapper.classList.remove('open');
+
+            audioSettingsPanel.classList.toggle('open', !isOpen);
+            audioSettingsBtn.classList.toggle('active', !isOpen);
+        };
+
+        videoFiltersBtn.onclick = () => {
+            const isOpen = videoFiltersPanel.classList.contains('open');
+            glassSettingsPanel.classList.remove('open');
+            glassToggleBtn.classList.remove('active');
+            audioSettingsPanel.classList.remove('open');
+            audioSettingsBtn.classList.remove('active');
+            langSelectWrapper.classList.remove('open');
+
+            videoFiltersPanel.classList.toggle('open', !isOpen);
+            videoFiltersBtn.classList.toggle('active', !isOpen);
+        };
+
+        collapseToggleBtn.onclick = () => {
+            collapsibleNav.classList.toggle('collapsed');
+            collapseToggleBtn.classList.toggle('active');
+        };
+
+        loopBadgeBtn.onclick = () => {
+            videoPlayer.loop = !videoPlayer.loop;
+            if (videoPlayer.loop) {
+                loopBadgeBtn.classList.add('active');
+            } else {
+                loopBadgeBtn.classList.remove('active');
+            }
+        };
+
+        if (isWebGLEnabled) webglToggleBtn.classList.add('active');
+
+        webglToggleBtn.onclick = () => {
+            isWebGLEnabled = !isWebGLEnabled;
+            webglToggleBtn.classList.toggle('active', isWebGLEnabled);
+            if (isWebGLEnabled) {
+                startColorSampling();
+            } else if (sampleInterval) {
+                clearInterval(sampleInterval);
+            }
+        };
+
+        shortcutHelpBtn.onclick = () => shortcutModal.classList.add('open');
+        closeShortcutModal.onclick = () => shortcutModal.classList.remove('open');
+        shortcutModal.onclick = (e) => {
+            if (e.target === shortcutModal) shortcutModal.classList.remove('open');
+        };
+
+        instructionHelpBtn.onclick = () => instructionModal.classList.add('open');
+        closeInstructionModal.onclick = () => instructionModal.classList.remove('open');
+        instructionModal.onclick = (e) => {
+            if (e.target === instructionModal) instructionModal.classList.remove('open');
+        };
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        setABtn.onclick = () => {
+            loopPointA = videoPlayer.currentTime;
+            setABtn.textContent = `A: ${formatTime(loopPointA)}`;
+            checkABStatus();
+        };
+
+        setBBtn.onclick = () => {
+            loopPointB = videoPlayer.currentTime;
+            setBBtn.textContent = `B: ${formatTime(loopPointB)}`;
+            checkABStatus();
+        };
+
+        clearABtn.onclick = () => {
+            const t = translations[selectedLang] || translations.en;
+            loopPointA = null;
+            loopPointB = null;
+            setABtn.textContent = t.setA;
+            setBBtn.textContent = t.setB;
+            setABtn.classList.remove('ab-active');
+            setBBtn.classList.remove('ab-active');
+        };
+
+        function checkABStatus() {
+            if (loopPointA !== null) setABtn.classList.add('ab-active');
+            else setABtn.classList.remove('ab-active');
+
+            if (loopPointB !== null) setBBtn.classList.add('ab-active');
+            else setBBtn.classList.remove('ab-active');
+        }
+
+        videoPlayer.ontimeupdate = () => {
+            if (loopPointA !== null && loopPointB !== null && loopPointB > loopPointA) {
+                if (videoPlayer.currentTime >= loopPointB) {
+                    videoPlayer.currentTime = loopPointA;
+                }
+            }
+        };
+
+        function parseTimestampToSeconds(timeStr) {
+            const cleanStr = timeStr.replace('[', '').replace(']', '').trim();
+            const parts = cleanStr.split(':').map(Number);
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            return 0;
+        }
+
+        function formatTimestampHTML(text) {
+            const timestampRegex = /\[(\d{1,2}:)?\d{1,2}:\d{2}\]/g;
+            let escaped = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return escaped.replace(timestampRegex, (match) => {
+                const seconds = parseTimestampToSeconds(match);
+                return `<a href="#" class="timestamp-link" data-seek="${seconds}" style="color: var(--accent); font-weight: 600; text-decoration: underline; cursor: pointer;">${match}</a>`;
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('timestamp-link')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const seekTime = parseFloat(e.target.getAttribute('data-seek'));
+                if (!isNaN(seekTime)) {
+                    videoPlayer.currentTime = seekTime;
+                    if (videoPlayer.paused) videoPlayer.play().catch(() => {});
+                }
+            }
+        });
+
+        function renderSidebarList(filterKeyword = '') {
+            const t = translations[selectedLang] || translations.en;
+
+            notesSidebarList.innerHTML = '';
+            const keyword = filterKeyword.toLowerCase().trim();
+
+            const filteredEntries = savedNotesList
+                .map((noteText, originalIndex) => ({ noteText, originalIndex }))
+                .filter(item => item.noteText.toLowerCase().includes(keyword));
+
+            if (filteredEntries.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.style.cssText = 'padding: 6px; color: var(--text-muted); font-size: 8px; text-align: center;';
+                emptyMsg.textContent = savedNotesList.length === 0 ? t.noSavedNotes : t.noMatchingNotes;
+                notesSidebarList.appendChild(emptyMsg);
+                return;
+            }
+
+            [...filteredEntries].reverse().forEach((item) => {
+                const elem = document.createElement('div');
+                elem.className = 'sidebar-note-item';
+                elem.title = item.noteText;
+                elem.innerHTML = formatTimestampHTML(item.noteText);
+                
+                if (activeNoteIndex === item.originalIndex) {
+                    elem.style.borderColor = 'var(--accent)';
+                    elem.style.fontWeight = '600';
+                }
+
+                elem.onclick = (e) => {
+                    if (e.target.classList.contains('timestamp-link')) return;
+                    notesTextArea.value = item.noteText;
+                    activeNoteIndex = item.originalIndex;
+                    notesSidebar.classList.remove('open');
+                    renderSidebarList(noteSearchInput.value);
+                };
+                notesSidebarList.appendChild(elem);
+            });
+        }
+
+        saveNoteBtn.onclick = () => {
+            const t = translations[selectedLang] || translations.en;
+            const currentText = notesTextArea.value.trim();
+            if (!currentText) return;
+
+            if (activeNoteIndex !== null) {
+                savedNotesList[activeNoteIndex] = currentText;
+            } else {
+                savedNotesList.push(currentText);
+                activeNoteIndex = savedNotesList.length - 1;
+            }
+
+            localStorage.setItem('player_saved_notes_list', JSON.stringify(savedNotesList));
+            renderSidebarList(noteSearchInput.value);
+            alert(t.savedAlert);
+        };
+
+        noteSearchInput.oninput = (e) => {
+            renderSidebarList(e.target.value);
+        };
+
+        toggleSidebarBtn.onclick = () => {
+            noteSearchInput.value = '';
+            renderSidebarList();
+            notesSidebar.classList.toggle('open');
+            if (notesSidebar.classList.contains('open')) {
+                noteSearchInput.focus();
+            }
+        };
+
+        closeSidebarBtn.onclick = () => {
+            notesSidebar.classList.remove('open');
+        };
+
+        insertTimestampBtn.onclick = () => {
+            const currentTime = formatTime(videoPlayer.currentTime || 0);
+            const timestampText = `[${currentTime}] `;
+            const start = notesTextArea.selectionStart;
+            const end = notesTextArea.selectionEnd;
+            const val = notesTextArea.value;
+            notesTextArea.value = val.substring(0, start) + timestampText + val.substring(end);
+            notesTextArea.selectionStart = notesTextArea.selectionEnd = start + timestampText.length;
+            notesTextArea.focus();
+        };
+
+        clearNotesBtn.onclick = () => {
+            notesTextArea.value = '';
+            activeNoteIndex = null;
+            renderSidebarList(noteSearchInput.value);
+        };
+
+        clearLoadedNoteBtn.onclick = () => {
+            const t = translations[selectedLang] || translations.en;
+            if (activeNoteIndex === null) {
+                alert(t.noNoteLoadedAlert);
+                return;
+            }
+            if (confirm(t.confirmDelete)) {
+                savedNotesList.splice(activeNoteIndex, 1);
+                localStorage.setItem('player_saved_notes_list', JSON.stringify(savedNotesList));
+                notesTextArea.value = '';
+                activeNoteIndex = null;
+                renderSidebarList(noteSearchInput.value);
+            }
+        };
+
+        downloadNotesBtn.onclick = () => {
+            const text = notesTextArea.value;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'player-notes.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            const key = e.key.toLowerCase();
+            if (e.key === '?' || key === '/') {
+                e.preventDefault();
+                shortcutModal.classList.toggle('open');
+                return;
+            }
+
+            if (key === ' ' || key === 'k') {
+                e.preventDefault();
+                if (videoPlayer.paused) {
+                    initAudioPipeline();
+                    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                    videoPlayer.play();
+                } else videoPlayer.pause();
+            } else if (key === 'j' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - 5);
+            } else if (key === 'l' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                videoPlayer.currentTime = Math.min(videoPlayer.duration || 0, videoPlayer.currentTime + 5);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                videoPlayer.volume = Math.min(1, videoPlayer.volume + 0.1);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                videoPlayer.volume = Math.max(0, videoPlayer.volume - 0.1);
+            } else if (key === 'f') {
+                e.preventDefault();
+                toggleFullscreen();
+            } else if (key === 'r') {
+                e.preventDefault();
+                loopBadgeBtn.click();
+            }
+        });
+
+        blurRange.oninput = (e) => {
+            const val = e.target.value + 'px';
+            htmlElement.style.setProperty('--glass-blur', val);
+            blurVal.textContent = val;
+        };
+
+        opacityRange.oninput = (e) => {
+            const raw = e.target.value;
+            const decimal = raw / 100;
+            htmlElement.style.setProperty('--glass-opacity', decimal);
+            opacityVal.textContent = raw + '%';
+        };
+
+        glowRange.oninput = (e) => {
+            const raw = e.target.value;
+            const decimal = raw / 100;
+            htmlElement.style.setProperty('--glow-opacity', decimal);
+            glowVal.textContent = raw + '%';
+        };
+
+        colorDots.forEach(dot => {
+            dot.onclick = () => {
+                colorDots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+                document.body.setAttribute('data-color', dot.getAttribute('data-color'));
+            };
+        });
+
+        const toggleFullscreen = () => {
+            document.body.classList.toggle('fullscreen-mode');
+            if (!document.body.classList.contains('fullscreen-mode')) {
+                document.body.classList.remove('show-controls');
+            }
+            updateUI();
+        };
+
+        expandBtn.onclick = toggleFullscreen;
+        minimizeBtn.onclick = toggleFullscreen;
+
+        document.addEventListener('mousemove', (e) => {
+            if (!document.body.classList.contains('fullscreen-mode')) return;
+
+            const controlsMenu = document.getElementById('controlsColumn');
+            const rect = controlsMenu.getBoundingClientRect();
+            const isOverMenu = (
+                e.clientX >= rect.left - 20 &&
+                e.clientX <= rect.right + 20 &&
+                e.clientY >= rect.top - 20 &&
+                e.clientY <= rect.bottom + 20
+            );
+
+            if (isOverMenu) {
+                clearTimeout(mouseTimer);
+                return;
+            }
+
+            document.body.classList.add('show-controls');
+            clearTimeout(mouseTimer);
+
+            mouseTimer = setTimeout(() => {
+                document.body.classList.remove('show-controls');
+            }, 2000);
+        });
+
+        function startColorSampling() {
+            if (sampleInterval) clearInterval(sampleInterval);
+            if (!isWebGLEnabled) return;
+
+            sampleInterval = setInterval(() => {
+                if (videoPlayer.paused || videoPlayer.ended || !isWebGLEnabled) return;
+                try {
+                    ctx.drawImage(glCanvas, 0, 0, 30, 30);
+                    const frameData = ctx.getImageData(0, 0, 30, 30).data;
+                    let r = 0, g = 0, b = 0, count = 0;
+                    
+                    for (let i = 0; i < frameData.length; i += 16) {
+                        r += frameData[i];
+                        g += frameData[i+1];
+                        b += frameData[i+2];
+                        count++;
+                    }
+                    
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+
+                    ambientGlow.style.background = `rgb(${r}, ${g}, ${b})`;
+                } catch (e) {}
+            }, 600);
+        }
+
+        videoPlayer.onplay = () => {
+            initAudioPipeline();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            hasTriggeredConfetti = false;
+            startColorSampling();
+        };
+
+        videoPlayer.onpause = () => {
+            if (sampleInterval) clearInterval(sampleInterval);
+        };
+
+        videoPlayer.onended = () => {
+            if (sampleInterval) clearInterval(sampleInterval);
+            if (!videoPlayer.loop && !hasTriggeredConfetti) {
+                hasTriggeredConfetti = true;
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        };
+
+        loadUrlBtn.onclick = () => {
+            const url = videoUrlInput.value.trim();
+            if (!url) return;
+            activeSourceType = 'custom';
+            videoPlayer.src = url;
+            videoPlayer.load();
+            videoTitle.textContent = translations[selectedLang].custom;
+            videoPlayer.play().catch(() => {});
+        };
+
+        localFileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            activeSourceType = 'custom';
+            const objectUrl = URL.createObjectURL(file);
+            videoPlayer.src = objectUrl;
+            videoPlayer.load();
+            videoTitle.textContent = file.name;
+            videoPlayer.play().catch(() => {});
+        };
 
         updateUI();
     </script>
 </body>
 </html>
+```[cite: 1]

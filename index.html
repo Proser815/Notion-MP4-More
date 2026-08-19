@@ -122,7 +122,7 @@
             transition: background-color 0.5s ease;
         }
 
-        .control-card, .info-bar, .player-wrapper, .controls-column, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box, .notes-sidebar, .custom-select-trigger, .custom-select-options {
+        .control-card, .info-bar, .player-wrapper, .controls-column, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box, .notes-sidebar, .custom-select-trigger, .custom-select-options, .collapsible-panel {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
@@ -243,7 +243,22 @@
             flex-wrap: nowrap;
         }
 
-        /* --- Custom Animated Language Dropdown --- */
+        .collapsible-group {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            overflow: hidden;
+            max-width: 300px;
+            opacity: 1;
+            transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+        }
+
+        .collapsible-group.collapsed {
+            max-width: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .custom-select-wrapper {
             position: relative;
             user-select: none;
@@ -361,7 +376,7 @@
             transform: scale(1.02);
         }
 
-        .glass-settings-panel {
+        .collapsible-panel {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
@@ -379,8 +394,8 @@
             transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s ease, margin 0.4s ease, border-width 0.4s ease;
         }
 
-        .glass-settings-panel.open {
-            max-height: 220px;
+        .collapsible-panel.open {
+            max-height: 280px;
             opacity: 1;
             padding: 8px;
             margin-bottom: 2px;
@@ -705,11 +720,19 @@
             position: relative;
         }
 
-        video {
+        video, canvas#glCanvas {
             width: 100%;
             aspect-ratio: 16/9;
             background: #000;
             outline: none;
+        }
+
+        canvas#glCanvas {
+            display: block;
+        }
+
+        video {
+            display: none;
         }
 
         .video-info {
@@ -846,7 +869,7 @@
             background: #000;
         }
 
-        body.fullscreen-mode video {
+        body.fullscreen-mode canvas#glCanvas {
             width: 100vw;
             height: 100vh;
             aspect-ratio: unset;
@@ -905,7 +928,8 @@
         <div class="player-column" id="playerColumn">
             <div class="ambient-glow" id="ambientGlow"></div>
             <div class="player-wrapper" id="playerWrapper">
-                <video id="mainVideoPlayer" crossorigin="anonymous" controls playsinline></video>
+                <video id="mainVideoPlayer" crossorigin="anonymous" playsinline></video>
+                <canvas id="glCanvas"></canvas>
                 <div class="video-info">
                     <div class="video-title" id="currentVideoTitle">No video</div>
                     <button class="fullscreen-btn" id="expandBtn">Expand</button>
@@ -918,54 +942,117 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
-                    <!-- Added WebGL Toggle Button -->
-                    <button class="icon-top-btn" id="webglToggleBtn" title="Toggle WebGL Hardware Processing">
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    <!-- Collapse Toggle Button -->
+                    <button class="icon-top-btn" id="collapseToggleBtn" title="Toggle Navigation Bar">
+                        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
-                    <!-- Improved & Intuitive SVG Icons -->
-                    <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">
-                        <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
-                    </button>
-                    <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">
-                        <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                    </button>
-                    <button class="icon-top-btn" id="glassToggleBtn" title="Glass & Color Customizer">
-                        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-                    </button>
-                    <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater / Focused Mode">
-                        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                    </button>
-                    <button class="icon-top-btn" id="instructionHelpBtn" title="How to use & User Guide">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                    </button>
-                    
-                    <!-- Smooth Animated Custom Language Dropdown -->
-                    <div class="custom-select-wrapper" id="langSelectWrapper">
-                        <div class="custom-select-trigger" id="langSelectTrigger">
-                            <span id="currentLangLabel">EN</span>
-                            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+
+                    <!-- Collapsible Container for Header Buttons -->
+                    <div class="collapsible-group" id="collapsibleNav">
+                        <button class="icon-top-btn" id="audioSettingsBtn" title="Audio Compressor / Equalizer">
+                            <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5v14M7 8v8M22 10v4M2 10v4"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="videoFiltersBtn" title="Real-time Video Filters">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="webglToggleBtn" title="Toggle WebGL Hardware Processing">
+                            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">
+                            <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">
+                            <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="glassToggleBtn" title="Glass & Color Customizer">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater / Focused Mode">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        </button>
+                        <button class="icon-top-btn" id="instructionHelpBtn" title="How to use & User Guide">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        </button>
+                        
+                        <!-- Smooth Animated Custom Language Dropdown -->
+                        <div class="custom-select-wrapper" id="langSelectWrapper">
+                            <div class="custom-select-trigger" id="langSelectTrigger">
+                                <span id="currentLangLabel">EN</span>
+                                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                            <div class="custom-select-options">
+                                <div class="custom-option selected" data-value="en">EN</div>
+                                <div class="custom-option" data-value="zh">中</div>
+                                <div class="custom-option" data-value="ja">日</div>
+                                <div class="custom-option" data-value="de">DE</div>
+                                <div class="custom-option" data-value="ko">한</div>
+                                <div class="custom-option" data-value="fr">FR</div>
+                                <div class="custom-option" data-value="it">IT</div>
+                                <div class="custom-option" data-value="fa">فا</div>
+                            </div>
                         </div>
-                        <div class="custom-select-options">
-                            <div class="custom-option selected" data-value="en">EN</div>
-                            <div class="custom-option" data-value="zh">中</div>
-                            <div class="custom-option" data-value="ja">日</div>
-                            <div class="custom-option" data-value="de">DE</div>
-                            <div class="custom-option" data-value="ko">한</div>
-                            <div class="custom-option" data-value="fr">FR</div>
-                            <div class="custom-option" data-value="it">IT</div>
-                            <div class="custom-option" data-value="fa">فا</div>
-                        </div>
+
+                        <button class="theme-btn" id="themeToggleBtn">Theme</button>
                     </div>
 
-                    <button class="theme-btn" id="themeToggleBtn">Theme</button>
                     <button class="icon-top-btn" id="minimizeBtn" title="Close / Exit Fullscreen">
                         <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
                     </button>
                 </div>
             </div>
 
+            <!-- Audio Compressor / Equalizer Panel -->
+            <div class="collapsible-panel" id="audioSettingsPanel">
+                <div class="slider-row">
+                    <label><span id="lblDialogue">Dialogue Boost</span> <span id="dialogueVal">0 dB</span></label>
+                    <input type="range" id="dialogueRange" min="0" max="12" value="0" step="0.5">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblCompressor">Explosion Limiter</span> <span id="compressorVal">Off</span></label>
+                    <input type="range" id="compressorRange" min="0" max="100" value="0">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblBass">Bass Gain</span> <span id="bassVal">0 dB</span></label>
+                    <input type="range" id="bassRange" min="-12" max="12" value="0" step="0.5">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblTreble">Treble Gain</span> <span id="trebleVal">0 dB</span></label>
+                    <input type="range" id="trebleRange" min="-12" max="12" value="0" step="0.5">
+                </div>
+            </div>
+
+            <!-- Real-time Video Filters Panel -->
+            <div class="collapsible-panel" id="videoFiltersPanel">
+                <div class="slider-row">
+                    <label><span id="lblBrightness">Brightness</span> <span id="brightnessVal">0</span></label>
+                    <input type="range" id="brightnessRange" min="-1" max="1" value="0" step="0.05">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblContrast">Contrast</span> <span id="contrastVal">1.0</span></label>
+                    <input type="range" id="contrastRange" min="0" max="2" value="1" step="0.05">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblSaturation">Saturation</span> <span id="saturationVal">1.0</span></label>
+                    <input type="range" id="saturationRange" min="0" max="2" value="1" step="0.05">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblSharpness">Sharpness</span> <span id="sharpnessVal">0.0</span></label>
+                    <input type="range" id="sharpnessRange" min="0" max="2" value="0" step="0.05">
+                </div>
+                <div class="slider-row">
+                    <label><span id="lblLut">Color Grading Preset</span></label>
+                    <select id="lutPresetSelect" style="width: 100%; font-size: 9px; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
+                        <option value="none">None</option>
+                        <option value="warm">Warm Vintage</option>
+                        <option value="cool">Cool Cyberpunk</option>
+                        <option value="dramatic">Dramatic Contrast</option>
+                        <option value="sepia">Sepia Tone</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Glass, Glow & Color Scheme Customizer Panel -->
-            <div class="glass-settings-panel" id="glassSettingsPanel">
+            <div class="collapsible-panel" id="glassSettingsPanel">
                 <div class="slider-row">
                     <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
                     <input type="range" id="blurRange" min="0" max="40" value="16">
@@ -1097,6 +1184,10 @@
         const glassToggleBtn = document.getElementById('glassToggleBtn');
         const loopBadgeBtn = document.getElementById('loopBadgeBtn');
         const webglToggleBtn = document.getElementById('webglToggleBtn');
+        const audioSettingsBtn = document.getElementById('audioSettingsBtn');
+        const videoFiltersBtn = document.getElementById('videoFiltersBtn');
+        const collapseToggleBtn = document.getElementById('collapseToggleBtn');
+        const collapsibleNav = document.getElementById('collapsibleNav');
         const shortcutHelpBtn = document.getElementById('shortcutHelpBtn');
         const shortcutModal = document.getElementById('shortcutModal');
         const closeShortcutModal = document.getElementById('closeShortcutModal');
@@ -1108,6 +1199,28 @@
         const instrModalText = document.getElementById('instrModalText');
 
         const glassSettingsPanel = document.getElementById('glassSettingsPanel');
+        const audioSettingsPanel = document.getElementById('audioSettingsPanel');
+        const videoFiltersPanel = document.getElementById('videoFiltersPanel');
+
+        const dialogueRange = document.getElementById('dialogueRange');
+        const compressorRange = document.getElementById('compressorRange');
+        const bassRange = document.getElementById('bassRange');
+        const trebleRange = document.getElementById('trebleRange');
+        const dialogueVal = document.getElementById('dialogueVal');
+        const compressorVal = document.getElementById('compressorVal');
+        const bassVal = document.getElementById('bassVal');
+        const trebleVal = document.getElementById('trebleVal');
+
+        const brightnessRange = document.getElementById('brightnessRange');
+        const contrastRange = document.getElementById('contrastRange');
+        const saturationRange = document.getElementById('saturationRange');
+        const sharpnessRange = document.getElementById('sharpnessRange');
+        const lutPresetSelect = document.getElementById('lutPresetSelect');
+        const brightnessVal = document.getElementById('brightnessVal');
+        const contrastVal = document.getElementById('contrastVal');
+        const saturationVal = document.getElementById('saturationVal');
+        const sharpnessVal = document.getElementById('sharpnessVal');
+
         const blurRange = document.getElementById('blurRange');
         const opacityRange = document.getElementById('opacityRange');
         const glowRange = document.getElementById('glowRange');
@@ -1163,6 +1276,240 @@
 
         let savedNotesList = JSON.parse(localStorage.getItem('player_saved_notes_list') || '[]');
         let activeNoteIndex = null;
+
+        // --- WEB AUDIO API PIPELINE ---
+        let audioCtx, audioSource, dialogueFilter, compressorNode, bassFilter, trebleFilter;
+
+        function initAudioPipeline() {
+            if (audioCtx) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+
+            audioSource = audioCtx.createMediaElementSource(videoPlayer);
+
+            // Peaking filter for Dialogue Boost (1kHz - 3kHz range)
+            dialogueFilter = audioCtx.createBiquadFilter();
+            dialogueFilter.type = 'peaking';
+            dialogueFilter.frequency.value = 2000;
+            dialogueFilter.Q.value = 1.0;
+            dialogueFilter.gain.value = 0;
+
+            // Low-shelf filter for Bass
+            bassFilter = audioCtx.createBiquadFilter();
+            bassFilter.type = 'lowshelf';
+            bassFilter.frequency.value = 250;
+            bassFilter.gain.value = 0;
+
+            // High-shelf filter for Treble
+            trebleFilter = audioCtx.createBiquadFilter();
+            trebleFilter.type = 'highshelf';
+            trebleFilter.frequency.value = 4000;
+            trebleFilter.gain.value = 0;
+
+            // Dynamics Compressor to tame loud explosions
+            compressorNode = audioCtx.createDynamicsCompressor();
+            compressorNode.threshold.value = 0;
+            compressorNode.knee.value = 40;
+            compressorNode.ratio.value = 1;
+            compressorNode.attack.value = 0.003;
+            compressorNode.release.value = 0.25;
+
+            // Chain: Source -> Dialogue -> Bass -> Treble -> Compressor -> Destination
+            audioSource.connect(dialogueFilter);
+            dialogueFilter.connect(bassFilter);
+            bassFilter.connect(trebleFilter);
+            trebleFilter.connect(compressorNode);
+            compressorNode.connect(audioCtx.destination);
+        }
+
+        dialogueRange.oninput = (e) => {
+            initAudioPipeline();
+            const val = parseFloat(e.target.value);
+            dialogueFilter.gain.value = val;
+            dialogueVal.textContent = `${val} dB`;
+        };
+
+        compressorRange.oninput = (e) => {
+            initAudioPipeline();
+            const val = parseFloat(e.target.value);
+            if (val === 0) {
+                compressorNode.ratio.value = 1;
+                compressorVal.textContent = 'Off';
+            } else {
+                compressorNode.threshold.value = -30 * (val / 100);
+                compressorNode.ratio.value = 1 + (val / 100) * 11;
+                compressorVal.textContent = `${Math.round(val)}%`;
+            }
+        };
+
+        bassRange.oninput = (e) => {
+            initAudioPipeline();
+            const val = parseFloat(e.target.value);
+            bassFilter.gain.value = val;
+            bassVal.textContent = `${val} dB`;
+        };
+
+        trebleRange.oninput = (e) => {
+            initAudioPipeline();
+            const val = parseFloat(e.target.value);
+            trebleFilter.gain.value = val;
+            trebleVal.textContent = `${val} dB`;
+        };
+
+        // --- WEBGL VIDEO PROCESSING PIPELINE ---
+        const glCanvas = document.getElementById('glCanvas');
+        let gl, filterProgram, texture;
+        let uniforms = {};
+
+        function initWebGL() {
+            gl = glCanvas.getContext('webgl') || glCanvas.getContext('experimental-webgl');
+            if (!gl) return;
+
+            const vsSource = `
+                attribute vec2 a_position;
+                attribute vec2 a_texCoord;
+                varying vec2 v_texCoord;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                    v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
+                }
+            `;
+
+            const fsSource = `
+                precision mediump float;
+                varying vec2 v_texCoord;
+                uniform sampler2D u_image;
+                uniform float u_brightness;
+                uniform float u_contrast;
+                uniform float u_saturation;
+                uniform float u_sharpness;
+                uniform int u_lutPreset;
+                uniform vec2 u_textureSize;
+
+                vec3 applyLUT(vec3 color, int preset) {
+                    if (preset == 1) { // Warm
+                        color.r = pow(color.r, 0.9) * 1.1;
+                        color.b = pow(color.b, 1.1) * 0.85;
+                    } else if (preset == 2) { // Cool
+                        color.r = pow(color.r, 1.1) * 0.85;
+                        color.b = pow(color.b, 0.9) * 1.15;
+                    } else if (preset == 3) { // Dramatic
+                        color = (color - 0.5) * 1.4 + 0.5;
+                    } else if (preset == 4) { // Sepia
+                        float gray = dot(color, vec3(0.299, 0.587, 0.114));
+                        color = vec3(gray * 1.2, gray * 0.9, gray * 0.6);
+                    }
+                    return clamp(color, 0.0, 1.0);
+                }
+
+                void main() {
+                    vec2 step = 1.0 / u_textureSize;
+                    vec4 center = texture2D(u_image, v_texCoord);
+                    
+                    // Simple Laplacian sharpness filter kernel
+                    vec4 north = texture2D(u_image, v_texCoord + vec2(0.0, -step.y));
+                    vec4 south = texture2D(u_image, v_texCoord + vec2(0.0, step.y));
+                    vec4 east  = texture2D(u_image, v_texCoord + vec2(step.x, 0.0));
+                    vec4 west  = texture2D(u_image, v_texCoord + vec2(-step.x, 0.0));
+                    
+                    vec3 color = center.rgb + u_sharpness * (4.0 * center.rgb - north.rgb - south.rgb - east.rgb - west.rgb);
+                    
+                    // Brightness
+                    color += u_brightness;
+                    
+                    // Contrast
+                    color = (color - 0.5) * u_contrast + 0.5;
+                    
+                    // Saturation
+                    float gray = dot(color, vec3(0.2126, 0.7152, 0.0722));
+                    color = mix(vec3(gray), color, u_saturation);
+                    
+                    // Custom LUT / Color Grading
+                    color = applyLUT(color, u_lutPreset);
+
+                    gl_FragColor = vec4(clamp(color, 0.0, 1.0), center.a);
+                }
+            `;
+
+            const compileShader = (type, source) => {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
+            };
+
+            filterProgram = gl.createProgram();
+            gl.attachShader(filterProgram, compileShader(gl.VERTEX_SHADER, vsSource));
+            gl.attachShader(filterProgram, compileShader(gl.FRAGMENT_SHADER, fsSource));
+            gl.linkProgram(filterProgram);
+            gl.useProgram(filterProgram);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1, 0, 0,
+                 1, -1, 1, 0,
+                -1,  1, 0, 1,
+                -1,  1, 0, 1,
+                 1, -1, 1, 0,
+                 1,  1, 1, 1,
+            ]), gl.STATIC_DRAW);
+
+            const aPos = gl.getAttribLocation(filterProgram, "a_position");
+            const aTex = gl.getAttribLocation(filterProgram, "a_texCoord");
+            gl.enableVertexAttribArray(aPos);
+            gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
+            gl.enableVertexAttribArray(aTex);
+            gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, 16, 8);
+
+            texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+            uniforms.brightness = gl.getUniformLocation(filterProgram, "u_brightness");
+            uniforms.contrast = gl.getUniformLocation(filterProgram, "u_contrast");
+            uniforms.saturation = gl.getUniformLocation(filterProgram, "u_saturation");
+            uniforms.sharpness = gl.getUniformLocation(filterProgram, "u_sharpness");
+            uniforms.lutPreset = gl.getUniformLocation(filterProgram, "u_lutPreset");
+            uniforms.textureSize = gl.getUniformLocation(filterProgram, "u_textureSize");
+        }
+
+        initWebGL();
+
+        function renderFrame() {
+            if (videoPlayer.readyState >= videoPlayer.HAVE_CURRENT_DATA) {
+                if (glCanvas.width !== videoPlayer.videoWidth || glCanvas.height !== videoPlayer.videoHeight) {
+                    glCanvas.width = videoPlayer.videoWidth || 640;
+                    glCanvas.height = videoPlayer.videoHeight || 360;
+                    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+                }
+
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoPlayer);
+
+                gl.uniform1f(uniforms.brightness, parseFloat(brightnessRange.value));
+                gl.uniform1f(uniforms.contrast, parseFloat(contrastRange.value));
+                gl.uniform1f(uniforms.saturation, parseFloat(saturationRange.value));
+                gl.uniform1f(uniforms.sharpness, parseFloat(sharpnessRange.value));
+
+                const lutMap = { none: 0, warm: 1, cool: 2, dramatic: 3, sepia: 4 };
+                gl.uniform1i(uniforms.lutPreset, lutMap[lutPresetSelect.value] || 0);
+                gl.uniform2f(uniforms.textureSize, glCanvas.width, glCanvas.height);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+            requestAnimationFrame(renderFrame);
+        }
+
+        requestAnimationFrame(renderFrame);
+
+        brightnessRange.oninput = (e) => brightnessVal.textContent = e.target.value;
+        contrastRange.oninput = (e) => contrastVal.textContent = e.target.value;
+        saturationRange.oninput = (e) => saturationVal.textContent = e.target.value;
+        sharpnessRange.oninput = (e) => sharpnessVal.textContent = e.target.value;
 
         // Animated Dropdown logic
         const langSelectWrapper = document.getElementById('langSelectWrapper');
@@ -1232,10 +1579,10 @@
                 scHelp: "Shortcut Help",
                 instrTitle: "User Instructions & Feature Guide",
                 instrText: `
-                    <div><b>1. WebGL Acceleration Toggle</b><br>• Click the <b>Layers Icon</b> at the top right to toggle GPU WebGL frame sampling for real-time ambient glowing.</div>
-                    <div><b>2. Video Playback Options</b><br>• <i>Network Stream:</i> Paste a direct video URL (.mp4, .webm) and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to load media.</div>
-                    <div><b>3. Interactive Timestamp Navigation</b><br>• Click <b>+ Time</b> to log timestamp links like <code>[0:15]</code> in your notes.<br>• Click any timestamp inside saved notes to jump directly to that position in the video!</div>
-                    <div><b>4. A-B Segment Looping</b><br>• Click <b>Set A</b> & <b>Set B</b> to repeat a practice section continuously.</div>
+                    <div><b>1. WebGL Acceleration & Real-time Filters</b><br>• Real-time video manipulation with customizable brightness, contrast, saturation, sharpness, and LUT preset color grading.</div>
+                    <div><b>2. Audio Compression & EQ</b><br>• Dynamic Web Audio API processing: Dialogue Boost, Explosion Limiter (Compressor), Bass and Treble Gain sliders.</div>
+                    <div><b>3. Video Playback Options</b><br>• <i>Network Stream:</i> Paste a direct video URL (.mp4, .webm) and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to load media.</div>
+                    <div><b>4. Interactive Timestamp Navigation</b><br>• Click <b>+ Time</b> to log timestamp links like <code>[0:15]</code> in your notes.<br>• Click any timestamp inside saved notes to jump directly to that position in the video!</div>
                 `
             },
             zh: { 
@@ -1278,10 +1625,9 @@
                 scHelp: "快捷键帮助",
                 instrTitle: "使用指南与功能说明",
                 instrText: `
-                    <div><b>1. WebGL 硬件加速开关</b><br>• 点击顶部<b>图层图标</b>切换 GPU WebGL 实时抽帧采样以控制环境光晕渲染。</div>
-                    <div><b>2. 视频加载与播放</b><br>• <i>网络视频:</i> 粘贴视频URL后点击<b>加载</b>。<br>• <i>本地文件:</i> 点击<b>选择本地视频文件</b>导入设备上的视频。</div>
-                    <div><b>3. 交互式时间戳跳转</b><br>• 点击 <b>+ 时间戳</b> 插入如 <code>[0:15]</code> 格式的时间点。<br>• 在侧边栏已存笔记中，点击高亮的时间戳链接即可直接跳转视频进度！</div>
-                    <div><b>4. A-B 片段循环复读</b><br>• 点击 <b>起点 A</b> 与 <b>终点 B</b> 即可对选定片段进行自动复读。</div>
+                    <div><b>1. WebGL 硬件加速与实时滤镜</b><br>• 实时调整亮度、对比度、饱和度、锐化以及 LUT 调色预设。</div>
+                    <div><b>2. 音频压缩与均衡器</b><br>• 基于 Web Audio API：具备人声增强、爆破音平滑压缩器、低音与高音调节。</div>
+                    <div><b>3. 视频加载与播放</b><br>• <i>网络视频:</i> 粘贴视频URL后点击<b>加载</b>。<br>• <i>本地文件:</i> 点击<b>选择本地视频文件</b>导入设备上的视频。</div>
                 `
             },
             ja: { 
@@ -1324,10 +1670,8 @@
                 scHelp: "ヘルプ",
                 instrTitle: "取扱説明書＆機能ガイド",
                 instrText: `
-                    <div><b>1. WebGL アクセラレーション切替</b><br>• 上部の<b>レイヤーアイコン</b>をクリックして GPU WebGL レンダリングをオン/オフできます。</div>
-                    <div><b>2. 動画再生オプション</b><br>• <i>URL:</i> リンクを貼り付けて <b>読み込み</b> をクリック。<br>• <i>ローカル:</i> <b>ファイルを選択</b> をクリック。</div>
-                    <div><b>3. タイムスタンプ・ジャンプ</b><br>• <b>+ 時間</b> で <code>[0:15]</code> などの時間を自動挿入。<br>• メモ内のタイムスタンプをクリックすると動画がその位置にジャンプします！</div>
-                    <div><b>4. A-B 区間リピート</b><br>• <b>開始 A</b> と <b>終了 B</b> を押して指定区間を繰り返し再生します。</div>
+                    <div><b>1. リアルタイムビデオフィルター</b><br>• 明るさ、コントラスト、彩度、シャープネス、LUTプリセット調色をリアルタイム処理。</div>
+                    <div><b>2. オーディオEQ & コンプレッサー</b><br>• ボイス強調、爆発音リミッター、低音・高音ゲインコントロール機能。</div>
                 `
             },
             de: { 
@@ -1370,10 +1714,7 @@
                 scHelp: "Hilfe",
                 instrTitle: "Benutzerhandbuch & Funktionen",
                 instrText: `
-                    <div><b>1. WebGL-Umschaltung</b><br>• Klicken Sie oben auf das <b>Ebenen-Symbol</b>, um die WebGL-GPU-Verarbeitung ein-/auszuschalten.</div>
-                    <div><b>2. Videowiedergabe</b><br>• <i>URL:</i> Link einfügen & auf <b>Laden</b> klicken.<br>• <i>Datei:</i> Auf <b>Lokale Datei wählen</b> klicken.</div>
-                    <div><b>3. Interaktive Zeitstempel</b><br>• Klicken Sie auf <b>+ Zeit</b>, um Zeitstempel wie <code>[0:15]</code> hinzuzufügen.<br>• Klicken Sie auf einen Zeitstempel in den Notizen, um direkt dorthin zu springen!</div>
-                    <div><b>4. A-B Schleifenfunktion</b><br>• Verwenden Sie <b>Start A</b> und <b>Ende B</b>, um Abschnitte zu wiederholen.</div>
+                    <div><b>1. WebGL Filter & Audio-EQ</b><br>• Steuerung für Helligkeit, Kontrast, LUT-Farbkorrektur sowie Dialogue Boost und Kompressor.</div>
                 `
             },
             ko: { 
@@ -1416,10 +1757,7 @@
                 scHelp: "단축키 도움말",
                 instrTitle: "사용 설명서 및 기능 가이드",
                 instrText: `
-                    <div><b>1. WebGL 가속 토글</b><br>• 상단 <b>레이어 아이콘</b>을 클릭하여 GPU WebGL 엠비언트 프레임 샘플링을 켜고 끌 수 있습니다.</div>
-                    <div><b>2. 비디오 재생 방법</b><br>• <i>URL:</i> 링크를 입력하고 <b>로드</b>를 클릭하세요.<br>• <i>로컬 파일:</i> <b>로컬 파일 선택</b>을 이용하세요.</div>
-                    <div><b>3. 타임스탬프 바로가기</b><br>• <b>+ 시간</b>을 눌러 <code>[0:15]</code>와 같은 타임스탬프를 추가하세요.<br>• 저장된 메모 속 타임스탬프를 클릭하면 해당 위치로 즉시 이동합니다!</div>
-                    <div><b>4. A-B 구간 반복</b><br>• <b>시작 A</b>와 <b>종료 B</b>를 눌러 원하는 구간을 반복 재생하세요.</div>
+                    <div><b>1. 실시간 비디오 필터 & 오디오 EQ</b><br>• 밝기, 대비, 선명도, LUT 색상 보정 및 대사 강조, 폭발음 압축기(리미터) 지원.</div>
                 `
             },
             fr: { 
@@ -1462,10 +1800,7 @@
                 scHelp: "Aide raccourcis",
                 instrTitle: "Guide d'Utilisation & Fonctionnalités",
                 instrText: `
-                    <div><b>1. Bascule WebGL</b><br>• Cliquez sur l'<b>icône Calques</b> en haut pour activer/désactiver le traitement WebGL GPU.</div>
-                    <div><b>2. Lecture Vidéo</b><br>• <i>URL:</i> Collez un lien et cliquez sur <b>Charger</b>.<br>• <i>Fichier local:</i> Cliquez sur <b>Choisir un fichier local</b>.</div>
-                    <div><b>3. Horodatages interactifs</b><br>• Cliquez sur <b>+ Temps</b> pour insérer un horodatage comme <code>[0:15]</code>.<br>• Cliquez sur un horodatage dans vos notes pour sauter directement à ce moment !</div>
-                    <div><b>4. Boucle A-B</b><br>• Utilisez <b>Début A</b> et <b>Fin B</b> pour répéter une séquence.</div>
+                    <div><b>1. Filtres vidéo WebGL & EQ Audio</b><br>• Boost de dialogue, limiteur, contrôles de luminosité, contraste et LUT.</div>
                 `
             },
             it: { 
@@ -1508,10 +1843,7 @@
                 scHelp: "Guida scorciatoie",
                 instrTitle: "Manuale Utente & Funzionalità",
                 instrText: `
-                    <div><b>1. Modalità WebGL</b><br>• Clicca l'<b>icona Livelli</b> in alto per attivare o disattivare l'accelerazione GPU WebGL.</div>
-                    <div><b>2. Riproduzione Video</b><br>• <i>URL:</i> Incolla il link e premi <b>Carica</b>.<br>• <i>File Locale:</i> Clicca su <b>Scegli file locale</b>.</div>
-                    <div><b>3. Timestamp Interattivi</b><br>• Clicca <b>+ Tempo</b> per inserire timestamp come <code>[0:15]</code>.<br>• Clicca un timestamp nelle note salvate per saltare al punto esatto del video!</div>
-                    <div><b>4. Ripetizione A-B</b><br>• Imposta <b>Inizio A</b> e <b>Fine B</b> per ripetere una sezione.</div>
+                    <div><b>1. Filtri WebGL & Equalizzazione Audio</b><br>• Regola brillantezza, contrasto, nitidezza, LUT ed equalizzatore audio.</div>
                 `
             },
             fa: { 
@@ -1554,10 +1886,7 @@
                 scHelp: "راهنمای میانبرها",
                 instrTitle: "راهنمای کامل استفاده و امکانات",
                 instrText: `
-                    <div><b>۱. دکمه شتاب‌دهنده WebGL</b><br>• روی <b>آیکون لایه‌ها</b> در بالا کلیک کنید تا پردازش WebGL را فعال یا غیرفعال کنید.</div>
-                    <div><b>۲. پخش ویدیو</b><br>• <i>آدرس اینترنتی:</i> لینک را وارد کرده و روی <b>بارگذاری</b> کلیک کنید.<br>• <i>فایل محلی:</i> روی <b>انتخاب فایل محلی</b> کلیک کنید.</div>
-                    <div><b>۳. تایم‌استمپ تعاملی</b><br>• با کلیک روی <b>+ زمان</b> تایم‌استمپ‌هایی مثل <code>[0:15]</code> ایجاد کنید.<br>• روی تایم‌استمپ کلیک کنید تا ویدیو بلافاصله به آن زمان منتقل شود!</div>
-                    <div><b>۴. تکرار بازه A-B</b><br>• با انتخاب <b>شروع A</b> و <b>پایان B</b> بازه دلخواه را تکرار کنید.</div>
+                    <div><b>۱. فیلترهای ویدیویی و اکولایزر صدا</b><br>• تنظیم درخشندگی، کنتراست، وضوح،LUT وتقویت صدا.</div>
                 `
             }
         };
@@ -1620,6 +1949,27 @@
         glassToggleBtn.onclick = () => {
             glassSettingsPanel.classList.toggle('open');
             glassToggleBtn.classList.toggle('active');
+            audioSettingsPanel.classList.remove('open');
+            videoFiltersPanel.classList.remove('open');
+        };
+
+        audioSettingsBtn.onclick = () => {
+            audioSettingsPanel.classList.toggle('open');
+            audioSettingsBtn.classList.toggle('active');
+            glassSettingsPanel.classList.remove('open');
+            videoFiltersPanel.classList.remove('open');
+        };
+
+        videoFiltersBtn.onclick = () => {
+            videoFiltersPanel.classList.toggle('open');
+            videoFiltersBtn.classList.toggle('active');
+            glassSettingsPanel.classList.remove('open');
+            audioSettingsPanel.classList.remove('open');
+        };
+
+        collapseToggleBtn.onclick = () => {
+            collapsibleNav.classList.toggle('collapsed');
+            collapseToggleBtn.classList.toggle('active');
         };
 
         loopBadgeBtn.onclick = () => {
@@ -1631,7 +1981,6 @@
             }
         };
 
-        // Initial state for WebGL button
         if (isWebGLEnabled) webglToggleBtn.classList.add('active');
 
         webglToggleBtn.onclick = () => {
@@ -1699,86 +2048,6 @@
                 }
             }
         };
-
-        // --- WEBGL PIPELINE & TIMESTAMP SEEK INTEGRATION ---
-
-        class WebGLVideoRenderer {
-            constructor(canvasElement, videoElement) {
-                this.canvas = canvasElement;
-                this.video = videoElement;
-                this.gl = canvasElement.getContext('webgl') || canvasElement.getContext('experimental-webgl');
-                if (this.gl) this.init();
-            }
-
-            init() {
-                const gl = this.gl;
-                const vsSource = `
-                    attribute vec2 a_position;
-                    attribute vec2 a_texCoord;
-                    varying vec2 v_texCoord;
-                    void main() {
-                        gl_Position = vec4(a_position, 0.0, 1.0);
-                        v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
-                    }
-                `;
-                const fsSource = `
-                    precision mediump float;
-                    varying vec2 v_texCoord;
-                    uniform sampler2D u_image;
-                    void main() {
-                        gl_FragColor = texture2D(u_image, v_texCoord);
-                    }
-                `;
-
-                const compileShader = (type, source) => {
-                    const shader = gl.createShader(type);
-                    gl.shaderSource(shader, source);
-                    gl.compileShader(shader);
-                    return shader;
-                };
-
-                const program = gl.createProgram();
-                gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vsSource));
-                gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fsSource));
-                gl.linkProgram(program);
-                gl.useProgram(program);
-
-                const positionBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-                    -1, -1, 0, 0,
-                     1, -1, 1, 0,
-                    -1,  1, 0, 1,
-                    -1,  1, 0, 1,
-                     1, -1, 1, 0,
-                     1,  1, 1, 1,
-                ]), gl.STATIC_DRAW);
-
-                const aPos = gl.getAttribLocation(program, "a_position");
-                const aTex = gl.getAttribLocation(program, "a_texCoord");
-                gl.enableVertexAttribArray(aPos);
-                gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
-                gl.enableVertexAttribArray(aTex);
-                gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, 16, 8);
-
-                this.texture = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, this.texture);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            }
-
-            render() {
-                if (!this.gl || this.video.paused || this.video.ended) return;
-                const gl = this.gl;
-                gl.bindTexture(gl.TEXTURE_2D, this.texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.video);
-                gl.drawArrays(gl.TRIANGLES, 0, 6);
-            }
-        }
-
-        const webGlRenderer = new WebGLVideoRenderer(colorCanvas, videoPlayer);
 
         function parseTimestampToSeconds(timeStr) {
             const cleanStr = timeStr.replace('[', '').replace(']', '').trim();
@@ -1938,8 +2207,11 @@
 
             if (key === ' ' || key === 'k') {
                 e.preventDefault();
-                if (videoPlayer.paused) videoPlayer.play();
-                else videoPlayer.pause();
+                if (videoPlayer.paused) {
+                    initAudioPipeline();
+                    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                    videoPlayer.play();
+                } else videoPlayer.pause();
             } else if (key === 'j' || e.key === 'ArrowLeft') {
                 e.preventDefault();
                 videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - 5);
@@ -2032,8 +2304,7 @@
             sampleInterval = setInterval(() => {
                 if (videoPlayer.paused || videoPlayer.ended || !isWebGLEnabled) return;
                 try {
-                    webGlRenderer.render();
-                    ctx.drawImage(videoPlayer, 0, 0, 30, 30);
+                    ctx.drawImage(glCanvas, 0, 0, 30, 30);
                     const frameData = ctx.getImageData(0, 0, 30, 30).data;
                     let r = 0, g = 0, b = 0, count = 0;
                     
@@ -2054,6 +2325,8 @@
         }
 
         videoPlayer.onplay = () => {
+            initAudioPipeline();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             hasTriggeredConfetti = false;
             startColorSampling();
         };

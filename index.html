@@ -253,6 +253,7 @@
             flex: 1;
         }
 
+        /* Smooth collapse transition fix */
         .collapsible-group {
             display: flex;
             gap: 4px;
@@ -260,12 +261,15 @@
             overflow: hidden;
             max-width: 1000px;
             opacity: 1;
-            transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+            transform: scale(1);
+            transform-origin: right center;
+            transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .collapsible-group.collapsed {
             max-width: 0 !important;
             opacity: 0 !important;
+            transform: scale(0.95) !important;
             pointer-events: none;
             margin: 0;
             padding: 0;
@@ -329,8 +333,10 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            z-index: 9999;
+            z-index: 99999;
             min-width: 65px;
+            max-height: 180px;
+            overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -1588,7 +1594,7 @@
         saturationRange.oninput = (e) => saturationVal.textContent = e.target.value;
         sharpnessRange.oninput = (e) => sharpnessVal.textContent = e.target.value;
 
-        // Animated Dropdown Logic
+        // Animated Dropdown Logic Fixed
         const langSelectWrapper = document.getElementById('langSelectWrapper');
         const langSelectTrigger = document.getElementById('langSelectTrigger');
         const currentLangLabel = document.getElementById('currentLangLabel');
@@ -2703,7 +2709,7 @@
         };
 
         loadUrlBtn.onclick = () => {
-            const url = videoUrlInput.value.txtTrim ? videoUrlInput.value.trim() : videoUrlInput.value.trim();
+            const url = videoUrlInput.value.trim();
             if (url) {
                 videoPlayer.src = url;
                 activeSourceType = 'custom';

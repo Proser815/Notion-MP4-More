@@ -176,6 +176,8 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            position: relative;
+            z-index: 10;
         }
 
         .header-row {
@@ -247,7 +249,7 @@
             display: flex;
             gap: 3px;
             align-items: center;
-            overflow: hidden;
+            overflow: visible;
             max-width: 300px;
             opacity: 1;
             transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
@@ -257,12 +259,14 @@
             max-width: 0;
             opacity: 0;
             pointer-events: none;
+            overflow: hidden;
         }
 
         .custom-select-wrapper {
             position: relative;
             user-select: none;
             flex-shrink: 0;
+            z-index: 999;
         }
 
         .custom-select-trigger {
@@ -304,6 +308,7 @@
             transform: rotate(180deg);
         }
 
+        /* Fixed Language Dropdown Styling */
         .custom-select-options {
             position: absolute;
             top: calc(100% + 4px);
@@ -311,24 +316,26 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: 9px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             padding: 3px;
             display: flex;
             flex-direction: column;
             gap: 2px;
-            z-index: 1000;
-            min-width: 60px;
+            z-index: 9999;
+            min-width: 65px;
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
             transform: translateY(-8px) scale(0.94);
             transform-origin: top right;
             transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.25s ease;
         }
 
         .custom-select-wrapper.open .custom-select-options {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            transform: translateY(0) scale(1) !important;
         }
 
         .custom-option {
@@ -755,21 +762,43 @@
             transition: color 0.4s ease;
         }
 
+        /* Improved iOS-Style SVG Icon Button for Fullscreen/Expand */
         .fullscreen-btn {
-            background: transparent;
-            border: none;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 9px;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 2px 4px;
+            width: 22px;
+            height: 22px;
             border-radius: 6px;
-            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+            outline: none;
+        }
+
+        .fullscreen-btn svg {
+            width: 11px;
+            height: 11px;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.25s ease;
         }
 
         .fullscreen-btn:hover {
             background: var(--bg-hover);
-            color: var(--text-main);
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.08);
+        }
+
+        .fullscreen-btn:hover svg {
+            transform: scale(1.1);
         }
 
         .shortcut-modal {
@@ -932,7 +961,10 @@
                 <canvas id="glCanvas"></canvas>
                 <div class="video-info">
                     <div class="video-title" id="currentVideoTitle">No video</div>
-                    <button class="fullscreen-btn" id="expandBtn">Expand</button>
+                    <!-- Upgraded Expand / Fullscreen SVG Icon Button -->
+                    <button class="fullscreen-btn" id="expandBtn" title="Toggle Fullscreen">
+                        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1126,7 +1158,7 @@
                 <div class="notes-sidebar" id="notesSidebar">
                     <div class="notes-sidebar-header">
                         <span id="lblRecentNotes">Saved Notes</span>
-                        <button class="fullscreen-btn" id="closeSidebarBtn" style="font-weight: 600; padding: 0 2px;">✕</button>
+                        <button class="fullscreen-btn" id="closeSidebarBtn" style="border:none; background:transparent;">✕</button>
                     </div>
                     <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search saved notes..." />
                     <div class="notes-sidebar-list" id="notesSidebarList">
@@ -1142,7 +1174,7 @@
         <div class="shortcut-box">
             <div class="shortcut-header">
                 <span id="lblKeyboardShortcuts">Keyboard Shortcuts</span>
-                <button class="fullscreen-btn" id="closeShortcutModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
+                <button class="fullscreen-btn" id="closeShortcutModal" style="border:none; background:transparent;">✕</button>
             </div>
             <div class="shortcut-list">
                 <div class="shortcut-item"><span id="scPlay">Play / Pause</span><kbd>Space / K</kbd></div>
@@ -1161,7 +1193,7 @@
         <div class="shortcut-box">
             <div class="shortcut-header">
                 <span id="instrModalTitle">User Instructions</span>
-                <button class="fullscreen-btn" id="closeInstructionModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
+                <button class="fullscreen-btn" id="closeInstructionModal" style="border:none; background:transparent;">✕</button>
             </div>
             <div class="shortcut-list">
                 <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.45; flex-direction: column; align-items: flex-start; gap: 10px;" id="instrModalText">
@@ -1287,26 +1319,22 @@
 
             audioSource = audioCtx.createMediaElementSource(videoPlayer);
 
-            // Peaking filter for Dialogue Boost (1kHz - 3kHz range)
             dialogueFilter = audioCtx.createBiquadFilter();
             dialogueFilter.type = 'peaking';
             dialogueFilter.frequency.value = 2000;
             dialogueFilter.Q.value = 1.0;
             dialogueFilter.gain.value = 0;
 
-            // Low-shelf filter for Bass
             bassFilter = audioCtx.createBiquadFilter();
             bassFilter.type = 'lowshelf';
             bassFilter.frequency.value = 250;
             bassFilter.gain.value = 0;
 
-            // High-shelf filter for Treble
             trebleFilter = audioCtx.createBiquadFilter();
             trebleFilter.type = 'highshelf';
             trebleFilter.frequency.value = 4000;
             trebleFilter.gain.value = 0;
 
-            // Dynamics Compressor to tame loud explosions
             compressorNode = audioCtx.createDynamicsCompressor();
             compressorNode.threshold.value = 0;
             compressorNode.knee.value = 40;
@@ -1314,7 +1342,6 @@
             compressorNode.attack.value = 0.003;
             compressorNode.release.value = 0.25;
 
-            // Chain: Source -> Dialogue -> Bass -> Treble -> Compressor -> Destination
             audioSource.connect(dialogueFilter);
             dialogueFilter.connect(bassFilter);
             bassFilter.connect(trebleFilter);
@@ -1406,7 +1433,6 @@
                     vec2 step = 1.0 / u_textureSize;
                     vec4 center = texture2D(u_image, v_texCoord);
                     
-                    // Simple Laplacian sharpness filter kernel
                     vec4 north = texture2D(u_image, v_texCoord + vec2(0.0, -step.y));
                     vec4 south = texture2D(u_image, v_texCoord + vec2(0.0, step.y));
                     vec4 east  = texture2D(u_image, v_texCoord + vec2(step.x, 0.0));
@@ -1414,17 +1440,12 @@
                     
                     vec3 color = center.rgb + u_sharpness * (4.0 * center.rgb - north.rgb - south.rgb - east.rgb - west.rgb);
                     
-                    // Brightness
                     color += u_brightness;
-                    
-                    // Contrast
                     color = (color - 0.5) * u_contrast + 0.5;
                     
-                    // Saturation
                     float gray = dot(color, vec3(0.2126, 0.7152, 0.0722));
                     color = mix(vec3(gray), color, u_saturation);
                     
-                    // Custom LUT / Color Grading
                     color = applyLUT(color, u_lutPreset);
 
                     gl_FragColor = vec4(clamp(color, 0.0, 1.0), center.a);
@@ -1511,23 +1532,27 @@
         saturationRange.oninput = (e) => saturationVal.textContent = e.target.value;
         sharpnessRange.oninput = (e) => sharpnessVal.textContent = e.target.value;
 
-        // Animated Dropdown logic
+        // FIXED Animated Dropdown Logic
         const langSelectWrapper = document.getElementById('langSelectWrapper');
         const langSelectTrigger = document.getElementById('langSelectTrigger');
         const currentLangLabel = document.getElementById('currentLangLabel');
         const customOptions = document.querySelectorAll('.custom-option');
 
         langSelectTrigger.onclick = (e) => {
+            e.preventDefault();
             e.stopPropagation();
             langSelectWrapper.classList.toggle('open');
         };
 
-        document.addEventListener('click', () => {
-            langSelectWrapper.classList.remove('open');
+        document.addEventListener('click', (e) => {
+            if (!langSelectWrapper.contains(e.target)) {
+                langSelectWrapper.classList.remove('open');
+            }
         });
 
         customOptions.forEach(opt => {
             opt.onclick = (e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 customOptions.forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
@@ -1546,7 +1571,6 @@
                 urlPlaceholder: "URL (.mp4/.webm)...",
                 none: "No video loaded", 
                 custom: "Network Stream", 
-                expand: "Expand",
                 theme: "Theme",
                 blur: "Blur Intensity",
                 opacity: "Glass Opacity",
@@ -1592,7 +1616,6 @@
                 urlPlaceholder: "输入视频网址 (.mp4/.webm)...",
                 none: "未加载任何视频", 
                 custom: "网络视频流", 
-                expand: "全屏模式",
                 theme: "主题配色",
                 blur: "毛玻璃模糊度",
                 opacity: "玻璃不透明度",
@@ -1637,7 +1660,6 @@
                 urlPlaceholder: "動画URL (.mp4/.webm)...",
                 none: "動画が読み込まれていません", 
                 custom: "ネットワークストリーム", 
-                expand: "全画面表示",
                 theme: "テーマ",
                 blur: "ぼかし強度",
                 opacity: "不透明度",
@@ -1681,7 +1703,6 @@
                 urlPlaceholder: "Video-URL (.mp4/.webm)...",
                 none: "Kein Video geladen", 
                 custom: "Netzwerk-Stream", 
-                expand: "Vollbild",
                 theme: "Thema",
                 blur: "Unschärfe",
                 opacity: "Opazität",
@@ -1724,7 +1745,6 @@
                 urlPlaceholder: "비디오 URL (.mp4/.webm)...",
                 none: "로드된 비디오 없음", 
                 custom: "네트워크 스트림", 
-                expand: "전체 화면",
                 theme: "테마",
                 blur: "블러 강도",
                 opacity: "유리 투명도",
@@ -1767,7 +1787,6 @@
                 urlPlaceholder: "URL vidéo (.mp4/.webm)...",
                 none: "Aucune vidéo chargée", 
                 custom: "Flux Réseau", 
-                expand: "Plein écran",
                 theme: "Thème",
                 blur: "Intensité du flou",
                 opacity: "Opacité du verre",
@@ -1810,7 +1829,6 @@
                 urlPlaceholder: "URL video (.mp4/.webm)...",
                 none: "Nessun video caricato", 
                 custom: "Flusso di Rete", 
-                expand: "Schermo intero",
                 theme: "Tema",
                 blur: "Intensità sfocatura",
                 opacity: "Opacità vetro",
@@ -1853,7 +1871,6 @@
                 urlPlaceholder: "آدرس ویدیو (.mp4/.webm)...",
                 none: "ویدیویی بارگذاری نشده", 
                 custom: "جریان شبکه", 
-                expand: "تمام‌صفحه",
                 theme: "پوسته",
                 blur: "شدت تاری",
                 opacity: "شفافیت شیشه",
@@ -1898,7 +1915,6 @@
             loadUrlBtn.textContent = t.load;
             videoUrlInput.placeholder = t.urlPlaceholder;
             document.getElementById('labelBrowse').childNodes[0].nodeValue = t.file + " ";
-            expandBtn.textContent = t.expand;
             themeToggleBtn.textContent = t.theme;
             
             lblBlur.textContent = t.blur;

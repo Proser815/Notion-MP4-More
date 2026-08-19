@@ -294,7 +294,7 @@
             position: relative;
             user-select: none;
             flex-shrink: 0;
-            z-index: 99999;
+            z-index: 200000; /* Increased to ensure it stays on top */
         }
 
         .custom-select-trigger {
@@ -349,10 +349,16 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            z-index: 999999;
+            z-index: 200001; /* Layered directly above wrapper */
             min-width: 85px;
             max-height: 200px;
             overflow-y: auto;
+            
+            /* Hidden by default until opened */
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-6px) scale(0.98);
             
             /* iOS minimalist scrollbar customization */
             scrollbar-width: thin;
@@ -1634,7 +1640,7 @@
         saturationRange.oninput = (e) => saturationVal.textContent = e.target.value;
         sharpnessRange.oninput = (e) => sharpnessVal.textContent = e.target.value;
 
-        // Animated Dropdown Logic
+        // Animated Dropdown Logic (Fixed toggle action and folding)
         const langSelectWrapper = document.getElementById('langSelectWrapper');
         const langSelectTrigger = document.getElementById('langSelectTrigger');
         const currentLangLabel = document.getElementById('currentLangLabel');
@@ -1650,6 +1656,7 @@
             videoFiltersPanel.classList.remove('open');
             videoFiltersBtn.classList.remove('active');
 
+            // Toggle open state correctly so it folds back in on click
             langSelectWrapper.classList.toggle('open');
         };
 

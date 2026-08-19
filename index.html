@@ -18,8 +18,7 @@
             --text-muted: #8e8e93;
             --radius: 14px;
             --shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-            /* Smoother, springier cubic-bezier transition curve */
-            --transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             --glass-blur: 16px;
             --glass-opacity: 0.85;
             --glow-opacity: 0.15;
@@ -112,28 +111,27 @@
             background-color: var(--bg-base);
             color: var(--text-main);
             margin: 0;
-            padding: 16px;
+            padding: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
+            overflow: hidden;
             transition: background-color 0.5s ease;
         }
 
-        .control-card, .info-bar, .player-wrapper, .controls-column, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box, .notes-sidebar, .custom-select-trigger, .custom-select-options, .collapsible-panel {
+        .control-card, .info-bar, .player-wrapper, .controls-column, .theme-btn, .cinematic-btn, .glass-toggle-btn, .loop-badge-btn, .shortcut-btn, .notes-card, input[type="text"], textarea, .instruction-modal .shortcut-box, .notes-sidebar, .custom-select-trigger, .custom-select-options {
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
-            transition: var(--transition), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
         }
 
         body.cinematic-mode .controls-column {
             opacity: 0.2;
             filter: blur(5px);
             pointer-events: auto;
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         body.cinematic-mode .controls-column:hover {
@@ -143,16 +141,15 @@
 
         body.cinematic-mode .player-wrapper {
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 15px var(--accent);
-            transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .dashboard {
             width: 100%;
-            max-width: 860px;
+            max-width: 760px;
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 12px;
-            align-items: start;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 10px;
+            align-items: stretch;
             transition: var(--transition);
         }
 
@@ -171,7 +168,7 @@
             filter: blur(14px);
             opacity: var(--glow-opacity);
             z-index: -1;
-            transition: background 0.6s ease, opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: background 0.6s ease, opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             pointer-events: none;
         }
 
@@ -179,9 +176,6 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            position: relative;
-            z-index: 100;
-            overflow: visible;
         }
 
         .header-row {
@@ -189,9 +183,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 2px;
-            gap: 6px;
-            position: relative;
-            overflow: visible;
+            flex-wrap: nowrap;
+            gap: 4px;
         }
 
         h1 {
@@ -218,7 +211,7 @@
             outline: none;
             padding: 0;
             flex-shrink: 0;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .icon-top-btn svg {
@@ -229,17 +222,12 @@
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .icon-top-btn:hover {
             background: var(--bg-hover);
             transform: scale(1.06);
             border-color: var(--accent);
-        }
-
-        .icon-top-btn:active {
-            transform: scale(0.95);
         }
 
         .icon-top-btn.active {
@@ -250,54 +238,16 @@
 
         .header-controls {
             display: flex;
-            gap: 4px;
-            align-items: center;
-            justify-content: flex-end;
-            flex: 1;
-            overflow: visible;
-        }
-
-        .collapsible-group {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            overflow: visible;
-            max-width: 1000px;
-            opacity: 1;
-            transform: scale(1);
-            transform-origin: right center;
-            transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .collapsible-group.collapsed {
-            max-width: 0 !important;
-            opacity: 0 !important;
-            transform: scale(0.95) !important;
-            pointer-events: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .button-cluster {
-            display: flex;
-            align-items: center;
             gap: 3px;
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px solid var(--border-color);
-            padding: 2px;
-            border-radius: 9px;
-            overflow: visible;
-        }
-        [data-theme="dark"] .button-cluster {
-            background: rgba(255, 255, 255, 0.03);
+            align-items: center;
+            flex-wrap: nowrap;
         }
 
+        /* --- Custom Animated Language Dropdown --- */
         .custom-select-wrapper {
             position: relative;
             user-select: none;
             flex-shrink: 0;
-            z-index: 2147483647;
         }
 
         .custom-select-trigger {
@@ -315,7 +265,7 @@
             gap: 4px;
             outline: none;
             box-sizing: border-box;
-            transition: var(--transition);
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .custom-select-trigger:hover {
@@ -332,7 +282,7 @@
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .custom-select-wrapper.open .custom-select-trigger svg {
@@ -341,67 +291,47 @@
 
         .custom-select-options {
             position: absolute;
-            top: calc(100% + 6px);
+            top: calc(100% + 4px);
             right: 0;
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: 9px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            padding: 4px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            padding: 3px;
             display: flex;
             flex-direction: column;
             gap: 2px;
-            z-index: 2147483647;
-            min-width: 105px;
-            max-height: 220px;
-            overflow-y: auto;
-            
+            z-index: 1000;
+            min-width: 60px;
             opacity: 0;
             visibility: hidden;
-            pointer-events: none;
-            transform: translateY(-8px) scale(0.96);
-            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
-            
-            scrollbar-width: thin;
-            scrollbar-color: rgba(150, 150, 150, 0.4) transparent;
-        }
-
-        .custom-select-options::-webkit-scrollbar {
-            width: 5px;
-        }
-        .custom-select-options::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-select-options::-webkit-scrollbar-thumb {
-            background-color: rgba(150, 150, 150, 0.4);
-            border-radius: 10px;
+            transform: translateY(-8px) scale(0.94);
+            transform-origin: top right;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.25s ease;
         }
 
         .custom-select-wrapper.open .custom-select-options {
-            opacity: 1 !important;
-            visibility: visible !important;
-            pointer-events: auto !important;
-            transform: translateY(0) scale(1) !important;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
         }
 
         .custom-option {
-            padding: 5px 8px;
+            padding: 4px 8px;
             font-size: 9px;
             font-weight: 500;
             border-radius: 6px;
             cursor: pointer;
             color: var(--text-main);
-            transition: var(--transition);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            white-space: nowrap;
         }
 
         .custom-option:hover {
             background: var(--bg-hover);
             color: var(--accent);
-            transform: translateX(2px);
         }
 
         .custom-option.selected {
@@ -423,7 +353,6 @@
             outline: none;
             box-sizing: border-box;
             flex-shrink: 0;
-            transition: var(--transition);
         }
 
         .theme-btn:hover {
@@ -432,16 +361,7 @@
             transform: scale(1.02);
         }
 
-        .theme-btn:active {
-            transform: scale(0.96);
-        }
-
-        .collapsible-panel {
-            position: absolute;
-            top: 32px;
-            right: 0;
-            left: 0;
-            z-index: 99999;
+        .glass-settings-panel {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
@@ -449,28 +369,28 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow);
             font-size: 9px;
+            max-height: 0;
             opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: translateY(-8px) scale(0.98);
-            transform-origin: top right;
-            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+            overflow: hidden;
+            margin: 0;
+            border-width: 0;
+            transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s ease, margin 0.4s ease, border-width 0.4s ease;
         }
 
-        .collapsible-panel.open {
+        .glass-settings-panel.open {
+            max-height: 220px;
             opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transform: translateY(0) scale(1);
+            padding: 8px;
+            margin-bottom: 2px;
+            border-width: 1px;
         }
 
         .slider-row {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            transition: var(--transition);
         }
 
         .slider-row label {
@@ -485,7 +405,6 @@
             width: 100%;
             accent-color: var(--accent);
             cursor: pointer;
-            transition: transform 0.2s ease;
         }
 
         .color-picker-row {
@@ -502,7 +421,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .color-dot:hover {
@@ -523,7 +442,6 @@
             flex-direction: column;
             gap: 6px;
             box-shadow: var(--shadow);
-            transition: var(--transition);
         }
 
         .control-row {
@@ -542,7 +460,6 @@
             border-radius: 10px;
             font-size: 9px;
             outline: none;
-            transition: var(--transition);
         }
 
         [data-theme="dark"] input[type="text"] {
@@ -553,7 +470,6 @@
             background: var(--bg-surface);
             border-color: var(--accent);
             box-shadow: 0 0 0 2px rgba(229, 184, 59, 0.2);
-            transform: translateY(-0.5px);
         }
 
         .action-btn, .file-label {
@@ -567,7 +483,7 @@
             font-size: 9px;
             white-space: nowrap;
             text-align: center;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .action-btn:hover, .file-label:hover {
@@ -581,12 +497,9 @@
 
         .action-btn.ab-active {
             background: #ff5252;
-            animation: pulseAB 1.5s infinite;
         }
-        @keyframes pulseAB {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
+        .action-btn.ab-active:hover {
+            background: #ff1744;
         }
 
         input[type="file"] {
@@ -603,7 +516,6 @@
             gap: 4px;
             box-shadow: var(--shadow);
             position: relative;
-            transition: var(--transition);
         }
 
         .notes-header {
@@ -628,7 +540,6 @@
             align-items: center;
             justify-content: center;
             color: var(--accent);
-            transition: transform 0.3s ease;
         }
 
         .notes-logo-minimal svg {
@@ -654,7 +565,6 @@
             box-sizing: border-box;
             outline: none;
             font-family: inherit;
-            transition: var(--transition);
         }
 
         [data-theme="dark"] textarea {
@@ -682,18 +592,13 @@
             font-size: 8px;
             font-weight: 500;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
 
         .notes-btn:hover {
             background: var(--bg-hover);
             color: var(--text-main);
             border-color: var(--accent);
-            transform: translateY(-0.5px);
-        }
-
-        .notes-btn:active {
-            transform: scale(0.95);
         }
 
         .notes-sidebar-container {
@@ -718,7 +623,7 @@
             pointer-events: none;
             transform: translateX(-10px);
             z-index: 20;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             box-sizing: border-box;
         }
 
@@ -750,7 +655,6 @@
             outline: none;
             box-sizing: border-box;
             margin-bottom: 2px;
-            transition: var(--transition);
         }
         [data-theme="dark"] .notes-search-input {
             background: rgba(0, 0, 0, 0.2);
@@ -778,7 +682,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             color: var(--text-main);
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
 
         [data-theme="dark"] .sidebar-note-item {
@@ -788,7 +692,6 @@
         .sidebar-note-item:hover {
             background: var(--bg-hover);
             border-color: var(--accent);
-            transform: translateX(2px);
         }
 
         .player-wrapper {
@@ -800,22 +703,13 @@
             flex-direction: column;
             box-shadow: var(--shadow);
             position: relative;
-            transition: var(--transition);
         }
 
-        video, canvas#glCanvas {
+        video {
             width: 100%;
             aspect-ratio: 16/9;
             background: #000;
             outline: none;
-        }
-
-        canvas#glCanvas {
-            display: block;
-        }
-
-        video {
-            display: none;
         }
 
         .video-info {
@@ -839,41 +733,20 @@
         }
 
         .fullscreen-btn {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
+            background: transparent;
+            border: none;
             color: var(--text-muted);
-            width: 22px;
-            height: 22px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 9px;
+            font-weight: 500;
             cursor: pointer;
-            padding: 0;
-            transition: var(--transition);
-            outline: none;
-        }
-
-        .fullscreen-btn svg {
-            width: 11px;
-            height: 11px;
-            stroke: currentColor;
-            stroke-width: 2.2;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: transform 0.25s ease;
+            padding: 2px 4px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
         .fullscreen-btn:hover {
             background: var(--bg-hover);
-            color: var(--accent);
-            border-color: var(--accent);
-            transform: scale(1.08);
-        }
-
-        .fullscreen-btn:active {
-            transform: scale(0.95);
+            color: var(--text-main);
         }
 
         .shortcut-modal {
@@ -888,7 +761,7 @@
             z-index: 10000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.3s ease;
         }
 
         .shortcut-modal.open {
@@ -908,12 +781,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            transform: scale(0.95);
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .shortcut-modal.open .shortcut-box {
-            transform: scale(1);
         }
 
         .shortcut-header {
@@ -936,7 +803,6 @@
             justify-content: space-between;
             align-items: center;
             color: var(--text-muted);
-            transition: color 0.3s ease;
         }
 
         .shortcut-item kbd {
@@ -947,7 +813,6 @@
             font-family: inherit;
             color: var(--text-main);
             font-weight: 600;
-            transition: var(--transition);
         }
 
         body.fullscreen-mode {
@@ -981,7 +846,7 @@
             background: #000;
         }
 
-        body.fullscreen-mode canvas#glCanvas {
+        body.fullscreen-mode video {
             width: 100vw;
             height: 100vh;
             aspect-ratio: unset;
@@ -989,6 +854,10 @@
             border-radius: 0;
             border: none;
             background: #000;
+        }
+
+        body.fullscreen-mode .ambient-glow {
+            opacity: calc(var(--glow-opacity) * 0.5);
         }
 
         body.fullscreen-mode .controls-column {
@@ -1001,11 +870,11 @@
             border-radius: 14px;
             padding: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 99999;
+            z-index: 9999;
             opacity: 0;
             pointer-events: none;
             transform: translateX(15px);
-            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
         }
 
         body.fullscreen-mode .player-wrapper .video-info {
@@ -1036,14 +905,10 @@
         <div class="player-column" id="playerColumn">
             <div class="ambient-glow" id="ambientGlow"></div>
             <div class="player-wrapper" id="playerWrapper">
-                <video id="mainVideoPlayer" crossorigin="anonymous" playsinline></video>
-                <canvas id="glCanvas"></canvas>
+                <video id="mainVideoPlayer" crossorigin="anonymous" controls playsinline></video>
                 <div class="video-info">
                     <div class="video-title" id="currentVideoTitle">No video</div>
-                    <!-- Upgraded Expand / Fullscreen SVG Icon Button -->
-                    <button class="fullscreen-btn" id="expandBtn" title="Toggle Fullscreen">
-                        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                    </button>
+                    <button class="fullscreen-btn" id="expandBtn">Expand</button>
                 </div>
             </div>
         </div>
@@ -1053,152 +918,73 @@
             <div class="header-row">
                 <h1 id="appTitle">Player</h1>
                 <div class="header-controls">
-                    <!-- Collapse Toggle Button -->
-                    <button class="icon-top-btn" id="collapseToggleBtn" title="Toggle Navigation Bar">
-                        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                    <!-- Added WebGL Toggle Button -->
+                    <button class="icon-top-btn" id="webglToggleBtn" title="Toggle WebGL Hardware Processing">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
                     </button>
-
-                    <!-- Collapsible Container for Header Buttons with Reorganised Clusters -->
-                    <div class="collapsible-group" id="collapsibleNav">
-                        <!-- Cluster 1: Audio & Video Adjustments -->
-                        <div class="button-cluster">
-                            <button class="icon-top-btn" id="audioSettingsBtn" title="Audio Compressor / Equalizer">
-                                <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5v14M7 8v8M22 10v4M2 10v4"/></svg>
-                            </button>
-                            <button class="icon-top-btn" id="videoFiltersBtn" title="Real-time Video Filters">
-                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z"/></svg>
-                            </button>
-                            <button class="icon-top-btn" id="webglToggleBtn" title="Toggle WebGL Hardware Processing">
-                                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                            </button>
+                    <!-- Improved & Intuitive SVG Icons -->
+                    <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">
+                        <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+                    </button>
+                    <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">
+                        <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                    </button>
+                    <button class="icon-top-btn" id="glassToggleBtn" title="Glass & Color Customizer">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                    </button>
+                    <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater / Focused Mode">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </button>
+                    <button class="icon-top-btn" id="instructionHelpBtn" title="How to use & User Guide">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </button>
+                    
+                    <!-- Smooth Animated Custom Language Dropdown -->
+                    <div class="custom-select-wrapper" id="langSelectWrapper">
+                        <div class="custom-select-trigger" id="langSelectTrigger">
+                            <span id="currentLangLabel">EN</span>
+                            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
                         </div>
-
-                        <!-- Cluster 2: Layout & Appearance Customizer -->
-                        <div class="button-cluster">
-                            <button class="icon-top-btn" id="loopBadgeBtn" title="Toggle Loop">
-                                <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                            </button>
-                            <button class="icon-top-btn" id="glassToggleBtn" title="Glass & Color Customizer">
-                                <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-                            </button>
-                            <button class="icon-top-btn" id="cinematicToggleBtn" title="Theater / Focused Mode">
-                                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                            </button>
-                        </div>
-
-                        <!-- Cluster 3: Help & Localization / Theme -->
-                        <div class="button-cluster">
-                            <button class="icon-top-btn" id="shortcutHelpBtn" title="Keyboard Shortcuts (?)">
-                                <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
-                            </button>
-                            <button class="icon-top-btn" id="instructionHelpBtn" title="How to use & User Guide">
-                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                            </button>
-                            
-                            <!-- Smooth Animated Custom Language Dropdown -->
-                            <div class="custom-select-wrapper" id="langSelectWrapper">
-                                <div class="custom-select-trigger" id="langSelectTrigger">
-                                    <span id="currentLangLabel">EN</span>
-                                    <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                                </div>
-                                <div class="custom-select-options">
-                                    <div class="custom-option selected" data-value="en">English (EN)</div>
-                                    <div class="custom-option" data-value="zh">中文 (ZH)</div>
-                                    <div class="custom-option" data-value="ja">日本語 (JA)</div>
-                                    <div class="custom-option" data-value="de">Deutsch (DE)</div>
-                                    <div class="custom-option" data-value="ko">한국어 (KO)</div>
-                                    <div class="custom-option" data-value="fr">Français (FR)</div>
-                                    <div class="custom-option" data-value="it">Italiano (IT)</div>
-                                    <div class="custom-option" data-value="fa">فارسی (FA)</div>
-                                    <div class="custom-option" data-value="es">Español (ES)</div>
-                                    <div class="custom-option" data-value="pt">Português (PT)</div>
-                                    <div class="custom-option" data-value="ru">Русский (RU)</div>
-                                    <div class="custom-option" data-value="hi">हिन्दी (HI)</div>
-                                    <div class="custom-option" data-value="ar">العربية (AR)</div>
-                                </div>
-                            </div>
-
-                            <button class="theme-btn" id="themeToggleBtn">Theme</button>
+                        <div class="custom-select-options">
+                            <div class="custom-option selected" data-value="en">EN</div>
+                            <div class="custom-option" data-value="zh">中</div>
+                            <div class="custom-option" data-value="ja">日</div>
+                            <div class="custom-option" data-value="de">DE</div>
+                            <div class="custom-option" data-value="ko">한</div>
+                            <div class="custom-option" data-value="fr">FR</div>
+                            <div class="custom-option" data-value="it">IT</div>
+                            <div class="custom-option" data-value="fa">فا</div>
                         </div>
                     </div>
 
+                    <button class="theme-btn" id="themeToggleBtn">Theme</button>
                     <button class="icon-top-btn" id="minimizeBtn" title="Close / Exit Fullscreen">
                         <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
                     </button>
                 </div>
+            </div>
 
-                <!-- Audio Compressor / Equalizer Panel -->
-                <div class="collapsible-panel" id="audioSettingsPanel">
-                    <div class="slider-row">
-                        <label><span id="lblDialogue">Dialogue Boost</span> <span id="dialogueVal">0 dB</span></label>
-                        <input type="range" id="dialogueRange" min="0" max="12" value="0" step="0.5">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblCompressor">Explosion Limiter</span> <span id="compressorVal">Off</span></label>
-                        <input type="range" id="compressorRange" min="0" max="100" value="0">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblBass">Bass Gain</span> <span id="bassVal">0 dB</span></label>
-                        <input type="range" id="bassRange" min="-12" max="12" value="0" step="0.5">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblTreble">Treble Gain</span> <span id="trebleVal">0 dB</span></label>
-                        <input type="range" id="trebleRange" min="-12" max="12" value="0" step="0.5">
-                    </div>
+            <!-- Glass, Glow & Color Scheme Customizer Panel -->
+            <div class="glass-settings-panel" id="glassSettingsPanel">
+                <div class="slider-row">
+                    <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
+                    <input type="range" id="blurRange" min="0" max="40" value="16">
                 </div>
-
-                <!-- Real-time Video Filters Panel -->
-                <div class="collapsible-panel" id="videoFiltersPanel">
-                    <div class="slider-row">
-                        <label><span id="lblBrightness">Brightness</span> <span id="brightnessVal">0</span></label>
-                        <input type="range" id="brightnessRange" min="-1" max="1" value="0" step="0.05">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblContrast">Contrast</span> <span id="contrastVal">1.0</span></label>
-                        <input type="range" id="contrastRange" min="0" max="2" value="1" step="0.05">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblSaturation">Saturation</span> <span id="saturationVal">1.0</span></label>
-                        <input type="range" id="saturationRange" min="0" max="2" value="1" step="0.05">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblSharpness">Sharpness</span> <span id="sharpnessVal">0.0</span></label>
-                        <input type="range" id="sharpnessRange" min="0" max="2" value="0" step="0.05">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblLut">Color Grading Preset</span></label>
-                        <select id="lutPresetSelect" style="width: 100%; font-size: 9px; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                            <option value="none" id="optLutNone">None</option>
-                            <option value="warm" id="optLutWarm">Warm Vintage</option>
-                            <option value="cool" id="optLutCool">Cool Cyberpunk</option>
-                            <option value="dramatic" id="optLutDramatic">Dramatic Contrast</option>
-                            <option value="sepia" id="optLutSepia">Sepia Tone</option>
-                        </select>
-                    </div>
+                <div class="slider-row">
+                    <label><span id="lblOpacity">Glass Opacity</span> <span id="opacityVal">85%</span></label>
+                    <input type="range" id="opacityRange" min="10" max="100" value="85">
                 </div>
-
-                <!-- Glass, Glow & Color Scheme Customizer Panel -->
-                <div class="collapsible-panel" id="glassSettingsPanel">
-                    <div class="slider-row">
-                        <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
-                        <input type="range" id="blurRange" min="0" max="40" value="16">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblOpacity">Glass Opacity</span> <span id="opacityVal">85%</span></label>
-                        <input type="range" id="opacityRange" min="10" max="100" value="85">
-                    </div>
-                    <div class="slider-row">
-                        <label><span id="lblGlow">Ambient Glow</span> <span id="glowVal">15%</span></label>
-                        <input type="range" id="glowRange" min="0" max="100" value="15">
-                    </div>
-                    <div class="color-picker-row" id="colorPickerRow">
-                        <div class="color-dot active" data-color="amber" style="background: #e5b83b;" title="Amber"></div>
-                        <div class="color-dot" data-color="sage" style="background: #7fa98b;" title="Sage"></div>
-                        <div class="color-dot" data-color="rose" style="background: #d4838f;" title="Rose"></div>
-                        <div class="color-dot" data-color="lavender" style="background: #9d8ec4;" title="Lavender"></div>
-                        <div class="color-dot" data-color="sky" style="background: #7ca9c9;" title="Sky"></div>
-                        <div class="color-dot" data-color="peach" style="background: #e09f6e;" title="Peach"></div>
-                    </div>
+                <div class="slider-row">
+                    <label><span id="lblGlow">Ambient Glow</span> <span id="glowVal">15%</span></label>
+                    <input type="range" id="glowRange" min="0" max="100" value="15">
+                </div>
+                <div class="color-picker-row" id="colorPickerRow">
+                    <div class="color-dot active" data-color="amber" style="background: #e5b83b;" title="Amber"></div>
+                    <div class="color-dot" data-color="sage" style="background: #7fa98b;" title="Sage"></div>
+                    <div class="color-dot" data-color="rose" style="background: #d4838f;" title="Rose"></div>
+                    <div class="color-dot" data-color="lavender" style="background: #9d8ec4;" title="Lavender"></div>
+                    <div class="color-dot" data-color="sky" style="background: #7ca9c9;" title="Sky"></div>
+                    <div class="color-dot" data-color="peach" style="background: #e09f6e;" title="Peach"></div>
                 </div>
             </div>
 
@@ -1253,7 +1039,7 @@
                 <div class="notes-sidebar" id="notesSidebar">
                     <div class="notes-sidebar-header">
                         <span id="lblRecentNotes">Saved Notes</span>
-                        <button class="fullscreen-btn" id="closeSidebarBtn" style="border:none; background:transparent;">✕</button>
+                        <button class="fullscreen-btn" id="closeSidebarBtn" style="font-weight: 600; padding: 0 2px;">✕</button>
                     </div>
                     <input type="text" id="noteSearchInput" class="notes-search-input" placeholder="Search saved notes..." />
                     <div class="notes-sidebar-list" id="notesSidebarList">
@@ -1269,7 +1055,7 @@
         <div class="shortcut-box">
             <div class="shortcut-header">
                 <span id="lblKeyboardShortcuts">Keyboard Shortcuts</span>
-                <button class="fullscreen-btn" id="closeShortcutModal" style="border:none; background:transparent;">✕</button>
+                <button class="fullscreen-btn" id="closeShortcutModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
             </div>
             <div class="shortcut-list">
                 <div class="shortcut-item"><span id="scPlay">Play / Pause</span><kbd>Space / K</kbd></div>
@@ -1285,13 +1071,13 @@
 
     <!-- Detailed Instruction / Help Modal -->
     <div class="shortcut-modal" id="instructionModal">
-        <div class="shortcut-box" style="width: 380px;">
+        <div class="shortcut-box">
             <div class="shortcut-header">
-                <span id="instrModalTitle">User Guide & Detailed Instructions</span>
-                <button class="fullscreen-btn" id="closeInstructionModal" style="border:none; background:transparent;">✕</button>
+                <span id="instrModalTitle">User Instructions</span>
+                <button class="fullscreen-btn" id="closeInstructionModal" style="font-weight: 600; padding: 2px 6px;">✕</button>
             </div>
             <div class="shortcut-list">
-                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.5; flex-direction: column; align-items: flex-start; gap: 10px;" id="instrModalText">
+                <div class="shortcut-item" style="color: var(--text-main); text-align: left; line-height: 1.45; flex-direction: column; align-items: flex-start; gap: 10px;" id="instrModalText">
                     <!-- Populated dynamically -->
                 </div>
             </div>
@@ -1311,10 +1097,6 @@
         const glassToggleBtn = document.getElementById('glassToggleBtn');
         const loopBadgeBtn = document.getElementById('loopBadgeBtn');
         const webglToggleBtn = document.getElementById('webglToggleBtn');
-        const audioSettingsBtn = document.getElementById('audioSettingsBtn');
-        const videoFiltersBtn = document.getElementById('videoFiltersBtn');
-        const collapseToggleBtn = document.getElementById('collapseToggleBtn');
-        const collapsibleNav = document.getElementById('collapsibleNav');
         const shortcutHelpBtn = document.getElementById('shortcutHelpBtn');
         const shortcutModal = document.getElementById('shortcutModal');
         const closeShortcutModal = document.getElementById('closeShortcutModal');
@@ -1326,28 +1108,6 @@
         const instrModalText = document.getElementById('instrModalText');
 
         const glassSettingsPanel = document.getElementById('glassSettingsPanel');
-        const audioSettingsPanel = document.getElementById('audioSettingsPanel');
-        const videoFiltersPanel = document.getElementById('videoFiltersPanel');
-
-        const dialogueRange = document.getElementById('dialogueRange');
-        const compressorRange = document.getElementById('compressorRange');
-        const bassRange = document.getElementById('bassRange');
-        const trebleRange = document.getElementById('trebleRange');
-        const dialogueVal = document.getElementById('dialogueVal');
-        const compressorVal = document.getElementById('compressorVal');
-        const bassVal = document.getElementById('bassVal');
-        const trebleVal = document.getElementById('trebleVal');
-
-        const brightnessRange = document.getElementById('brightnessRange');
-        const contrastRange = document.getElementById('contrastRange');
-        const saturationRange = document.getElementById('saturationRange');
-        const sharpnessRange = document.getElementById('sharpnessRange');
-        const lutPresetSelect = document.getElementById('lutPresetSelect');
-        const brightnessVal = document.getElementById('brightnessVal');
-        const contrastVal = document.getElementById('contrastVal');
-        const saturationVal = document.getElementById('saturationVal');
-        const sharpnessVal = document.getElementById('sharpnessVal');
-
         const blurRange = document.getElementById('blurRange');
         const opacityRange = document.getElementById('opacityRange');
         const glowRange = document.getElementById('glowRange');
@@ -1404,259 +1164,28 @@
         let savedNotesList = JSON.parse(localStorage.getItem('player_saved_notes_list') || '[]');
         let activeNoteIndex = null;
 
-        let audioCtx, audioSource, dialogueFilter, compressorNode, bassFilter, trebleFilter;
-
-        function initAudioPipeline() {
-            if (audioCtx) return;
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
-
-            audioSource = audioCtx.createMediaElementSource(videoPlayer);
-
-            dialogueFilter = audioCtx.createBiquadFilter();
-            dialogueFilter.type = 'peaking';
-            dialogueFilter.frequency.value = 2000;
-            dialogueFilter.Q.value = 1.0;
-            dialogueFilter.gain.value = 0;
-
-            bassFilter = audioCtx.createBiquadFilter();
-            bassFilter.type = 'lowshelf';
-            bassFilter.frequency.value = 250;
-            bassFilter.gain.value = 0;
-
-            trebleFilter = audioCtx.createBiquadFilter();
-            trebleFilter.type = 'highshelf';
-            trebleFilter.frequency.value = 4000;
-            trebleFilter.gain.value = 0;
-
-            compressorNode = audioCtx.createDynamicsCompressor();
-            compressorNode.threshold.value = 0;
-            compressorNode.knee.value = 40;
-            compressorNode.ratio.value = 1;
-            compressorNode.attack.value = 0.003;
-            compressorNode.release.value = 0.25;
-
-            audioSource.connect(dialogueFilter);
-            dialogueFilter.connect(bassFilter);
-            bassFilter.connect(trebleFilter);
-            trebleFilter.connect(compressorNode);
-            compressorNode.connect(audioCtx.destination);
-        }
-
-        dialogueRange.oninput = (e) => {
-            initAudioPipeline();
-            const val = parseFloat(e.target.value);
-            dialogueFilter.gain.value = val;
-            dialogueVal.textContent = `${val} dB`;
-        };
-
-        compressorRange.oninput = (e) => {
-            initAudioPipeline();
-            const val = parseFloat(e.target.value);
-            if (val === 0) {
-                compressorNode.ratio.value = 1;
-                compressorVal.textContent = 'Off';
-            } else {
-                compressorNode.threshold.value = -30 * (val / 100);
-                compressorNode.ratio.value = 1 + (val / 100) * 11;
-                compressorVal.textContent = `${Math.round(val)}%`;
-            }
-        };
-
-        bassRange.oninput = (e) => {
-            initAudioPipeline();
-            const val = parseFloat(e.target.value);
-            bassFilter.gain.value = val;
-            bassVal.textContent = `${val} dB`;
-        };
-
-        trebleRange.oninput = (e) => {
-            initAudioPipeline();
-            const val = parseFloat(e.target.value);
-            trebleFilter.gain.value = val;
-            trebleVal.textContent = `${val} dB`;
-        };
-
-        const glCanvas = document.getElementById('glCanvas');
-        let gl, filterProgram, texture;
-        let uniforms = {};
-
-        function initWebGL() {
-            gl = glCanvas.getContext('webgl') || glCanvas.getContext('experimental-webgl');
-            if (!gl) return;
-
-            const vsSource = `
-                attribute vec2 a_position;
-                attribute vec2 a_texCoord;
-                varying vec2 v_texCoord;
-                void main() {
-                    gl_Position = vec4(a_position, 0.0, 1.0);
-                    v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
-                }
-            `;
-
-            const fsSource = `
-                precision mediump float;
-                varying vec2 v_texCoord;
-                uniform sampler2D u_image;
-                uniform float u_brightness;
-                uniform float u_contrast;
-                uniform float u_saturation;
-                uniform float u_sharpness;
-                uniform int u_lutPreset;
-                uniform vec2 u_textureSize;
-
-                vec3 applyLUT(vec3 color, int preset) {
-                    if (preset == 1) {
-                        color.r = pow(color.r, 0.9) * 1.1;
-                        color.b = pow(color.b, 1.1) * 0.85;
-                    } else if (preset == 2) {
-                        color.r = pow(color.r, 1.1) * 0.85;
-                        color.b = pow(color.b, 0.9) * 1.15;
-                    } else if (preset == 3) {
-                        color = (color - 0.5) * 1.4 + 0.5;
-                    } else if (preset == 4) {
-                        float gray = dot(color, vec3(0.299, 0.587, 0.114));
-                        color = vec3(gray * 1.2, gray * 0.9, gray * 0.6);
-                    }
-                    return clamp(color, 0.0, 1.0);
-                }
-
-                void main() {
-                    vec2 step = 1.0 / u_textureSize;
-                    vec4 center = texture2D(u_image, v_texCoord);
-                    
-                    vec4 north = texture2D(u_image, v_texCoord + vec2(0.0, -step.y));
-                    vec4 south = texture2D(u_image, v_texCoord + vec2(0.0, step.y));
-                    vec4 east  = texture2D(u_image, v_texCoord + vec2(step.x, 0.0));
-                    vec4 west  = texture2D(u_image, v_texCoord + vec2(-step.x, 0.0));
-                    
-                    vec3 color = center.rgb + u_sharpness * (4.0 * center.rgb - north.rgb - south.rgb - east.rgb - west.rgb);
-                    
-                    color += u_brightness;
-                    color = (color - 0.5) * u_contrast + 0.5;
-                    
-                    float gray = dot(color, vec3(0.2126, 0.7152, 0.0722));
-                    color = mix(vec3(gray), color, u_saturation);
-                    
-                    color = applyLUT(color, u_lutPreset);
-
-                    gl_FragColor = vec4(clamp(color, 0.0, 1.0), center.a);
-                }
-            `;
-
-            const compileShader = (type, source) => {
-                const shader = gl.createShader(type);
-                gl.shaderSource(shader, source);
-                gl.compileShader(shader);
-                return shader;
-            };
-
-            filterProgram = gl.createProgram();
-            gl.attachShader(filterProgram, compileShader(gl.VERTEX_SHADER, vsSource));
-            gl.attachShader(filterProgram, compileShader(gl.FRAGMENT_SHADER, fsSource));
-            gl.linkProgram(filterProgram);
-            gl.useProgram(filterProgram);
-
-            const positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-                -1, -1, 0, 0,
-                 1, -1, 1, 0,
-                -1,  1, 0, 1,
-                -1,  1, 0, 1,
-                 1, -1, 1, 0,
-                 1,  1, 1, 1,
-            ]), gl.STATIC_DRAW);
-
-            const aPos = gl.getAttribLocation(filterProgram, "a_position");
-            const aTex = gl.getAttribLocation(filterProgram, "a_texCoord");
-            gl.enableVertexAttribArray(aPos);
-            gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
-            gl.enableVertexAttribArray(aTex);
-            gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, 16, 8);
-
-            texture = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-            uniforms.brightness = gl.getUniformLocation(filterProgram, "u_brightness");
-            uniforms.contrast = gl.getUniformLocation(filterProgram, "u_contrast");
-            uniforms.saturation = gl.getUniformLocation(filterProgram, "u_saturation");
-            uniforms.sharpness = gl.getUniformLocation(filterProgram, "u_sharpness");
-            uniforms.lutPreset = gl.getUniformLocation(filterProgram, "u_lutPreset");
-            uniforms.textureSize = gl.getUniformLocation(filterProgram, "u_textureSize");
-        }
-
-        initWebGL();
-
-        function renderFrame() {
-            if (videoPlayer.readyState >= videoPlayer.HAVE_CURRENT_DATA) {
-                if (glCanvas.width !== videoPlayer.videoWidth || glCanvas.height !== videoPlayer.videoHeight) {
-                    glCanvas.width = videoPlayer.videoWidth || 640;
-                    glCanvas.height = videoPlayer.videoHeight || 360;
-                    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
-                }
-
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoPlayer);
-
-                gl.uniform1f(uniforms.brightness, parseFloat(brightnessRange.value));
-                gl.uniform1f(uniforms.contrast, parseFloat(contrastRange.value));
-                gl.uniform1f(uniforms.saturation, parseFloat(saturationRange.value));
-                gl.uniform1f(uniforms.sharpness, parseFloat(sharpnessRange.value));
-
-                const lutMap = { none: 0, warm: 1, cool: 2, dramatic: 3, sepia: 4 };
-                gl.uniform1i(uniforms.lutPreset, lutMap[lutPresetSelect.value] || 0);
-                gl.uniform2f(uniforms.textureSize, glCanvas.width, glCanvas.height);
-
-                gl.drawArrays(gl.TRIANGLES, 0, 6);
-            }
-            requestAnimationFrame(renderFrame);
-        }
-
-        requestAnimationFrame(renderFrame);
-
-        brightnessRange.oninput = (e) => brightnessVal.textContent = e.target.value;
-        contrastRange.oninput = (e) => contrastVal.textContent = e.target.value;
-        saturationRange.oninput = (e) => saturationVal.textContent = e.target.value;
-        sharpnessRange.oninput = (e) => sharpnessVal.textContent = e.target.value;
-
+        // Animated Dropdown logic
         const langSelectWrapper = document.getElementById('langSelectWrapper');
         const langSelectTrigger = document.getElementById('langSelectTrigger');
         const currentLangLabel = document.getElementById('currentLangLabel');
         const customOptions = document.querySelectorAll('.custom-option');
 
         langSelectTrigger.onclick = (e) => {
-            e.preventDefault();
             e.stopPropagation();
-            glassSettingsPanel.classList.remove('open');
-            glassToggleBtn.classList.remove('active');
-            audioSettingsPanel.classList.remove('open');
-            audioSettingsBtn.classList.remove('active');
-            videoFiltersPanel.classList.remove('open');
-            videoFiltersBtn.classList.remove('active');
-
             langSelectWrapper.classList.toggle('open');
         };
 
-        document.addEventListener('click', (e) => {
-            if (!langSelectWrapper.contains(e.target)) {
-                langSelectWrapper.classList.remove('open');
-            }
+        document.addEventListener('click', () => {
+            langSelectWrapper.classList.remove('open');
         });
 
         customOptions.forEach(opt => {
             opt.onclick = (e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 customOptions.forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
                 selectedLang = opt.getAttribute('data-value');
-                currentLangLabel.textContent = selectedLang.toUpperCase();
+                currentLangLabel.textContent = opt.textContent;
                 langSelectWrapper.classList.remove('open');
                 updateUI();
             };
@@ -1664,267 +1193,371 @@
 
         const translations = {
             en: { 
-                title: "Player", load: "Load", file: "Choose Local File", urlPlaceholder: "URL (.mp4/.webm)...",
-                none: "No video loaded", custom: "Network Stream", theme: "Theme",
-                blur: "Blur Intensity", opacity: "Glass Opacity", glow: "Ambient Glow",
-                scratchpad: "Scratchpad Notes", recentNotes: "Saved Notes", placeholderNotes: "Jot down notes or timestamps...",
-                timeBtn: "+ Time", recentBtn: "Saved Notes", saveBtn: "Save", clear: "Clear Editor",
-                deleteNoteBtn: "Delete Saved Note", download: "Download .txt", searchPlaceholder: "Search saved notes...",
-                setA: "Set A: --", setB: "Set B: --", clearAB: "Clear AB",
-                noSavedNotes: "No saved notes", noMatchingNotes: "No matching notes",
-                savedAlert: "Note saved successfully!", noNoteLoadedAlert: "No saved note selected.",
-                confirmDelete: "Permanently delete this saved note?", shortcutsTitle: "Keyboard Shortcuts Guide",
-                scPlay: "Play / Pause", scBack: "Skip Backward 5s", scForward: "Skip Forward 5s",
-                scVol: "Volume Up / Down", scFull: "Fullscreen Toggle", scLoop: "Toggle Loop", scHelp: "Shortcut Help",
-                lutNone: "None", lutWarm: "Warm Vintage", lutCool: "Cool Cyberpunk", lutDramatic: "Dramatic Contrast", lutSepia: "Sepia Tone",
-                instrTitle: "Complete User Guide & Instructions",
+                title: "Player", 
+                load: "Load", 
+                file: "Choose Local File", 
+                urlPlaceholder: "URL (.mp4/.webm)...",
+                none: "No video loaded", 
+                custom: "Network Stream", 
+                expand: "Expand",
+                theme: "Theme",
+                blur: "Blur Intensity",
+                opacity: "Glass Opacity",
+                glow: "Ambient Glow",
+                scratchpad: "Scratchpad Notes",
+                recentNotes: "Saved Notes",
+                placeholderNotes: "Jot down notes or timestamps...",
+                timeBtn: "+ Time",
+                recentBtn: "Saved Notes",
+                saveBtn: "Save",
+                clear: "Clear Editor",
+                deleteNoteBtn: "Delete Saved Note",
+                download: "Download .txt",
+                searchPlaceholder: "Search saved notes...",
+                setA: "Set A: --",
+                setB: "Set B: --",
+                clearAB: "Clear AB",
+                noSavedNotes: "No saved notes",
+                noMatchingNotes: "No matching notes",
+                savedAlert: "Note saved successfully!",
+                noNoteLoadedAlert: "No saved note is currently selected. Please load one from Saved Notes first.",
+                confirmDelete: "Are you sure you want to permanently delete this saved note?",
+                shortcutsTitle: "Keyboard Shortcuts Guide",
+                scPlay: "Play / Pause",
+                scBack: "Skip Backward 5s",
+                scForward: "Skip Forward 5s",
+                scVol: "Volume Up / Down",
+                scFull: "Fullscreen Toggle",
+                scLoop: "Toggle Loop",
+                scHelp: "Shortcut Help",
+                instrTitle: "User Instructions & Feature Guide",
                 instrText: `
-                    <div><b>1. Media Loading Options</b><br>• <i>Network Stream:</i> Paste a direct video file link (.mp4/.webm) into the URL bar and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to open a video from your device storage.</div>
-                    <div><b>2. WebGL Hardware Filters & Color Grading</b><br>• Access the filters panel to adjust real-time Brightness, Contrast, Saturation, Sharpness, and pick Cinematic LUT color presets.</div>
-                    <div><b>3. Professional Audio EQ & Limiter</b><br>• Use the Audio settings to boost Dialogue frequencies, apply an Explosion Limiter compressor, or modify Bass and Treble gains.</div>
-                    <div><b>4. Scratchpad Notes & Interactive Timestamps</b><br>• Click <b>+ Time</b> to stamp the current video time into your scratchpad. Click any timestamp link inside saved notes to instantly seek to that video moment.</div>
+                    <div><b>1. WebGL Acceleration Toggle</b><br>• Click the <b>Layers Icon</b> at the top right to toggle GPU WebGL frame sampling for real-time ambient glowing.</div>
+                    <div><b>2. Video Playback Options</b><br>• <i>Network Stream:</i> Paste a direct video URL (.mp4, .webm) and click <b>Load</b>.<br>• <i>Local File:</i> Click <b>Choose Local File</b> to load media.</div>
+                    <div><b>3. Interactive Timestamp Navigation</b><br>• Click <b>+ Time</b> to log timestamp links like <code>[0:15]</code> in your notes.<br>• Click any timestamp inside saved notes to jump directly to that position in the video!</div>
+                    <div><b>4. A-B Segment Looping</b><br>• Click <b>Set A</b> & <b>Set B</b> to repeat a practice section continuously.</div>
                 `
             },
             zh: { 
-                title: "播放器", load: "加载", file: "选择本地视频文件", urlPlaceholder: "输入视频网址 (.mp4/.webm)...",
-                none: "未加载任何视频", custom: "网络视频流", theme: "主题配色",
-                blur: "毛玻璃模糊度", opacity: "玻璃不透明度", glow: "环境光晕亮度",
-                scratchpad: "随手记事本", recentNotes: "已存笔记列表", placeholderNotes: "在此记录笔记或按键添加时间戳...",
-                timeBtn: "+ 时间戳", recentBtn: "已存笔记", saveBtn: "保存笔记", clear: "清空编辑器",
-                deleteNoteBtn: "删除已存笔记", download: "导出 .txt", searchPlaceholder: "搜索已存笔记...",
-                setA: "起点 A: --", setB: "终点 B: --", clearAB: "清除 AB 循环",
-                noSavedNotes: "暂无保存的笔记", noMatchingNotes: "未找到匹配笔记",
-                savedAlert: "笔记已成功保存！", noNoteLoadedAlert: "当前未选中任何已存笔记。",
-                confirmDelete: "确定要永久删除此条已存笔记吗？", shortcutsTitle: "键盘快捷键指南",
-                scPlay: "播放 / 暂停", scBack: "快退 5 秒", scForward: "快进 5 秒",
-                scVol: "音量 增大 / 减小", scFull: "切换全屏模式", scLoop: "切换单曲循环", scHelp: "快捷键帮助",
-                lutNone: "无滤镜", lutWarm: "温暖复古", lutCool: "赛博朋克冷色", lutDramatic: "戏剧性对比", lutSepia: "怀旧复古褐",
-                instrTitle: "详细使用指南与功能说明",
+                title: "播放器", 
+                load: "加载", 
+                file: "选择本地视频文件", 
+                urlPlaceholder: "输入视频网址 (.mp4/.webm)...",
+                none: "未加载任何视频", 
+                custom: "网络视频流", 
+                expand: "全屏模式",
+                theme: "主题配色",
+                blur: "毛玻璃模糊度",
+                opacity: "玻璃不透明度",
+                glow: "环境光晕亮度",
+                scratchpad: "随手记事本",
+                recentNotes: "已存笔记列表",
+                placeholderNotes: "在此记录笔记或按键添加时间戳...",
+                timeBtn: "+ 时间戳",
+                recentBtn: "已存笔记",
+                saveBtn: "保存笔记",
+                clear: "清空编辑器",
+                deleteNoteBtn: "删除已存笔记",
+                download: "导出 .txt",
+                searchPlaceholder: "搜索已存笔记...",
+                setA: "起点 A: --",
+                setB: "终点 B: --",
+                clearAB: "清除 AB 循环",
+                noSavedNotes: "暂无保存的笔记",
+                noMatchingNotes: "未找到匹配笔记",
+                savedAlert: "笔记已成功保存！",
+                noNoteLoadedAlert: "当前未选中任何已存笔记。请先从列表中加载笔记后再行删除。",
+                confirmDelete: "确定要永久删除此条已存笔记吗？",
+                shortcutsTitle: "键盘快捷键指南",
+                scPlay: "播放 / 暂停",
+                scBack: "快退 5 秒",
+                scForward: "快进 5 秒",
+                scVol: "音量 增大 / 减小",
+                scFull: "切换全屏模式",
+                scLoop: "切换单曲循环",
+                scHelp: "快捷键帮助",
+                instrTitle: "使用指南与功能说明",
                 instrText: `
-                    <div><b>1. 媒体加载方式</b><br>• <i>网络流:</i> 在输入框中粘贴直链 (.mp4/.webm) 后点击<b>加载</b>。<br>• <i>本地文件:</i> 点击<b>选择本地视频文件</b>导入设备中的视频。</div>
-                    <div><b>2. WebGL 硬件滤镜与调色</b><br>• 开启视频滤镜面板，实时调节亮度、对比度、饱和度、锐化及 LUT 预设。</div>
-                    <div><b>3. 专业音频均衡与压缩</b><br>• 使用音频面板调节人声增强、爆破音平滑压缩、低音与高音增益。</div>
-                    <div><b>4. 记事本与互动时间戳</b><br>• 点击 <b>+ 时间戳</b> 记录当前播放时刻。点击笔记中的时间戳链接可一键跳转至对应进度！</div>
+                    <div><b>1. WebGL 硬件加速开关</b><br>• 点击顶部<b>图层图标</b>切换 GPU WebGL 实时抽帧采样以控制环境光晕渲染。</div>
+                    <div><b>2. 视频加载与播放</b><br>• <i>网络视频:</i> 粘贴视频URL后点击<b>加载</b>。<br>• <i>本地文件:</i> 点击<b>选择本地视频文件</b>导入设备上的视频。</div>
+                    <div><b>3. 交互式时间戳跳转</b><br>• 点击 <b>+ 时间戳</b> 插入如 <code>[0:15]</code> 格式的时间点。<br>• 在侧边栏已存笔记中，点击高亮的时间戳链接即可直接跳转视频进度！</div>
+                    <div><b>4. A-B 片段循环复读</b><br>• 点击 <b>起点 A</b> 与 <b>终点 B</b> 即可对选定片段进行自动复读。</div>
                 `
             },
             ja: { 
-                title: "プレーヤー", load: "読み込み", file: "ローカルファイルを選択", urlPlaceholder: "動画URL (.mp4/.webm)...",
-                none: "動画が読み込まれていません", custom: "ネットワークストリーム", theme: "テーマ",
-                blur: "ぼかし強度", opacity: "不透明度", glow: "アンビエント光",
-                scratchpad: "メモ帳", recentNotes: "保存済みメモ", placeholderNotes: "メモやタイムスタンプを入力...",
-                timeBtn: "+ 時間", recentBtn: "保存済みメモ", saveBtn: "保存", clear: "エディタを清掃",
-                deleteNoteBtn: "メモ削除", download: ".txt 出力", searchPlaceholder: "保存済みメモを検索...",
-                setA: "開始 A: --", setB: "終了 B: --", clearAB: "AB リセット",
-                noSavedNotes: "保存されたメモはありません", noMatchingNotes: "該当するメモがありません",
-                savedAlert: "メモを正常に保存しました！", noNoteLoadedAlert: "メモが選択されていません。",
-                confirmDelete: "このメモを永久に削除しますか？", shortcutsTitle: "キーボードショートカット",
-                scPlay: "再生 / 一時停止", scBack: "5秒巻き戻し", scForward: "5秒早送り",
-                scVol: "音量 上 / 下", scFull: "全画面切替", scLoop: "ループ切替", scHelp: "ヘルプ",
-                lutNone: "なし", lutWarm: "ウォームビンテージ", lutCool: "クールサイバーパンク", lutDramatic: "ドラマチックコントラスト", lutSepia: "セピア",
-                instrTitle: "詳細な取扱説明書と機能ガイド",
+                title: "プレーヤー", 
+                load: "読み込み", 
+                file: "ローカルファイルを選択", 
+                urlPlaceholder: "動画URL (.mp4/.webm)...",
+                none: "動画が読み込まれていません", 
+                custom: "ネットワークストリーム", 
+                expand: "全画面表示",
+                theme: "テーマ",
+                blur: "ぼかし強度",
+                opacity: "不透明度",
+                glow: "アンビエント光",
+                scratchpad: "メモ帳",
+                recentNotes: "保存済みメモ",
+                placeholderNotes: "メモやタイムスタンプを入力...",
+                timeBtn: "+ 時間",
+                recentBtn: "保存済みメモ",
+                saveBtn: "保存",
+                clear: "エディタを清掃",
+                deleteNoteBtn: "メモ strike",
+                download: ".txt 出力",
+                searchPlaceholder: "保存済みメモを検索...",
+                setA: "開始 A: --",
+                setB: "終了 B: --",
+                clearAB: "AB リセット",
+                noSavedNotes: "保存されたメモはありません",
+                noMatchingNotes: "該当するメモがありません",
+                savedAlert: "メモを正常に保存しました！",
+                noNoteLoadedAlert: "現在選択されているメモがありません。先に一覧から読み込んでください。",
+                confirmDelete: "このメモを永久に削除してもよろしいですか？",
+                shortcutsTitle: "キーボードショートカットガイド",
+                scPlay: "再生 / 一時停止",
+                scBack: "5秒巻き戻し",
+                scForward: "5秒早送り",
+                scVol: "音量 上 / 下",
+                scFull: "全画面表示切り替え",
+                scLoop: "ループ切り替え",
+                scHelp: "ヘルプ",
+                instrTitle: "取扱説明書＆機能ガイド",
                 instrText: `
-                    <div><b>1. メディアの読み込み</b><br>• <i>ネットワーク:</i> URLを入力して<b>読み込み</b>を押下。<br>• <i>ローカル:</i> デバイス内のファイルを選択。</div>
-                    <div><b>2. WebGLフィルター & カラー調整</b><br>• リアルタイムで明るさ、コントラスト、LUTプリセットを適用。</div>
+                    <div><b>1. WebGL アクセラレーション切替</b><br>• 上部の<b>レイヤーアイコン</b>をクリックして GPU WebGL レンダリングをオン/オフできます。</div>
+                    <div><b>2. 動画再生オプション</b><br>• <i>URL:</i> リンクを貼り付けて <b>読み込み</b> をクリック。<br>• <i>ローカル:</i> <b>ファイルを選択</b> をクリック。</div>
+                    <div><b>3. タイムスタンプ・ジャンプ</b><br>• <b>+ 時間</b> で <code>[0:15]</code> などの時間を自動挿入。<br>• メモ内のタイムスタンプをクリックすると動画がその位置にジャンプします！</div>
+                    <div><b>4. A-B 区間リピート</b><br>• <b>開始 A</b> と <b>終了 B</b> を押して指定区間を繰り返し再生します。</div>
                 `
             },
             de: { 
-                title: "Player", load: "Laden", file: "Lokale Datei wählen", urlPlaceholder: "Video-URL (.mp4/.webm)...",
-                none: "Kein Video geladen", custom: "Netzwerk-Stream", theme: "Thema",
-                blur: "Unschärfe", opacity: "Opazität", glow: "Umgebungslicht",
-                scratchpad: "Notizblock", recentNotes: "Gespeicherte Notizen", placeholderNotes: "Notizen oder Zeitstempel eingeben...",
-                timeBtn: "+ Zeit", recentBtn: "Gespeichert", saveBtn: "Speichern", clear: "Editor leeren",
-                deleteNoteBtn: "Notiz löschen", download: ".txt herunterladen", searchPlaceholder: "Notizen suchen...",
-                setA: "Start A: --", setB: "Ende B: --", clearAB: "AB zurücksetzen",
-                noSavedNotes: "Keine Notizen", noMatchingNotes: "Keine Treffer",
-                savedAlert: "Notiz gespeichert!", noNoteLoadedAlert: "Keine Notiz ausgewählt.",
-                confirmDelete: "Notiz unwiderruflich löschen?", shortcutsTitle: "Tastenkombinationen",
-                scPlay: "Wiedergabe / Pause", scBack: "5s zurück", scForward: "5s vor",
-                scVol: "Lautstärke +/-", scFull: "Vollbild", scLoop: "Schleife", scHelp: "Hilfe",
-                lutNone: "Keine", lutWarm: "Warm Vintage", lutCool: "Cool Cyberpunk", lutDramatic: "Dramatischer Kontrast", lutSepia: "Sepia-Ton",
-                instrTitle: "Benutzerhandbuch & Anleitung",
+                title: "Player", 
+                load: "Laden", 
+                file: "Lokale Datei wählen", 
+                urlPlaceholder: "Video-URL (.mp4/.webm)...",
+                none: "Kein Video geladen", 
+                custom: "Netzwerk-Stream", 
+                expand: "Vollbild",
+                theme: "Thema",
+                blur: "Unschärfe",
+                opacity: "Opazität",
+                glow: "Umgebungslicht",
+                scratchpad: "Notizblock",
+                recentNotes: "Gespeicherte Notizen",
+                placeholderNotes: "Notizen oder Zeitstempel eingeben...",
+                timeBtn: "+ Zeit",
+                recentBtn: "Gespeichert",
+                saveBtn: "Speichern",
+                clear: "Editor leeren",
+                deleteNoteBtn: "Notiz löschen",
+                download: ".txt herunterladen",
+                searchPlaceholder: "Notizen suchen...",
+                setA: "Start A: --",
+                setB: "Ende B: --",
+                clearAB: "AB zurücksetzen",
+                noSavedNotes: "Keine gespeicherten Notizen",
+                noMatchingNotes: "Keine passenden Notizen",
+                savedAlert: "Notiz erfolgreich gespeichert!",
+                noNoteLoadedAlert: "Keine gespeicherte Notiz ausgewählt. Bitte zuerst eine laden.",
+                confirmDelete: "Möchten Sie diese Notiz wirklich dauerhaft löschen?",
+                shortcutsTitle: "Tastenkombinationen-Anleitung",
+                scPlay: "Wiedergabe / Pause",
+                scBack: "5s zurück",
+                scForward: "5s vor",
+                scVol: "Lautstärke +/-",
+                scFull: "Vollbild umschalten",
+                scLoop: "Schleife umschalten",
+                scHelp: "Hilfe",
+                instrTitle: "Benutzerhandbuch & Funktionen",
                 instrText: `
-                    <div><b>1. Medienwiedergabe & Laden</b><br>• URL einfügen oder lokale Datei auswählen.</div>
-                    <div><b>2. WebGL-Filter & Audio-EQ</b><br>• Helligkeit, Kontrast, Kompressor und Equalizer anpassen.</div>
+                    <div><b>1. WebGL-Umschaltung</b><br>• Klicken Sie oben auf das <b>Ebenen-Symbol</b>, um die WebGL-GPU-Verarbeitung ein-/auszuschalten.</div>
+                    <div><b>2. Videowiedergabe</b><br>• <i>URL:</i> Link einfügen & auf <b>Laden</b> klicken.<br>• <i>Datei:</i> Auf <b>Lokale Datei wählen</b> klicken.</div>
+                    <div><b>3. Interaktive Zeitstempel</b><br>• Klicken Sie auf <b>+ Zeit</b>, um Zeitstempel wie <code>[0:15]</code> hinzuzufügen.<br>• Klicken Sie auf einen Zeitstempel in den Notizen, um direkt dorthin zu springen!</div>
+                    <div><b>4. A-B Schleifenfunktion</b><br>• Verwenden Sie <b>Start A</b> und <b>Ende B</b>, um Abschnitte zu wiederholen.</div>
                 `
             },
             ko: { 
-                title: "플레이어", load: "로드", file: "로컬 파일 선택", urlPlaceholder: "비디오 URL (.mp4/.webm)...",
-                none: "로드된 비디오 없음", custom: "네트워크 스트림", theme: "테마",
-                blur: "블러 강도", opacity: "유리 투명도", glow: "주변 광채",
-                scratchpad: "연습장 메모", recentNotes: "저장된 메모 목록", placeholderNotes: "메모나 타임스탬프를 입력하세요...",
-                timeBtn: "+ 시간", recentBtn: "저장된 메모", saveBtn: "저장", clear: "에디터 비우기",
-                deleteNoteBtn: "저장된 메모 삭제", download: ".txt 다운로드", searchPlaceholder: "저장된 메모 검색...",
-                setA: "시작 A: --", setB: "종료 B: --", clearAB: "AB 초기화",
-                noSavedNotes: "저장된 메모 없음", noMatchingNotes: "일치하는 메모 없음",
-                savedAlert: "메모가 저장되었습니다!", noNoteLoadedAlert: "선택된 메모가 없습니다.",
-                confirmDelete: "이 메모를 삭제하시겠습니까?", shortcutsTitle: "키보드 단축키",
-                scPlay: "재생 / 일시정지", scBack: "5초 뒤로", scForward: "5초 앞으로",
-                scVol: "음량 조절", scFull: "전체 화면", scLoop: "반복 재생", scHelp: "도움말",
-                lutNone: "없음", lutWarm: "따뜻한 빈티지", lutCool: "쿨 사이버펑크", lutDramatic: "극적인 대비", lutSepia: "세피아 톤",
-                instrTitle: "사용 설명서 및 상세 기능 안내",
+                title: "플레이어", 
+                load: "로드", 
+                file: "로컬 파일 선택", 
+                urlPlaceholder: "비디오 URL (.mp4/.webm)...",
+                none: "로드된 비디오 없음", 
+                custom: "네트워크 스트림", 
+                expand: "전체 화면",
+                theme: "테마",
+                blur: "블러 강도",
+                opacity: "유리 투명도",
+                glow: "주변 광채",
+                scratchpad: "연습장 메모",
+                recentNotes: "저장된 메모 목록",
+                placeholderNotes: "메모나 타임스탬프를 입력하세요...",
+                timeBtn: "+ 시간",
+                recentBtn: "저장된 메모",
+                saveBtn: "저장",
+                clear: "에디터 비우기",
+                deleteNoteBtn: "저장된 메모 삭제",
+                download: ".txt 다운로드",
+                searchPlaceholder: "저장된 메모 검색...",
+                setA: "시작 A: --",
+                setB: "종료 B: --",
+                clearAB: "AB 초기화",
+                noSavedNotes: "저장된 메모가 없습니다",
+                noMatchingNotes: "일치하는 메모가 없습니다",
+                savedAlert: "메모가 성공적으로 저장되었습니다!",
+                noNoteLoadedAlert: "선택된 저장 메모가 없습니다. 먼저 목록에서 불러오세요.",
+                confirmDelete: "이 메모를 영구적으로 삭제하시겠습니까?",
+                shortcutsTitle: "키보드 단축키 안내",
+                scPlay: "재생 / 일시정지",
+                scBack: "5초 뒤로",
+                scForward: "5초 앞으로",
+                scVol: "음량 조절",
+                scFull: "전체 화면 전환",
+                scLoop: "반복 재생 전환",
+                scHelp: "단축키 도움말",
+                instrTitle: "사용 설명서 및 기능 가이드",
                 instrText: `
-                    <div><b>1. 비디오 소스 로드</b><br>• 네트워크 URL 주소를 입력하거나 로컬 파일을 선택하세요.</div>
-                    <div><b>2. 실시간 WebGL 필터 및 오디오 EQ</b><br>• 밝기, 대비, 대사 강조 및 폭발음 압축기(리미터)를 설정할 수 있습니다.</div>
+                    <div><b>1. WebGL 가속 토글</b><br>• 상단 <b>레이어 아이콘</b>을 클릭하여 GPU WebGL 엠비언트 프레임 샘플링을 켜고 끌 수 있습니다.</div>
+                    <div><b>2. 비디오 재생 방법</b><br>• <i>URL:</i> 링크를 입력하고 <b>로드</b>를 클릭하세요.<br>• <i>로컬 파일:</i> <b>로컬 파일 선택</b>을 이용하세요.</div>
+                    <div><b>3. 타임스탬프 바로가기</b><br>• <b>+ 시간</b>을 눌러 <code>[0:15]</code>와 같은 타임스탬프를 추가하세요.<br>• 저장된 메모 속 타임스탬프를 클릭하면 해당 위치로 즉시 이동합니다!</div>
+                    <div><b>4. A-B 구간 반복</b><br>• <b>시작 A</b>와 <b>종료 B</b>를 눌러 원하는 구간을 반복 재생하세요.</div>
                 `
             },
             fr: { 
-                title: "Lecteur", load: "Charger", file: "Choisir un fichier local", urlPlaceholder: "URL vidéo (.mp4/.webm)...",
-                none: "Aucune vidéo chargée", custom: "Flux Réseau", theme: "Thème",
-                blur: "Intensité du flou", opacity: "Opacité du verre", glow: "Lueur ambiante",
-                scratchpad: "Bloc-notes", recentNotes: "Notes enregistrées", placeholderNotes: "Prenez des notes ou ajoutez des horodatages...",
-                timeBtn: "+ Temps", recentBtn: "Notes enregistrées", saveBtn: "Enregistrer", clear: "Effacer l'éditeur",
-                deleteNoteBtn: "Supprimer la note", download: "Télécharger .txt", searchPlaceholder: "Rechercher des notes...",
-                setA: "Début A: --", setB: "Fin B: --", clearAB: "Effacer AB",
-                noSavedNotes: "Aucune note", noMatchingNotes: "Aucune correspondance",
-                savedAlert: "Note enregistrée !", noNoteLoadedAlert: "Aucune note sélectionnée.",
-                confirmDelete: "Voulez-vous supprimer cette note ?", shortcutsTitle: "Raccourcis Clavier",
-                scPlay: "Lecture / Pause", scBack: "Reculer de 5s", scForward: "Avancer de 5s",
-                scVol: "Volume Haut / Bas", scFull: "Plein écran", scLoop: "Boucle", scHelp: "Aide",
-                lutNone: "Aucun", lutWarm: "Vintage Chaud", lutCool: "Cyberpunk Froid", lutDramatic: "Contraste Dramatique", lutSepia: "Sépia",
-                instrTitle: "Guide d'Utilisation Détaillé",
+                title: "Lecteur", 
+                load: "Charger", 
+                file: "Choisir un fichier local", 
+                urlPlaceholder: "URL vidéo (.mp4/.webm)...",
+                none: "Aucune vidéo chargée", 
+                custom: "Flux Réseau", 
+                expand: "Plein écran",
+                theme: "Thème",
+                blur: "Intensité du flou",
+                opacity: "Opacité du verre",
+                glow: "Lueur ambiante",
+                scratchpad: "Bloc-notes",
+                recentNotes: "Notes enregistrées",
+                placeholderNotes: "Prenez des notes ou ajoutez des horodatages...",
+                timeBtn: "+ Temps",
+                recentBtn: "Notes enregistrées",
+                saveBtn: "Enregistrer",
+                clear: "Effacer l'éditeur",
+                deleteNoteBtn: "Supprimer la note",
+                download: "Télécharger .txt",
+                searchPlaceholder: "Rechercher des notes...",
+                setA: "Début A: --",
+                setB: "Fin B: --",
+                clearAB: "Effacer AB",
+                noSavedNotes: "Aucune note enregistrée",
+                noMatchingNotes: "Aucune note correspondante",
+                savedAlert: "Note enregistrée avec succès !",
+                noNoteLoadedAlert: "Aucune note sélectionnée. Veuillez en charger une depuis la liste.",
+                confirmDelete: "Voulez-vous vraiment supprimer définitivement cette note ?",
+                shortcutsTitle: "Guide des Raccourcis Clavier",
+                scPlay: "Lecture / Pause",
+                scBack: "Reculer de 5s",
+                scForward: "Avancer de 5s",
+                scVol: "Volume Haut / Bas",
+                scFull: "Plein écran",
+                scLoop: "Activer la boucle",
+                scHelp: "Aide raccourcis",
+                instrTitle: "Guide d'Utilisation & Fonctionnalités",
                 instrText: `
-                    <div><b>1. Chargement des médias</b><br>• Entrez une URL réseau ou choisissez un fichier local.</div>
-                    <div><b>2. Filtres WebGL & Égaliseur Audio</b><br>• Personnalisez la luminosité, le contraste et les effets audio.</div>
+                    <div><b>1. Bascule WebGL</b><br>• Cliquez sur l'<b>icône Calques</b> en haut pour activer/désactiver le traitement WebGL GPU.</div>
+                    <div><b>2. Lecture Vidéo</b><br>• <i>URL:</i> Collez un lien et cliquez sur <b>Charger</b>.<br>• <i>Fichier local:</i> Cliquez sur <b>Choisir un fichier local</b>.</div>
+                    <div><b>3. Horodatages interactifs</b><br>• Cliquez sur <b>+ Temps</b> pour insérer un horodatage comme <code>[0:15]</code>.<br>• Cliquez sur un horodatage dans vos notes pour sauter directement à ce moment !</div>
+                    <div><b>4. Boucle A-B</b><br>• Utilisez <b>Début A</b> et <b>Fin B</b> pour répéter une séquence.</div>
                 `
             },
             it: { 
-                title: "Player", load: "Carica", file: "Scegli file locale", urlPlaceholder: "URL video (.mp4/.webm)...",
-                none: "Nessun video caricato", custom: "Flusso di Rete", theme: "Tema",
-                blur: "Intensità sfocatura", opacity: "Opacità vetro", glow: "Luce ambientale",
-                scratchpad: "Blocco note", recentNotes: "Note salvate", placeholderNotes: "Scrivi appunti o annota timestamp...",
-                timeBtn: "+ Tempo", recentBtn: "Note salvate", saveBtn: "Salva", clear: "Svuota editor",
-                deleteNoteBtn: "Elimina nota", download: "Scarica .txt", searchPlaceholder: "Cerca note...",
-                setA: "Inizio A: --", setB: "Fine B: --", clearAB: "Azzera AB",
-                noSavedNotes: "Nessuna nota", noMatchingNotes: "Nessun risultato",
-                savedAlert: "Nota salvata!", noNoteLoadedAlert: "Nessuna nota selezionata.",
-                confirmDelete: "Eliminare definitivamente la nota?", shortcutsTitle: "Scorciatoie da Tastiera",
-                scPlay: "Riproduci / Pausa", scBack: "Indietro 5s", scForward: "Avanti 5s",
-                scVol: "Volume Su / Giù", scFull: "Schermo intero", scLoop: "Ripeti", scHelp: "Aiuto",
-                lutNone: "Nessuno", lutWarm: "Vintage Caldo", lutCool: "Cyberpunk Freddo", lutDramatic: "Contrasto Drammatico", lutSepia: "Seppia",
-                instrTitle: "Manuale Utente & Guida Dettagliata",
+                title: "Player", 
+                load: "Carica", 
+                file: "Scegli file locale", 
+                urlPlaceholder: "URL video (.mp4/.webm)...",
+                none: "Nessun video caricato", 
+                custom: "Flusso di Rete", 
+                expand: "Schermo intero",
+                theme: "Tema",
+                blur: "Intensità sfocatura",
+                opacity: "Opacità vetro",
+                glow: "Luce ambientale",
+                scratchpad: "Blocco note",
+                recentNotes: "Note salvate",
+                placeholderNotes: "Scrivi appunti o annota timestamp...",
+                timeBtn: "+ Tempo",
+                recentBtn: "Note salvate",
+                saveBtn: "Salva",
+                clear: "Svuota editor",
+                deleteNoteBtn: "Elimina nota salvata",
+                download: "Scarica .txt",
+                searchPlaceholder: "Cerca note salvate...",
+                setA: "Inizio A: --",
+                setB: "Fine B: --",
+                clearAB: "Azzera AB",
+                noSavedNotes: "Nessuna nota salvata",
+                noMatchingNotes: "Nessuna nota trovata",
+                savedAlert: "Nota salvata con successo!",
+                noNoteLoadedAlert: "Nessuna nota selezionata. Caricane una dalla lista.",
+                confirmDelete: "Vuoi davvero eliminare definitivamente questa nota?",
+                shortcutsTitle: "Guida Scorciatoie da Tastiera",
+                scPlay: "Riproduci / Pausa",
+                scBack: "Indietro di 5s",
+                scForward: "Avanti di 5s",
+                scVol: "Volume Su / Giù",
+                scFull: "Schermo intero",
+                scLoop: "Ripeti video",
+                scHelp: "Guida scorciatoie",
+                instrTitle: "Manuale Utente & Funzionalità",
                 instrText: `
-                    <div><b>1. Caricamento Video</b><br>• Inserisci l'URL di rete o seleziona un file locale.</div>
-                    <div><b>2. Filtri WebGL e Equalizzatore</b><br>• Regola luminosità, contrasto e opzioni audio avanzate.</div>
+                    <div><b>1. Modalità WebGL</b><br>• Clicca l'<b>icona Livelli</b> in alto per attivare o disattivare l'accelerazione GPU WebGL.</div>
+                    <div><b>2. Riproduzione Video</b><br>• <i>URL:</i> Incolla il link e premi <b>Carica</b>.<br>• <i>File Locale:</i> Clicca su <b>Scegli file locale</b>.</div>
+                    <div><b>3. Timestamp Interattivi</b><br>• Clicca <b>+ Tempo</b> per inserire timestamp come <code>[0:15]</code>.<br>• Clicca un timestamp nelle note salvate per saltare al punto esatto del video!</div>
+                    <div><b>4. Ripetizione A-B</b><br>• Imposta <b>Inizio A</b> e <b>Fine B</b> per ripetere una sezione.</div>
                 `
             },
             fa: { 
-                title: "پخش‌کننده", load: "بارگذاری", file: "انتخاب فایل محلی", urlPlaceholder: "آدرس ویدیو (.mp4/.webm)...",
-                none: "ویدیویی بارگذاری نشده", custom: "جریان شبکه", theme: "پوسته",
-                blur: "شدت تاری", opacity: "شفافیت شیشه", glow: "درخشش محیطی",
-                scratchpad: "دفترچه یادداشت", recentNotes: "یادداشت‌ها", placeholderNotes: "یادداشت‌ها یا تایم‌استمپ‌ها...",
-                timeBtn: "+ زمان", recentBtn: "یادداشت‌ها", saveBtn: "ذخیره", clear: "پاک‌سازی",
-                deleteNoteBtn: "حذف یادداشت", download: "دانلود .txt", searchPlaceholder: "جستجوی یادداشت...",
-                setA: "شروع A: --", setB: "پایان B: --", clearAB: "حذف AB",
-                noSavedNotes: "هیچ یادداشتی نیست", noMatchingNotes: "نتیجه‌ای یافت نشد",
-                savedAlert: "یادداشت ذخیره شد!", noNoteLoadedAlert: "یادداشتی انتخاب نشده است.",
-                confirmDelete: "آیا این یادداشت حذف شود؟", shortcutsTitle: "میانبرهای صفحه‌کلید",
-                scPlay: "پخش / مکث", scBack: "۵ ثانیه عقب", scForward: "۵ ثانیه جلو",
-                scVol: "تنظیم صدا", scFull: "تمام‌صفحه", scLoop: "تکرار", scHelp: "راهنما",
-                lutNone: "هیچ‌کدام", lutWarm: "وینتیج گرم", lutCool: "سایبرپانک سرد", lutDramatic: "کنتراست دراماتیک", lutSepia: "سپیا",
-                instrTitle: "راهنمای کامل و دستورالعمل‌ها",
+                title: "پخش‌کننده", 
+                load: "بارگذاری", 
+                file: "انتخاب فایل محلی", 
+                urlPlaceholder: "آدرس ویدیو (.mp4/.webm)...",
+                none: "ویدیویی بارگذاری نشده", 
+                custom: "جریان شبکه", 
+                expand: "تمام‌صفحه",
+                theme: "پوسته",
+                blur: "شدت تاری",
+                opacity: "شفافیت شیشه",
+                glow: "درخشش محیطی",
+                scratchpad: "دفترچه یادداشت",
+                recentNotes: "یادداشت‌های ذخیره‌شده",
+                placeholderNotes: "یادداشت‌ها یا تایم‌استمپ‌های خود را بنویسید...",
+                timeBtn: "+ زمان",
+                recentBtn: "یادداشت‌ها",
+                saveBtn: "ذخیره",
+                clear: "پاک‌سازی ویرایشگر",
+                deleteNoteBtn: "حذف یادداشت",
+                download: "دانلود .txt",
+                searchPlaceholder: "جستجوی یادداشت‌ها...",
+                setA: "شروع A: --",
+                setB: "پایان B: --",
+                clearAB: "حذف AB",
+                noSavedNotes: "هیچ یادداشتی ذخیره نشده است",
+                noMatchingNotes: "یادداشتی پیدا نشد",
+                savedAlert: "یادداشت با موفقیت ذخیره شد!",
+                noNoteLoadedAlert: "هیچ یادداشتی انتخاب نشده است. ابتدا یک یادداشت را بارگذاری کنید.",
+                confirmDelete: "آیا از حذف دائمی این یادداشت اطمینان دارید؟",
+                shortcutsTitle: "راهنمای میانبرهای صفحه‌کلید",
+                scPlay: "پخش / مکث",
+                scBack: "۵ ثانیه عقب",
+                scForward: "۵ ثانیه جلو",
+                scVol: "تنظیم بلندی صدا",
+                scFull: "تغییر حالت تمام‌صفحه",
+                scLoop: "تکرار ویدیو",
+                scHelp: "راهنمای میانبرها",
+                instrTitle: "راهنمای کامل استفاده و امکانات",
                 instrText: `
-                    <div><b>۱. بارگذاری ویدیو</b><br>• آدرس مستقیم یا فایل محلی خود را وارد کنید.</div>
-                    <div><b>۲. فیلترهای تصویری و اکولایزر صوتی</b><br>• تنظیمات درخشندگی، کنتراست و صوت را مدیریت کنید.</div>
-                `
-            },
-            es: {
-                title: "Reproductor", load: "Cargar", file: "Elegir archivo local", urlPlaceholder: "URL de video (.mp4/.webm)...",
-                none: "Ningún video cargado", custom: "Transmisión de red", theme: "Tema",
-                blur: "Desenfoque", opacity: "Opacidad", glow: "Brillo ambiental",
-                scratchpad: "Bloc de notas", recentNotes: "Notas guardadas", placeholderNotes: "Anota notas o marcas de tiempo...",
-                timeBtn: "+ Tiempo", recentBtn: "Notas guardadas", saveBtn: "Guardar", clear: "Limpiar",
-                deleteNoteBtn: "Eliminar nota", download: "Descargar .txt", searchPlaceholder: "Buscar notas...",
-                setA: "Inicio A: --", setB: "Fin B: --", clearAB: "Borrar AB",
-                noSavedNotes: "Sin notas", noMatchingNotes: "Sin coincidencias",
-                savedAlert: "¡Nota guardada!", noNoteLoadedAlert: "Ninguna nota seleccionada.",
-                confirmDelete: "¿Eliminar esta nota?", shortcutsTitle: "Atajos de teclado",
-                scPlay: "Reproducir / Pausa", scBack: "Retroceder 5s", scForward: "Avanzar 5s",
-                scVol: "Volumen +/-", scFull: "Pantalla completa", scLoop: "Bucle", scHelp: "Ayuda",
-                lutNone: "Ninguno", lutWarm: "Vintage cálido", lutCool: "Ciberpunk frío", lutDramatic: "Contraste dramático", lutSepia: "Sepia",
-                instrTitle: "Guía de Usuario Detallada",
-                instrText: `
-                    <div><b>1. Carga de medios</b><br>• Inserte una URL de red o seleccione un archivo local.</div>
-                    <div><b>2. Filtros WebGL y Ecualizador</b><br>• Modifique brillo, contraste y propiedades de audio.</div>
-                `
-            },
-            pt: {
-                title: "Reprodutor", load: "Carregar", file: "Escolher arquivo local", urlPlaceholder: "URL do vídeo (.mp4/.webm)...",
-                none: "Nenhum vídeo carregado", custom: "Transmissão de rede", theme: "Tema",
-                blur: "Desfoque", opacity: "Opacidade", glow: "Brillo ambiente",
-                scratchpad: "Bloco de notas", recentNotes: "Notas salvas", placeholderNotes: "Anote notas ou marcas de tempo...",
-                timeBtn: "+ Tempo", recentBtn: "Notas salvas", saveBtn: "Salvar", clear: "Limpar",
-                deleteNoteBtn: "Excluir nota", download: "Baixar .txt", searchPlaceholder: "Pesquisar notas...",
-                setA: "Início A: --", setB: "Fim B: --", clearAB: "Limpar AB",
-                noSavedNotes: "Sem notas", noMatchingNotes: "Nenhum resultado",
-                savedAlert: "Nota salva!", noNoteLoadedAlert: "Nenhuma nota selecionada.",
-                confirmDelete: "Deseja excluir esta nota?", shortcutsTitle: "Atalhos de teclado",
-                scPlay: "Reproduzir / Pausa", scBack: "Voltar 5s", scForward: "Avançar 5s",
-                scVol: "Volume +/-", scFull: "Tela cheia", scLoop: "Repetir", scHelp: "Ajuda",
-                lutNone: "Nenhum", lutWarm: "Vintage Quente", lutCool: "Cyberpunk Frio", lutDramatic: "Contraste Dramático", lutSepia: "Sépia",
-                instrTitle: "Guia Detalhado do Usuário",
-                instrText: `
-                    <div><b>1. Carregamento de Mídia</b><br>• Insira um link direto ou escolha um arquivo local.</div>
-                    <div><b>2. Filtros WebGL e Equalizador</b><br>• Ajuste brilho, contraste e áudio avançado.</div>
-                `
-            },
-            ru: {
-                title: "Плеер", load: "Загрузить", file: "Выбрать файл", urlPlaceholder: "URL видео (.mp4/.webm)...",
-                none: "Видео не загружено", custom: "Сетевой поток", theme: "Тема",
-                blur: "Размытие", opacity: "Прозрачность", glow: "Свечение",
-                scratchpad: "Блокнот", recentNotes: "Сохраненные заметки", placeholderNotes: "Записывайте заметки...",
-                timeBtn: "+ Время", recentBtn: "Заметки", saveBtn: "Сохранить", clear: "Очистить",
-                deleteNoteBtn: "Удалить заметку", download: "Скачать .txt", searchPlaceholder: "Поиск заметок...",
-                setA: "Точка A: --", setB: "Точка B: --", clearAB: "Сбросить AB",
-                noSavedNotes: "Нет заметок", noMatchingNotes: "Нет результатов",
-                savedAlert: "Заметка сохранена!", noNoteLoadedAlert: "Заметка не выбрана.",
-                confirmDelete: "Удалить эту заметку?", shortcutsTitle: "Горячие клавиши",
-                scPlay: "Воспроизведение / Пауза", scBack: "Назад 5с", scForward: "Вперед 5с",
-                scVol: "Громкость +/-", scFull: "На весь экран", scLoop: "Повтор", scHelp: "Помощь",
-                lutNone: "Нет", lutWarm: "Теплый винтаж", lutCool: "Холодный киберпанк", lutDramatic: "Драматичный контраст", lutSepia: "Сепия",
-                instrTitle: "Подробная Инструкция Пользователя",
-                instrText: `
-                    <div><b>1. Загрузка видео</b><br>• Вставьте ссылку или выберите файл на устройстве.</div>
-                    <div><b>2. WebGL фильтры и аудио EQ</b><br>• Настраивайте яркость, контраст и эквалайзер в реальном времени.</div>
-                `
-            },
-            hi: {
-                title: "плеयर", load: "लोड", file: "लोकल फ़ाइल चुनें", urlPlaceholder: "वीडियो URL (.mp4/.webm)...",
-                none: "कोई वीडियो लोड नहीं हुआ", custom: "नेटवर्क स्ट्रीम", theme: "थीम",
-                blur: "धुंधलापन", opacity: "पारदर्शिता", glow: "ग्लो",
-                scratchpad: "नोट्स", recentNotes: "सहेजे गए नोट्स", placeholderNotes: "नोट्स लिखें...",
-                timeBtn: "+ समय", recentBtn: "नोट्स", saveBtn: "सहेजें", clear: "साफ़ करें",
-                deleteNoteBtn: "नोट हटाएं", download: ".txt डाउनलोड", searchPlaceholder: "नोट्स खोजें...",
-                setA: "सेट A: --", setB: "सेट B: --", clearAB: "AB साफ़ करें",
-                noSavedNotes: "कोई नोट नहीं", noMatchingNotes: "कोई परिणाम नहीं",
-                savedAlert: "नोट सहेजा गया!", noNoteLoadedAlert: "कोई नोट चयनित नहीं।",
-                confirmDelete: "क्या आप इस नोट को हटाना चाहते हैं?", shortcutsTitle: "कीबोर्ड शॉर्टकट",
-                scPlay: "चलाएं / रोकें", scBack: "5 सेकंड पीछे", scForward: "5 सेकंड आगे",
-                scVol: "वॉल्यूम +/-", scFull: "फुलस्क्रीन", scLoop: "लूप", scHelp: "मदद",
-                lutNone: "कोई नहीं", lutWarm: "वार्म विंटेज", lutCool: "कूल साइबरपंक", lutDramatic: "ड्रामेटिक कंट्रास्ट", lutSepia: "सेपिया",
-                instrTitle: "विस्तृत उपयोगकर्ता निर्देश",
-                instrText: `
-                    <div><b>1. मीडिया लोड करना</b><br>• URL दर्ज करें या लोकल फ़ाइल चुनें।</div>
-                    <div><b>2. WebGL फ़िल्टर और ऑडियो EQ</b><br>• चमक, कंट्रास्ट और ऑडियो विकल्प प्रबंधित करें।</div>
-                `
-            },
-            ar: {
-                title: "مشغل", load: "تحميل", file: "اختر ملف محلي", urlPlaceholder: "رابط الفيديو (.mp4/.webm)...",
-                none: "لا يوجد فيديو محمل", custom: "بث شبكي", theme: "السمة",
-                blur: "التمويه", opacity: "الشفافية", glow: "التوهج",
-                scratchpad: "ملاحظات سريعة", recentNotes: "الملاحظات المحفوظة", placeholderNotes: "اكتب ملاحظاتك...",
-                timeBtn: "+ الوقت", recentBtn: "الملاحظات", saveBtn: "حفظ", clear: "مسح",
-                deleteNoteBtn: "حذف الملاحظة", download: "تحميل .txt", searchPlaceholder: "بحث في الملاحظات...",
-                setA: "تعيين A: --", setB: "تعيين B: --", clearAB: "مسح AB",
-                noSavedNotes: "لا توجد ملاحظات", noMatchingNotes: "لا توجد نتائج",
-                savedAlert: "تم الحفظ بنجاح!", noNoteLoadedAlert: "لم يتم اختيار ملاحظة.",
-                confirmDelete: "هل تريد حذف هذه الملاحظة؟", shortcutsTitle: "اختصارات لوحة المفاتيح",
-                scPlay: "تشغيل / إيقاف", scBack: "رجوع 5ث", scForward: "تقديم 5ث",
-                scVol: "الصوت +/-", scFull: "ملء الشاشة", scLoop: "تكرار", scHelp: "مساعدة",
-                lutNone: "بلا", lutWarm: "دافئ كلاسيكي", lutCool: "سايبربانك بارد", lutDramatic: "تباين درامي", lutSepia: "بني داكن",
-                instrTitle: "دليل المستخدم الشامل والتعليمات",
-                instrText: `
-                    <div><b>1. تحميل الوسائط</b><br>• الصق رابط الفيديو المباشر أو اختر ملفاً محلياً.</div>
-                    <div><b>2. مرشحات WebGL والتلوين</b><br>• تحكم في السطوع والتباين والحدة في الوقت الفعلي.</div>
+                    <div><b>۱. دکمه شتاب‌دهنده WebGL</b><br>• روی <b>آیکون لایه‌ها</b> در بالا کلیک کنید تا پردازش WebGL را فعال یا غیرفعال کنید.</div>
+                    <div><b>۲. پخش ویدیو</b><br>• <i>آدرس اینترنتی:</i> لینک را وارد کرده و روی <b>بارگذاری</b> کلیک کنید.<br>• <i>فایل محلی:</i> روی <b>انتخاب فایل محلی</b> کلیک کنید.</div>
+                    <div><b>۳. تایم‌استمپ تعاملی</b><br>• با کلیک روی <b>+ زمان</b> تایم‌استمپ‌هایی مثل <code>[0:15]</code> ایجاد کنید.<br>• روی تایم‌استمپ کلیک کنید تا ویدیو بلافاصله به آن زمان منتقل شود!</div>
+                    <div><b>۴. تکرار بازه A-B</b><br>• با انتخاب <b>شروع A</b> و <b>پایان B</b> بازه دلخواه را تکرار کنید.</div>
                 `
             }
         };
@@ -1936,6 +1569,7 @@
             loadUrlBtn.textContent = t.load;
             videoUrlInput.placeholder = t.urlPlaceholder;
             document.getElementById('labelBrowse').childNodes[0].nodeValue = t.file + " ";
+            expandBtn.textContent = t.expand;
             themeToggleBtn.textContent = t.theme;
             
             lblBlur.textContent = t.blur;
@@ -1951,12 +1585,6 @@
             clearLoadedNoteBtn.textContent = t.deleteNoteBtn;
             downloadNotesBtn.textContent = t.download;
             noteSearchInput.placeholder = t.searchPlaceholder;
-
-            document.getElementById('optLutNone').textContent = t.lutNone;
-            document.getElementById('optLutWarm').textContent = t.lutWarm;
-            document.getElementById('optLutCool').textContent = t.lutCool;
-            document.getElementById('optLutDramatic').textContent = t.lutDramatic;
-            document.getElementById('optLutSepia').textContent = t.lutSepia;
 
             if (loopPointA === null) setABtn.textContent = t.setA;
             if (loopPointB === null) setBBtn.textContent = t.setB;
@@ -1990,44 +1618,8 @@
         };
 
         glassToggleBtn.onclick = () => {
-            const isOpen = glassSettingsPanel.classList.contains('open');
-            audioSettingsPanel.classList.remove('open');
-            audioSettingsBtn.classList.remove('active');
-            videoFiltersPanel.classList.remove('open');
-            videoFiltersBtn.classList.remove('active');
-            langSelectWrapper.classList.remove('open');
-
-            glassSettingsPanel.classList.toggle('open', !isOpen);
-            glassToggleBtn.classList.toggle('active', !isOpen);
-        };
-
-        audioSettingsBtn.onclick = () => {
-            const isOpen = audioSettingsPanel.classList.contains('open');
-            glassSettingsPanel.classList.remove('open');
-            glassToggleBtn.classList.remove('active');
-            videoFiltersPanel.classList.remove('open');
-            videoFiltersBtn.classList.remove('active');
-            langSelectWrapper.classList.remove('open');
-
-            audioSettingsPanel.classList.toggle('open', !isOpen);
-            audioSettingsBtn.classList.toggle('active', !isOpen);
-        };
-
-        videoFiltersBtn.onclick = () => {
-            const isOpen = videoFiltersPanel.classList.contains('open');
-            glassSettingsPanel.classList.remove('open');
-            glassToggleBtn.classList.remove('active');
-            audioSettingsPanel.classList.remove('open');
-            audioSettingsBtn.classList.remove('active');
-            langSelectWrapper.classList.remove('open');
-
-            videoFiltersPanel.classList.toggle('open', !isOpen);
-            videoFiltersBtn.classList.toggle('active', !isOpen);
-        };
-
-        collapseToggleBtn.onclick = () => {
-            collapsibleNav.classList.toggle('collapsed');
-            collapseToggleBtn.classList.toggle('active');
+            glassSettingsPanel.classList.toggle('open');
+            glassToggleBtn.classList.toggle('active');
         };
 
         loopBadgeBtn.onclick = () => {
@@ -2039,6 +1631,7 @@
             }
         };
 
+        // Initial state for WebGL button
         if (isWebGLEnabled) webglToggleBtn.classList.add('active');
 
         webglToggleBtn.onclick = () => {
@@ -2106,6 +1699,86 @@
                 }
             }
         };
+
+        // --- WEBGL PIPELINE & TIMESTAMP SEEK INTEGRATION ---
+
+        class WebGLVideoRenderer {
+            constructor(canvasElement, videoElement) {
+                this.canvas = canvasElement;
+                this.video = videoElement;
+                this.gl = canvasElement.getContext('webgl') || canvasElement.getContext('experimental-webgl');
+                if (this.gl) this.init();
+            }
+
+            init() {
+                const gl = this.gl;
+                const vsSource = `
+                    attribute vec2 a_position;
+                    attribute vec2 a_texCoord;
+                    varying vec2 v_texCoord;
+                    void main() {
+                        gl_Position = vec4(a_position, 0.0, 1.0);
+                        v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
+                    }
+                `;
+                const fsSource = `
+                    precision mediump float;
+                    varying vec2 v_texCoord;
+                    uniform sampler2D u_image;
+                    void main() {
+                        gl_FragColor = texture2D(u_image, v_texCoord);
+                    }
+                `;
+
+                const compileShader = (type, source) => {
+                    const shader = gl.createShader(type);
+                    gl.shaderSource(shader, source);
+                    gl.compileShader(shader);
+                    return shader;
+                };
+
+                const program = gl.createProgram();
+                gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vsSource));
+                gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fsSource));
+                gl.linkProgram(program);
+                gl.useProgram(program);
+
+                const positionBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                    -1, -1, 0, 0,
+                     1, -1, 1, 0,
+                    -1,  1, 0, 1,
+                    -1,  1, 0, 1,
+                     1, -1, 1, 0,
+                     1,  1, 1, 1,
+                ]), gl.STATIC_DRAW);
+
+                const aPos = gl.getAttribLocation(program, "a_position");
+                const aTex = gl.getAttribLocation(program, "a_texCoord");
+                gl.enableVertexAttribArray(aPos);
+                gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
+                gl.enableVertexAttribArray(aTex);
+                gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, 16, 8);
+
+                this.texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, this.texture);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            }
+
+            render() {
+                if (!this.gl || this.video.paused || this.video.ended) return;
+                const gl = this.gl;
+                gl.bindTexture(gl.TEXTURE_2D, this.texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.video);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+        }
+
+        const webGlRenderer = new WebGLVideoRenderer(colorCanvas, videoPlayer);
 
         function parseTimestampToSeconds(timeStr) {
             const cleanStr = timeStr.replace('[', '').replace(']', '').trim();
@@ -2265,11 +1938,8 @@
 
             if (key === ' ' || key === 'k') {
                 e.preventDefault();
-                if (videoPlayer.paused) {
-                    initAudioPipeline();
-                    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-                    videoPlayer.play();
-                } else videoPlayer.pause();
+                if (videoPlayer.paused) videoPlayer.play();
+                else videoPlayer.pause();
             } else if (key === 'j' || e.key === 'ArrowLeft') {
                 e.preventDefault();
                 videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - 5);
@@ -2362,7 +2032,8 @@
             sampleInterval = setInterval(() => {
                 if (videoPlayer.paused || videoPlayer.ended || !isWebGLEnabled) return;
                 try {
-                    ctx.drawImage(glCanvas, 0, 0, 30, 30);
+                    webGlRenderer.render();
+                    ctx.drawImage(videoPlayer, 0, 0, 30, 30);
                     const frameData = ctx.getImageData(0, 0, 30, 30).data;
                     let r = 0, g = 0, b = 0, count = 0;
                     
@@ -2383,8 +2054,6 @@
         }
 
         videoPlayer.onplay = () => {
-            initAudioPipeline();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             hasTriggeredConfetti = false;
             startColorSampling();
         };
@@ -2407,27 +2076,29 @@
 
         loadUrlBtn.onclick = () => {
             const url = videoUrlInput.value.trim();
-            if (!url) return;
-            activeSourceType = 'custom';
-            videoPlayer.src = url;
-            videoPlayer.load();
-            videoTitle.textContent = translations[selectedLang].custom;
-            videoPlayer.play().catch(() => {});
+            if (url) {
+                videoPlayer.src = url;
+                activeSourceType = 'custom';
+                hasTriggeredConfetti = false;
+                updateUI();
+                videoPlayer.load();
+                videoPlayer.play().catch(() => {});
+            }
         };
 
         localFileInput.onchange = (e) => {
             const file = e.target.files[0];
-            if (!file) return;
-            activeSourceType = 'custom';
-            const objectUrl = URL.createObjectURL(file);
-            videoPlayer.src = objectUrl;
-            videoPlayer.load();
-            videoTitle.textContent = file.name;
-            videoPlayer.play().catch(() => {});
+            if (file) {
+                activeSourceType = 'local';
+                hasTriggeredConfetti = false;
+                videoTitle.textContent = file.name;
+                videoPlayer.src = URL.createObjectURL(file);
+                videoPlayer.load();
+                videoPlayer.play();
+            }
         };
 
         updateUI();
     </script>
 </body>
 </html>
-```[cite: 1]

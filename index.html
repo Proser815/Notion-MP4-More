@@ -186,6 +186,7 @@
             align-items: flex-start;
             padding: 0 2px;
             gap: 6px;
+            position: relative;
         }
 
         h1 {
@@ -384,29 +385,33 @@
         }
 
         .collapsible-panel {
+            position: absolute;
+            top: 32px;
+            right: 0;
+            left: 0;
+            z-index: 99;
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            padding: 0 8px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             font-size: 9px;
-            max-height: 0;
             opacity: 0;
-            overflow: hidden;
-            margin: 0;
-            border-width: 0;
-            transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s ease, margin 0.4s ease, border-width 0.4s ease;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-8px) scale(0.98);
+            transform-origin: top right;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.25s ease;
         }
 
         .collapsible-panel.open {
-            max-height: 280px;
             opacity: 1;
-            padding: 8px;
-            margin-bottom: 2px;
-            border-width: 1px;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
         }
 
         .slider-row {
@@ -1030,79 +1035,79 @@
                         <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
                     </button>
                 </div>
-            </div>
 
-            <!-- Audio Compressor / Equalizer Panel -->
-            <div class="collapsible-panel" id="audioSettingsPanel">
-                <div class="slider-row">
-                    <label><span id="lblDialogue">Dialogue Boost</span> <span id="dialogueVal">0 dB</span></label>
-                    <input type="range" id="dialogueRange" min="0" max="12" value="0" step="0.5">
+                <!-- Audio Compressor / Equalizer Panel -->
+                <div class="collapsible-panel" id="audioSettingsPanel">
+                    <div class="slider-row">
+                        <label><span id="lblDialogue">Dialogue Boost</span> <span id="dialogueVal">0 dB</span></label>
+                        <input type="range" id="dialogueRange" min="0" max="12" value="0" step="0.5">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblCompressor">Explosion Limiter</span> <span id="compressorVal">Off</span></label>
+                        <input type="range" id="compressorRange" min="0" max="100" value="0">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblBass">Bass Gain</span> <span id="bassVal">0 dB</span></label>
+                        <input type="range" id="bassRange" min="-12" max="12" value="0" step="0.5">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblTreble">Treble Gain</span> <span id="trebleVal">0 dB</span></label>
+                        <input type="range" id="trebleRange" min="-12" max="12" value="0" step="0.5">
+                    </div>
                 </div>
-                <div class="slider-row">
-                    <label><span id="lblCompressor">Explosion Limiter</span> <span id="compressorVal">Off</span></label>
-                    <input type="range" id="compressorRange" min="0" max="100" value="0">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblBass">Bass Gain</span> <span id="bassVal">0 dB</span></label>
-                    <input type="range" id="bassRange" min="-12" max="12" value="0" step="0.5">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblTreble">Treble Gain</span> <span id="trebleVal">0 dB</span></label>
-                    <input type="range" id="trebleRange" min="-12" max="12" value="0" step="0.5">
-                </div>
-            </div>
 
-            <!-- Real-time Video Filters Panel -->
-            <div class="collapsible-panel" id="videoFiltersPanel">
-                <div class="slider-row">
-                    <label><span id="lblBrightness">Brightness</span> <span id="brightnessVal">0</span></label>
-                    <input type="range" id="brightnessRange" min="-1" max="1" value="0" step="0.05">
+                <!-- Real-time Video Filters Panel -->
+                <div class="collapsible-panel" id="videoFiltersPanel">
+                    <div class="slider-row">
+                        <label><span id="lblBrightness">Brightness</span> <span id="brightnessVal">0</span></label>
+                        <input type="range" id="brightnessRange" min="-1" max="1" value="0" step="0.05">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblContrast">Contrast</span> <span id="contrastVal">1.0</span></label>
+                        <input type="range" id="contrastRange" min="0" max="2" value="1" step="0.05">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblSaturation">Saturation</span> <span id="saturationVal">1.0</span></label>
+                        <input type="range" id="saturationRange" min="0" max="2" value="1" step="0.05">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblSharpness">Sharpness</span> <span id="sharpnessVal">0.0</span></label>
+                        <input type="range" id="sharpnessRange" min="0" max="2" value="0" step="0.05">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblLut">Color Grading Preset</span></label>
+                        <select id="lutPresetSelect" style="width: 100%; font-size: 9px; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
+                            <option value="none">None</option>
+                            <option value="warm">Warm Vintage</option>
+                            <option value="cool">Cool Cyberpunk</option>
+                            <option value="dramatic">Dramatic Contrast</option>
+                            <option value="sepia">Sepia Tone</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="slider-row">
-                    <label><span id="lblContrast">Contrast</span> <span id="contrastVal">1.0</span></label>
-                    <input type="range" id="contrastRange" min="0" max="2" value="1" step="0.05">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblSaturation">Saturation</span> <span id="saturationVal">1.0</span></label>
-                    <input type="range" id="saturationRange" min="0" max="2" value="1" step="0.05">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblSharpness">Sharpness</span> <span id="sharpnessVal">0.0</span></label>
-                    <input type="range" id="sharpnessRange" min="0" max="2" value="0" step="0.05">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblLut">Color Grading Preset</span></label>
-                    <select id="lutPresetSelect" style="width: 100%; font-size: 9px; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                        <option value="none">None</option>
-                        <option value="warm">Warm Vintage</option>
-                        <option value="cool">Cool Cyberpunk</option>
-                        <option value="dramatic">Dramatic Contrast</option>
-                        <option value="sepia">Sepia Tone</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- Glass, Glow & Color Scheme Customizer Panel -->
-            <div class="collapsible-panel" id="glassSettingsPanel">
-                <div class="slider-row">
-                    <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
-                    <input type="range" id="blurRange" min="0" max="40" value="16">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblOpacity">Glass Opacity</span> <span id="opacityVal">85%</span></label>
-                    <input type="range" id="opacityRange" min="10" max="100" value="85">
-                </div>
-                <div class="slider-row">
-                    <label><span id="lblGlow">Ambient Glow</span> <span id="glowVal">15%</span></label>
-                    <input type="range" id="glowRange" min="0" max="100" value="15">
-                </div>
-                <div class="color-picker-row" id="colorPickerRow">
-                    <div class="color-dot active" data-color="amber" style="background: #e5b83b;" title="Amber"></div>
-                    <div class="color-dot" data-color="sage" style="background: #7fa98b;" title="Sage"></div>
-                    <div class="color-dot" data-color="rose" style="background: #d4838f;" title="Rose"></div>
-                    <div class="color-dot" data-color="lavender" style="background: #9d8ec4;" title="Lavender"></div>
-                    <div class="color-dot" data-color="sky" style="background: #7ca9c9;" title="Sky"></div>
-                    <div class="color-dot" data-color="peach" style="background: #e09f6e;" title="Peach"></div>
+                <!-- Glass, Glow & Color Scheme Customizer Panel -->
+                <div class="collapsible-panel" id="glassSettingsPanel">
+                    <div class="slider-row">
+                        <label><span id="lblBlur">Blur Intensity</span> <span id="blurVal">16px</span></label>
+                        <input type="range" id="blurRange" min="0" max="40" value="16">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblOpacity">Glass Opacity</span> <span id="opacityVal">85%</span></label>
+                        <input type="range" id="opacityRange" min="10" max="100" value="85">
+                    </div>
+                    <div class="slider-row">
+                        <label><span id="lblGlow">Ambient Glow</span> <span id="glowVal">15%</span></label>
+                        <input type="range" id="glowRange" min="0" max="100" value="15">
+                    </div>
+                    <div class="color-picker-row" id="colorPickerRow">
+                        <div class="color-dot active" data-color="amber" style="background: #e5b83b;" title="Amber"></div>
+                        <div class="color-dot" data-color="sage" style="background: #7fa98b;" title="Sage"></div>
+                        <div class="color-dot" data-color="rose" style="background: #d4838f;" title="Rose"></div>
+                        <div class="color-dot" data-color="lavender" style="background: #9d8ec4;" title="Lavender"></div>
+                        <div class="color-dot" data-color="sky" style="background: #7ca9c9;" title="Sky"></div>
+                        <div class="color-dot" data-color="peach" style="background: #e09f6e;" title="Peach"></div>
+                    </div>
                 </div>
             </div>
 
@@ -1962,24 +1967,36 @@
         };
 
         glassToggleBtn.onclick = () => {
-            glassSettingsPanel.classList.toggle('open');
-            glassToggleBtn.classList.toggle('active');
+            const isOpen = glassSettingsPanel.classList.contains('open');
             audioSettingsPanel.classList.remove('open');
+            audioSettingsBtn.classList.remove('active');
             videoFiltersPanel.classList.remove('open');
+            videoFiltersBtn.classList.remove('active');
+
+            glassSettingsPanel.classList.toggle('open', !isOpen);
+            glassToggleBtn.classList.toggle('active', !isOpen);
         };
 
         audioSettingsBtn.onclick = () => {
-            audioSettingsPanel.classList.toggle('open');
-            audioSettingsBtn.classList.toggle('active');
+            const isOpen = audioSettingsPanel.classList.contains('open');
             glassSettingsPanel.classList.remove('open');
+            glassToggleBtn.classList.remove('active');
             videoFiltersPanel.classList.remove('open');
+            videoFiltersBtn.classList.remove('active');
+
+            audioSettingsPanel.classList.toggle('open', !isOpen);
+            audioSettingsBtn.classList.toggle('active', !isOpen);
         };
 
         videoFiltersBtn.onclick = () => {
-            videoFiltersPanel.classList.toggle('open');
-            videoFiltersBtn.classList.toggle('active');
+            const isOpen = videoFiltersPanel.classList.contains('open');
             glassSettingsPanel.classList.remove('open');
+            glassToggleBtn.classList.remove('active');
             audioSettingsPanel.classList.remove('open');
+            audioSettingsBtn.classList.remove('active');
+
+            videoFiltersPanel.classList.toggle('open', !isOpen);
+            videoFiltersBtn.classList.toggle('active', !isOpen);
         };
 
         collapseToggleBtn.onclick = () => {

@@ -111,14 +111,14 @@
             background-color: var(--bg-base);
             color: var(--text-main);
             margin: 0;
-            padding: 4px;
+            padding: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
+            overflow-x: hidden;
             transition: background-color 0.5s ease;
         }
 
@@ -145,11 +145,11 @@
 
         .dashboard {
             width: 100%;
-            max-width: 760px;
+            max-width: 860px;
             display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            gap: 10px;
-            align-items: stretch;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 12px;
+            align-items: start;
             transition: var(--transition);
         }
 
@@ -183,16 +183,15 @@
         .header-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 0 2px;
-            flex-wrap: nowrap;
-            gap: 4px;
+            gap: 6px;
         }
 
         h1 {
             font-size: 13px;
             font-weight: 600;
-            margin: 0;
+            margin: 4px 0 0 0;
             letter-spacing: -0.2px;
             transition: color 0.4s ease;
             white-space: nowrap;
@@ -240,17 +239,20 @@
 
         .header-controls {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             align-items: center;
-            flex-wrap: nowrap;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            flex: 1;
         }
 
         .collapsible-group {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             align-items: center;
-            overflow: visible;
-            max-width: 300px;
+            flex-wrap: wrap;
+            overflow: hidden;
+            max-width: 100%;
             opacity: 1;
             transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
         }
@@ -259,7 +261,6 @@
             max-width: 0;
             opacity: 0;
             pointer-events: none;
-            overflow: hidden;
         }
 
         .custom-select-wrapper {
@@ -308,7 +309,6 @@
             transform: rotate(180deg);
         }
 
-        /* Fixed Language Dropdown Styling */
         .custom-select-options {
             position: absolute;
             top: calc(100% + 4px);
@@ -387,7 +387,7 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            padding: 8px;
+            padding: 0 8px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -762,7 +762,6 @@
             transition: color 0.4s ease;
         }
 
-        /* Improved iOS-Style SVG Icon Button for Fullscreen/Expand */
         .fullscreen-btn {
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
@@ -1532,7 +1531,7 @@
         saturationRange.oninput = (e) => saturationVal.textContent = e.target.value;
         sharpnessRange.oninput = (e) => sharpnessVal.textContent = e.target.value;
 
-        // FIXED Animated Dropdown Logic
+        // Animated Dropdown Logic
         const langSelectWrapper = document.getElementById('langSelectWrapper');
         const langSelectTrigger = document.getElementById('langSelectTrigger');
         const currentLangLabel = document.getElementById('currentLangLabel');
